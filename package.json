@@ -1,0 +1,22 @@
+{
+  "name": "appirio-accounts-app",
+  "description": "Appirio Accounts App",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "webpack -p --bail --progress --build",
+    "dev": "webpack-dev-server --history-api-fallback --dev --inline --progress --port 3000",
+    "prod": "webpack-dev-server --history-api-fallback --prod --inline --progress --port 3000"
+  },
+  "dependencies": {
+    "angular": "^1.4.8",
+    "angular-ui-router": "^0.2.18"
+  },
+  "devDependencies": {
+    "appirio-tech-webpack-config": "^0.2.21",
+    "coffee-loader": "^0.7.2",
+    "coffee-script": "^1.10.0",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.1",
+    "webpack-s3-plugin": "^0.6.7"
+  }
+}
