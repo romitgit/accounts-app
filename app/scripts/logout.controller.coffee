@@ -15,7 +15,7 @@ LogoutController = (
   vm.error     = false
   vm.loading   = false
   vm.apps      = {}
-  vm.logoutUrl = $sce.trustAsResourceUrl('http://local.sample.topcoder-dev.com:3100/logout')
+  vm.logoutUrl = $sce.trustAsResourceUrl(process.env.APP_LOGOUT_URL)
 
   $window.loaded = (src) ->
     $log.info 'logged out from '+src
