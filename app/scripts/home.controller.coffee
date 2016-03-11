@@ -4,6 +4,7 @@ HomeController = (
   $log
   $rootScope
   $state
+  AuthService
   TokenService) ->
   
   vm           = this
@@ -32,6 +33,7 @@ HomeController.$inject = [
   '$log'
   '$rootScope'
   '$state'
+  'AuthService'
   'TokenService'
 ]
 
