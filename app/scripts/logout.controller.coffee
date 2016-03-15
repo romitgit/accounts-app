@@ -24,14 +24,14 @@ LogoutController = (
     $timeout () ->
       vm.apps[src] = src
       if vm.apps.member && vm.apps.connect
-        if $stateParams.retUrl
-          redirectUrl = $stateParams.retUrl
+        if $location.search().retUrl
+          redirectUrl = $location.search().retUrl
           $log.info 'redirect back to ' + redirectUrl
           $window.location = redirectUrl
         else
-          $log.info 'moving to home'
+          $log.info 'move to home'
           $state.go 'home'
-      500
+      250
 
   init = ->
     AuthService.logout()
