@@ -6,6 +6,7 @@ LoginController = (
     $location
     $window
     $state
+    $stateParams
     $timeout
     AuthService
     TokenService) ->
@@ -37,24 +38,34 @@ LoginController = (
     vm.error   = false
     vm.loading = false
 
+    # TODO 
+    tcjwt = 'DUMMY-TCJWT'
+    tcsso = 'DUMMY-TCSSO'
     jwt = TokenService.getAppirioJWT()
     unless jwt
       vm.error = true
-
-    else if $location.search().retUrl
-      redirectUrl = $location.search().retUrl + '?jwt=' + encodeURIComponent(jwt)
+    else if $stateParams.retUrl
+      redirectUrl = $stateParams.retUrl + '?jwt=' + encodeURIComponent(jwt) + '&tcjwt=' + encodeURIComponent(tcjwt) + '&tcsso=' + encodeURIComponent(tcsso)
       $log.info 'redirect back to ' + redirectUrl
       $window.location = redirectUrl
-    
     else
         $state.go 'home'
 
   init = ->
     jwt = TokenService.getAppirioJWT()
-    if jwt && $location.search().retUrl
-      redirectUrl = $location.search().retUrl + '?jwt=' + encodeURIComponent(jwt)
+    if jwt && $stateParams.retUrl
+      redirectUrl = $stateParams.retUrl + '?jwt=' + encodeURIComponent(jwt)
       $log.info 'redirect back to ' + redirectUrl
       $window.location = redirectUrl
+    else if ($stateParams.handle || $stateParams.email) && $stateParams.password
+      id = $stateParams.handle || $stateParams.email
+      pass = $stateParams.password
+      loginOptions =
+        username: id
+        password: pass
+        error   : loginFailure
+        success : loginSuccess
+      AuthService.login loginOptions
     else
       vm.init = true
     vm
@@ -68,6 +79,7 @@ LoginController.$inject = [
   '$location'
   '$window'
   '$state'
+  '$stateParams'
   '$timeout'
   'AuthService'
   'TokenService'

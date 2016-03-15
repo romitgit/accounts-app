@@ -12,10 +12,8 @@ config = ($locationProvider, $stateProvider) ->
     controller  : 'HomeController as vm'
     template    : require('./views/home')()
   
-  # general routes
-  
   states['login'] =
-    url: '/login'
+    url: '/login?retUrl&handle&password'
     title: 'Login'
     controller  : 'LoginController as vm'
     template: require('./views/login')()

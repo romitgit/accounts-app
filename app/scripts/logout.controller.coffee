@@ -6,6 +6,7 @@ LogoutController = (
     $location
     $window
     $state
+    $stateParams
     $sce
     $timeout
     AuthService) ->
@@ -23,12 +24,12 @@ LogoutController = (
     $timeout () ->
       vm.apps[src] = src
       if vm.apps.member && vm.apps.connect
-        if $location.search().retUrl
-          redirectUrl = $location.search().retUrl
+        if $stateParams.retUrl
+          redirectUrl = $stateParams.retUrl
           $log.info 'redirect back to ' + redirectUrl
           $window.location = redirectUrl
         else
-          $log.info 'move to home'
+          $log.info 'moving to home'
           $state.go 'home'
       500
 
@@ -44,6 +45,7 @@ LogoutController.$inject = [
   '$location'
   '$window'
   '$state'
+  '$stateParams'
   '$sce'
   '$timeout'
   'AuthService'
