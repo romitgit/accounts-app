@@ -21,7 +21,7 @@ HomeController = (
   init = ->
     jwt = TokenService.getAppirioJWT()
     unless jwt
-      $state.go 'login'
+      $state.go 'CONNECT_LOGIN'
     else
       vm.account = TokenService.decodeToken().handle
     vm

@@ -9,14 +9,15 @@ LogoutController = (
     $stateParams
     $sce
     $timeout
-    AuthService) ->
+    AuthService
+    Constants) ->
   
   vm           = this
   vm.title     = 'Logout'
   vm.error     = false
   vm.loading   = false
   vm.apps      = {}
-  vm.logoutUrl = $sce.trustAsResourceUrl(process.env.APP_LOGOUT_URL)
+  vm.logoutUrl = $sce.trustAsResourceUrl(Constants.APP_LOGOUT_URL)
 
   $window.loaded = (src) ->
     $log.info 'logged out from '+src
@@ -34,7 +35,8 @@ LogoutController = (
       250
 
   init = ->
-    AuthService.logout()
+    AuthService.logout().then (res) ->
+      $log.debug res
     vm
 
   init()
@@ -49,6 +51,7 @@ LogoutController.$inject = [
   '$sce'
   '$timeout'
   'AuthService'
+  'Constants'
 ]
 
 angular.module('accounts').controller 'LogoutController', LogoutController

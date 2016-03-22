@@ -9,7 +9,9 @@ LoginController = (
     $stateParams
     $timeout
     AuthService
-    TokenService) ->
+    TokenService
+    Utils
+    Constants) ->
   
   vm           = this
   vm.username  = ''
@@ -17,16 +19,26 @@ LoginController = (
   vm.error     = false
   vm.loading   = false
   vm.init      = false
+  vm.retUrl    = $stateParams.retUrl
+  
+  vm.registrationUrl = 'https://connect.' + Constants.DOMAIN + '/registration'
+  vm.forgotPasswordUrl = 'https://connect.' + Constants.DOMAIN + '/forgot-password'
+
 
   vm.submit = ->
     vm.error   = false
     vm.loading = true
 
+    # Auth0 connection
+    # handle: "LDAP", email: "TC-User-Database"
+    conn = if Utils.isEmail(vm.username) then 'TC-User-Database' else 'LDAP'
+
     loginOptions =
-      username: vm.username
-      password: vm.password
-      error   : loginFailure
-      success : loginSuccess
+      username  : vm.username
+      password  : vm.password
+      connection: conn
+      error     : loginFailure
+      success   : loginSuccess
 
     AuthService.login loginOptions
 
@@ -38,23 +50,26 @@ LoginController = (
     vm.error   = false
     vm.loading = false
 
-    # TODO 
-    tcjwt = 'DUMMY-TCJWT'
-    tcsso = 'DUMMY-TCSSO'
     jwt = TokenService.getAppirioJWT()
     unless jwt
       vm.error = true
-    else if $stateParams.retUrl
-      redirectUrl = $stateParams.retUrl + '?jwt=' + encodeURIComponent(jwt) + '&tcjwt=' + encodeURIComponent(tcjwt) + '&tcsso=' + encodeURIComponent(tcsso)
+    else if vm.retUrl
+      redirectUrl = Utils.generateReturnUrl vm.retUrl
       $log.info 'redirect back to ' + redirectUrl
       $window.location = redirectUrl
     else
         $state.go 'home'
-
+  
+  vm.socialLogin = (provider) ->
+    callbackUrl = $state.href 'home', {}, { absolute: true }
+    authUrl = AuthService.generateSSOUrl provider, callbackUrl
+    $log.info "auth with: "+authUrl
+    $window.location = authUrl
+  
   init = ->
     jwt = TokenService.getAppirioJWT()
-    if jwt && $stateParams.retUrl
-      redirectUrl = $stateParams.retUrl + '?jwt=' + encodeURIComponent(jwt)
+    if jwt && vm.retUrl
+      redirectUrl = Utils.generateReturnUrl vm.retUrl
       $log.info 'redirect back to ' + redirectUrl
       $window.location = redirectUrl
     else if ($stateParams.handle || $stateParams.email) && $stateParams.password
@@ -83,6 +98,8 @@ LoginController.$inject = [
   '$timeout'
   'AuthService'
   'TokenService'
+  'Utils'
+  'Constants'
 ]
 
 angular.module('accounts').controller 'LoginController', LoginController

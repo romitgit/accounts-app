@@ -26,6 +26,24 @@ config = ($locationProvider, $stateProvider) ->
     template: require('./views/logout')()
     public: true
 
+  states['CONNECT_LOGIN'] =
+    url: '/connect?retUrl&handle&password'
+    controller  : 'LoginController as vm'
+    template: require('./views/connect/login')()
+    public: true
+
+  states['SSO_LOGIN'] =
+    url: '/sso-login/:org?retUrl'
+    template   : require('./views/connect/sso-login')()
+    controller : 'SSOLoginController as vm'
+    public: true
+
+  states['SSO_CALLBACK'] =
+    url: '/sso-callback'
+    template   : require('./views/connect/sso-callback')()
+    controller : 'SSOCallbackController as vm'
+    public: true
+  
   # This must be the last one in the list
   states['otherwise'] =
     url: '*path',

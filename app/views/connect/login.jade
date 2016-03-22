@@ -1,0 +1,38 @@
+main.layout-main.login-reg.flex.center.middle("role"="main" flush-height="lock")
+  login-reg-shell
+
+    header.flex.center.middle
+      img(src=require("../../images/connect/asp.svg"))
+
+
+    main.light-bg.elevated-bottom
+      h1 welcome back to topcoder
+
+      p.secondary Let's start building your app.  Login or create your account below to begin.
+
+      login
+        p.error.transition(ng-class="{ hide: !vm.error }") We can't find an account with the email / password you entered. Please try again.
+
+        .thankyou(ng-if="vm.activated")
+          p Thank you for activating your account. Please sign in below.
+
+        loader(ng-if="vm.loading")
+
+        form.flex.column.middle(ng-submit="vm.submit()" method="post")
+          input.widest(type="text" ng-model="vm.username" required=true placeholder="username" autofocus=true)
+
+          input.widest(type="password" ng-model="vm.password" required=true placeholder="password")
+
+          .forgot
+            a(href="{{vm.forgotPasswordUrl}}") Forgot Password?
+
+          button.action(type="submit") login
+
+          hr
+
+          p Or use your enterprise account
+
+          a.button(ui-sref="SSO_LOGIN({retUrl:vm.retUrl})") Single Sign On
+
+    footer
+      p Don't have an account? <a href="{{vm.registrationUrl}}">Register Now</a>

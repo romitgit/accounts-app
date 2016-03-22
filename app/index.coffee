@@ -13,6 +13,7 @@ require './app-run'
 
 require 'appirio-tech-ng-api-services'
 require 'appirio-tech-ng-auth'
+#require 'appirio-tech-ng-login-reg'
 
 requireContextFiles = (files) ->
   paths = files.keys()
