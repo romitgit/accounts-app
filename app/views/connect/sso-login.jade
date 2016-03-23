@@ -23,4 +23,4 @@ main.layout-main.login-reg.flex.center.middle("role"="main" flush-height="lock")
         p.success(ng-show="vm.success") Redirecting to {{ vm.org }} login...
 
     footer
-      p <a ui-sref="CONNECT_LOGIN">Back to Login</a>
+      p <a ui-sref="CONNECT_LOGIN({retUrl:vm.retUrl})">Back to Login</a>

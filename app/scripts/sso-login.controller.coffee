@@ -14,7 +14,7 @@ SSOLoginController = (
   vm.error         = ''
   vm.emailOrHandle = ''
   vm.org           = $stateParams.org
-  retUrl           = $stateParams.retUrl
+  vm.retUrl        = $stateParams.retUrl
 
   activate = ->
     if vm.org
@@ -36,7 +36,7 @@ SSOLoginController = (
 
   go = ->
     callbackUrl = $state.href 'SSO_CALLBACK', {}, { absolute: true }
-    state = retUrl
+    state = vm.retUrl
     unless state
       # TODO: home?
       state = $state.href 'home', {}, { absolute: true }
