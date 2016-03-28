@@ -42,6 +42,12 @@ config = (
     controller  : 'TCLoginController as vm'
     template: require('./views/tc/login')()
     public: true
+    
+  states['SOCIAL_CALLBACK'] =
+    url: '/social-callback?retUrl&userJWTToken&tcjwt&tcsso&status&message'
+    template   : require('./views/tc/social-callback')()
+    controller : 'SSOCallbackController as vm'
+    public: true
 
   states['CONNECT_LOGIN'] =
     url: '/connect?retUrl&handle&password'

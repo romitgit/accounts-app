@@ -35,16 +35,6 @@ SSOLoginController = (
       vm.error   = err.message
 
     AuthService.getSSOProvider(vm.emailOrHandle).then(success).catch(failure)
-
-
-  loginSuccess = ->
-    jwt = TokenService.getAppirioJWT()
-    if vm.retUrl
-      redirectUrl = Utils.generateReturnUrl vm.retUrl
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
-    else
-        $state.go 'home'
   
   go = ->
     state = vm.retUrl

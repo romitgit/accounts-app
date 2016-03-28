@@ -21,16 +21,17 @@ SSOCallbackController = (
   
   init = ->
     status = $stateParams.status
+    message = decodeURIComponent($stateParams.message)
     if status && status > 200 
-      $log.debug 'status:'+$stateParams.status
-      $log.debug 'message:'+$stateParams.message
+      $log.debug 'status:'+status
+      $log.debug 'message:'+message
       if status >= 500
-        $log.error status + ', ' + $stateParams.message
+        $log.error status + ', ' + message
         vm.error = 'Unexpected error occurred.'
       else if status >= 400
-        vm.error = $stateParams.message
+        vm.error = message
       else
-        $log.warn status + ', ' + $stateParams.message
+        $log.warn status + ', ' + message
       return vm
   
     TokenService.setAppirioJWT $stateParams.userJWTToken
