@@ -1,3 +1,12 @@
+  
+
 main.layout-main.login("role"="main" layout-main=true flush-height=true)
 
-  p Now redirecting...
+  login-reg-shell
+
+    p.error.transition(ng-show="vm.hasError()") {{vm.error}}
+
+    p(ng-show="!vm.hasError()") Now redirecting...
+
+    footer(ng-show="vm.hasError()")
+      p <a ui-sref="CONNECT_LOGIN({retUrl:vm.retUrl})">Back to Login</a>

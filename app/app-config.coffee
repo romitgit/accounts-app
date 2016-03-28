@@ -56,7 +56,7 @@ config = (
     public: true
 
   states['SSO_CALLBACK'] =
-    url: '/sso-callback'
+    url: '/sso-callback?retUrl&userJWTToken&tcjwt&tcsso&status&message'
     template   : require('./views/connect/sso-callback')()
     controller : 'SSOCallbackController as vm'
     public: true

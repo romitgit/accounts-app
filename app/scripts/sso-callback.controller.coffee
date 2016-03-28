@@ -3,6 +3,7 @@
 SSOCallbackController = (
   $log
   $state
+  $stateParams
   $window
   $cookies
   $http
@@ -12,36 +13,33 @@ SSOCallbackController = (
   Utils) ->
   
   vm = this
-
-  authenticate = (token, refreshToken) ->
-    TokenService.setAuth0Token token
-    TokenService.setAuth0RefreshToken refreshToken
-
-    success = (jwt) ->
-      TokenService.setAppirioJWT jwt
-      TokenService.setSSOToken $cookies.get('tcsso') || ''
-      redirectUrl = Utils.generateReturnUrl vm.state
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
-
-    AuthService.getNewJWT()
-      .then success
-      .catch (res) ->
-        $log.error res
+  vm.retUrl = encodeURIComponent($stateParams.retUrl)
+  vm.error = null
+  
+  vm.hasError = ->
+    !!vm.error
   
   init = ->
-    $log.info '***** LOCATION ******'
-    $log.info $window.location
-    params = Utils.parseQuery $window.location.hash.substring(1)
-    token        = params.id_token
-    refreshToken = params.refresh_token
-    # TODO: need to check state
-    vm.state     = params.state
-    $log.debug 'Auth0: token: '+token
-    $log.debug 'Auth0: refreshToken: '+refreshToken
-    $log.debug 'Auth0: state: '+vm.state
-
-    authenticate(token, refreshToken)
+    status = $stateParams.status
+    if status && status > 200 
+      $log.debug 'status:'+$stateParams.status
+      $log.debug 'message:'+$stateParams.message
+      if status >= 500
+        $log.error status + ', ' + $stateParams.message
+        vm.error = 'Unexpected error occurred.'
+      else if status >= 400
+        vm.error = $stateParams.message
+      else
+        $log.warn status + ', ' + $stateParams.message
+      return vm
+  
+    TokenService.setAppirioJWT $stateParams.userJWTToken
+    TokenService.getAuth0Token $stateParams.tcjwt || ''
+    TokenService.setSSOToken $stateParams.tcsso || ''
+    
+    redirectUrl = Utils.generateReturnUrl $stateParams.retUrl
+    $log.info 'redirect back to ' + redirectUrl
+    $window.location = redirectUrl
     vm
   
   init()
@@ -49,6 +47,7 @@ SSOCallbackController = (
 SSOCallbackController.$inject = [
   '$log'
   '$state'
+  '$stateParams'
   '$window'
   '$cookies'
   '$http'
