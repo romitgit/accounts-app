@@ -13,16 +13,17 @@
       }
     </style>
 
-  </head>
-  <body>
-    <ui-view>
     <script src="https://use.typekit.net/jjo6pal.js"></script>
     <script>
       try {
-        Typekit.load({ async: true });
+        Typekit.load({ async: false });
       } catch(e){
         // noop
       }
     </script>
+
+  </head>
+  <body>
+    <ui-view>
   </body>
 </html>

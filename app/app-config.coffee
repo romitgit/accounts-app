@@ -1,5 +1,16 @@
 
-config = ($locationProvider, $stateProvider) ->
+`import Auth0 from "auth0-js";`
+
+'use strict'
+
+config = (
+  $locationProvider
+  $stateProvider
+  authProvider
+  AUTH0_DOMAIN
+  AUTH0_CLIENT_ID
+  ) ->
+  
   states = {}
 
   $locationProvider.html5Mode true
@@ -24,6 +35,12 @@ config = ($locationProvider, $stateProvider) ->
     title: 'Logout'
     controller  : 'LogoutController as vm'
     template: require('./views/logout')()
+    public: true
+
+  states['MEMBER_LOGIN'] =
+    url: '/tc?retUrl&handle&password'
+    controller  : 'TCLoginController as vm'
+    template: require('./views/tc/login')()
     public: true
 
   states['CONNECT_LOGIN'] =
@@ -52,8 +69,22 @@ config = ($locationProvider, $stateProvider) ->
 
   for key, state of states
     $stateProvider.state key, state
+  
+  # Setup Auth0
+  authProvider.init({
+    domain: AUTH0_DOMAIN
+    clientID: AUTH0_CLIENT_ID
+    sso: false
+  }, Auth0)
 
-config.$inject = ['$locationProvider', '$stateProvider']
+
+config.$inject = [
+  '$locationProvider'
+  '$stateProvider'
+  'authProvider'
+  'AUTH0_DOMAIN'
+  'AUTH0_CLIENT_ID'
+]
 
 angular.module('accounts').config config
 

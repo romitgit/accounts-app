@@ -25,9 +25,13 @@ SSOCallbackController = (
       $window.location = redirectUrl
 
     AuthService.getNewJWT()
-      .then(success)
+      .then success
+      .catch (res) ->
+        $log.error res
   
   init = ->
+    $log.info '***** LOCATION ******'
+    $log.info $window.location
     params = Utils.parseQuery $window.location.hash.substring(1)
     token        = params.id_token
     refreshToken = params.refresh_token

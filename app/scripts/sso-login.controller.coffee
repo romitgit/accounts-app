@@ -5,7 +5,9 @@ SSOLoginController = (
   $state
   $stateParams
   $window
+  $authService
   AuthService
+  TokenService
   Utils) ->
   
   vm               = this
@@ -34,13 +36,24 @@ SSOLoginController = (
 
     AuthService.getSSOProvider(vm.emailOrHandle).then(success).catch(failure)
 
+
+  loginSuccess = ->
+    jwt = TokenService.getAppirioJWT()
+    if vm.retUrl
+      redirectUrl = Utils.generateReturnUrl vm.retUrl
+      $log.info 'redirect back to ' + redirectUrl
+      $window.location = redirectUrl
+    else
+        $state.go 'home'
+  
   go = ->
     callbackUrl = $state.href 'SSO_CALLBACK', {}, { absolute: true }
     state = vm.retUrl
     unless state
       # TODO: home?
       state = $state.href 'home', {}, { absolute: true }
-    authUrl     = Utils.generateSSOUrl vm.org, callbackUrl, state
+      
+    authUrl = Utils.generateSSOUrl vm.org, callbackUrl, state
     $log.info 'redirecting to ' + authUrl
     $window.location.href = authUrl;
   
@@ -53,7 +66,9 @@ SSOLoginController.$inject = [
   '$state'
   '$stateParams'
   '$window'
+  '$authService'
   'AuthService'
+  'TokenService'
   'Utils'
 ]
 

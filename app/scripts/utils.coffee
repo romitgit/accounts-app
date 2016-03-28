@@ -2,6 +2,7 @@
 
 Utils = (
   $log
+  $window
   API_URL
   AUTH0_DOMAIN
   AUTH0_CLIENT_ID
@@ -57,14 +58,21 @@ Utils = (
     v2sso = TokenService.getSSOToken() || ''
     returnUrlBase + '?jwt=' + encodeURIComponent(v3jwt) + '&tcjwt=' + encodeURIComponent(v2jwt) + '&tcsso=' + encodeURIComponent(v2sso)
 
+  # porting from Helpers in topcoder-app
+  setupLoginEventMetrics = (id) ->
+    if $window._kmq
+      $window._kmq.push ['identify', id]
+
   # expose functions
   isEmail           : isEmail
   parseQuery        : parseQuery
   generateSSOUrl    : generateSSOUrl
   generateReturnUrl : generateReturnUrl
+  setupLoginEventMetrics : setupLoginEventMetrics
 
 Utils.$inject = [
   '$log'
+  '$window'
   'API_URL'
   'AUTH0_DOMAIN'
   'AUTH0_CLIENT_ID'

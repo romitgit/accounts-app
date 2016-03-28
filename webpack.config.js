@@ -20,7 +20,7 @@ config = require('appirio-tech-webpack-config')({
   entry: {
     app: './app/index'
   },
-  template: './app/index.html'
+  template: './app/index.jade'
 });
 
 module.exports = config;
