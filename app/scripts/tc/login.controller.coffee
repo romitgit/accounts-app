@@ -37,7 +37,7 @@ TCLoginController = (
     vm.loginErrors.USERNAME_NONEXISTANT = false
     vm.loginErrors.WRONG_PASSWORD = false
     vm.loginErrors.SOCIAL_LOGIN_ERROR = false
-    ###
+    
     loginOptions =
       popup     : true
       connection: provider
@@ -54,7 +54,7 @@ TCLoginController = (
     authUrl = AuthService.generateSSOUrl provider, callbackUrl
     $log.info 'redirecting to ' + authUrl
     $window.location.href = authUrl;
-
+    ###
 
   vm.login = ->
     # loading

@@ -45,6 +45,7 @@ AuthService = (
         d.resolve res
       (error) ->
         d.reject error
+      'Auth0'
     )
     d.promise
 
