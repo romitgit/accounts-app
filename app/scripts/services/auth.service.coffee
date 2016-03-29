@@ -79,10 +79,13 @@ AuthService = (
     TokenService.setSSOToken tcsso
 
   login = (options) ->
-    success = options.success || angular.noop
-    error = options.error || angular.noop
+    opt = angular.extend {}, options 
+    success = opt.success || angular.noop
+    error = opt.error || angular.noop
+    delete opt.success
+    delete opt.error
 
-    auth0Signin(options)
+    auth0Signin(opt)
       .then(setAuth0Tokens)
       .then(getNewJWT)
       .then(setJWT)
