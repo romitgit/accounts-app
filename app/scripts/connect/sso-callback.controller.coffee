@@ -40,8 +40,11 @@ SSOCallbackController = (
     TokenService.setSSOToken $stateParams.tcsso || ''
     
     redirectUrl = Utils.generateReturnUrl $stateParams.retUrl
-    $log.info 'redirect back to ' + redirectUrl
-    $window.location = redirectUrl
+    unless redirectUrl
+      vm.error = 'Invalid URL is assigned to the return-URL.'
+    else
+      $log.info 'redirect back to ' + redirectUrl
+      $window.location = redirectUrl
     vm
   
   init()
