@@ -19,7 +19,8 @@ ConnectLoginController = (
   vm.error     = false
   vm.loading   = false
   vm.init      = false
-  vm.retUrl    = $stateParams.retUrl
+  vm.$stateParams = $stateParams
+  vm.retUrl    = decodeURIComponent($stateParams.retUrl)
   
   vm.registrationUrl = 'https://connect.' + Constants.DOMAIN + '/registration'
   vm.forgotPasswordUrl = 'https://connect.' + Constants.DOMAIN + '/forgot-password'

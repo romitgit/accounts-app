@@ -7,6 +7,7 @@ Utils = (
   AUTH0_DOMAIN
   AUTH0_CLIENT_ID
   TokenService
+  Constants
   ) ->
 
   # returns true if the value is a valid email address  
@@ -19,7 +20,13 @@ Utils = (
     URL_PATTERN = /^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?/i
     URL_PATTERN.test value
   
-
+  # encode object
+  encodeParams = (params, includeNull) ->
+    result = {}
+    for p,v of params
+      if v || includeNull then result[p] = encodeURIComponent(v) 
+    result
+  
   # parseQuery("p1=v1&p2=p3&p4")
   # returns {p1:v1, p2:v2, p3:null}
   parseQuery = (query) ->
@@ -57,12 +64,26 @@ Utils = (
   # format:
   #   returnUrlBase?jwt={V3_JWT}&tcjwt={V2_JWT}&tcsso={V2_SSO_TOKEN}
   generateReturnUrl = (returnUrlBase) ->
+    unless validateUrl returnUrlBase
+      $log.error 'Invalid URL: ' + returnUrlBase
+      return
     v3jwt = TokenService.getAppirioJWT()
     unless v3jwt
       $log.error 'JWT is not found in the storage.'
     v2jwt = TokenService.getAuth0Token() || ''
     v2sso = TokenService.getSSOToken() || ''
     returnUrlBase + '?jwt=' + encodeURIComponent(v3jwt) + '&tcjwt=' + encodeURIComponent(v2jwt) + '&tcsso=' + encodeURIComponent(v2sso)
+
+  # validate
+  validateUrl = (returnUrlBase) ->
+    unless isUrl returnUrlBase
+      return false
+    
+    parser = document?.createElement 'a'
+    if parser
+      parser.href = returnUrlBase
+      return parser.hostname.toLowerCase().endsWith(Constants.DOMAIN)
+    false
 
   # porting from Helpers in topcoder-app
   setupLoginEventMetrics = (id) ->
@@ -72,6 +93,7 @@ Utils = (
   # expose functions
   isEmail           : isEmail
   isUrl             : isUrl
+  encodeParams      : encodeParams
   parseQuery        : parseQuery
   generateSSOUrl    : generateSSOUrl
   generateReturnUrl : generateReturnUrl
@@ -84,6 +106,7 @@ Utils.$inject = [
   'AUTH0_DOMAIN'
   'AUTH0_CLIENT_ID'
   'TokenService'
+  'Constants'
 ]
 
 angular.module('accounts').factory 'Utils', Utils

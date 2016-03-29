@@ -18,13 +18,16 @@ LogoutController = (
   vm.loading   = false
   vm.apps      = {}
   vm.logoutUrl = $sce.trustAsResourceUrl(Constants.APP_LOGOUT_URL)
+  vm.logoutUrlMember = $sce.trustAsResourceUrl(Constants.MEMBER_LOGOUT_URL)
+  vm.logoutUrlConnect = $sce.trustAsResourceUrl(Constants.CONNECT_LOGOUT_URL)
 
   $window.loaded = (src) ->
     $log.info 'logged out from '+src
     $log.info vm.apps
-    $timeout () ->
+    
+    handler = () ->
       vm.apps[src] = src
-      if vm.apps.member && vm.apps.connect
+      if vm.apps.member && vm.apps.connect && vm.apps.sample
         if $location.search().retUrl
           redirectUrl = $location.search().retUrl
           $log.info 'redirect back to ' + redirectUrl
@@ -32,7 +35,8 @@ LogoutController = (
         else
           $log.info 'move to home'
           $state.go 'home'
-      250
+    
+    $timeout handler, 250
 
   init = ->
     AuthService.logout().then (res) ->

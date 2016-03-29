@@ -9,4 +9,4 @@ main.layout-main.login("role"="main" layout-main=true flush-height=true)
     p(ng-show="!vm.hasError()") Now redirecting...
 
     footer(ng-show="vm.hasError()")
-      p <a ui-sref="CONNECT_LOGIN({retUrl:vm.retUrl})">Back to Login</a>
+      p <a ui-sref="CONNECT_LOGIN({retUrl:vm.$stateParams.retUrl})">Back to Login</a>

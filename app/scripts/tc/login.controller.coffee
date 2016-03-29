@@ -19,7 +19,8 @@ TCLoginController = (
   vm = this
   vm.loading   = false
   vm.init      = false
-  vm.retUrl    = $stateParams.retUrl
+  vm.retUrl    =  decodeURIComponent($stateParams.retUrl)
+  
   vm.registrationUrl      = 'https://www.' + Constants.DOMAIN + '/register/'
   vm.forgotPasswordUrl    = 'https://www.' + Constants.DOMAIN + '/reset-password/'
   vm.accountInactiveUrl   = 'https://www.' + Constants.DOMAIN + '/account-inactive/'

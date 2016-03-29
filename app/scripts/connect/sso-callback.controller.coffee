@@ -14,6 +14,7 @@ SSOCallbackController = (
   
   vm = this
   vm.retUrl = encodeURIComponent($stateParams.retUrl)
+  vm.$stateParams = $stateParams
   vm.error = null
   
   vm.hasError = ->

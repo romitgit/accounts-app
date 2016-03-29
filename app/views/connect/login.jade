@@ -32,7 +32,7 @@ main.layout-main.login-reg.flex.center.middle("role"="main" flush-height="lock")
 
           p Or use your enterprise account
 
-          a.button(ui-sref="SSO_LOGIN({retUrl:vm.retUrl})") Single Sign On
+          a.button(ui-sref="SSO_LOGIN({retUrl:vm.$stateParams.retUrl})") Single Sign On
 
     footer
       p Don't have an account? <a href="{{vm.registrationUrl}}">Register Now</a>

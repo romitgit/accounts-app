@@ -28,9 +28,9 @@ LoginController = (
   
   init = ->
     if isConnectLogin()
-      $state.go 'CONNECT_LOGIN', $stateParams
+      $state.go 'CONNECT_LOGIN', Utils.encodeParams $stateParams
     else 
-      $state.go 'MEMBER_LOGIN', $stateParams      
+      $state.go 'MEMBER_LOGIN', Utils.encodeParams $stateParams      
     vm
   
   init()
