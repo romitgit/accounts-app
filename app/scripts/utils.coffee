@@ -9,10 +9,16 @@ Utils = (
   TokenService
   ) ->
 
-  # returns true if the value is email address  
+  # returns true if the value is a valid email address  
   isEmail = (value) ->
     EMAIL_PATTERN = /^(([^<>()[\]\.,:\s@\"]+(\.[^<>()[\]\.,:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,:\s@\"]+\.)+[^<>()[\]\.,:\s@\"]{2,})$/i
     EMAIL_PATTERN.test value
+
+  # returns true if the value is a valid HTTP(s) URL
+  isUrl = (value) ->
+    URL_PATTERN = /^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?/i
+    URL_PATTERN.test value
+  
 
   # parseQuery("p1=v1&p2=p3&p4")
   # returns {p1:v1, p2:v2, p3:null}
@@ -65,6 +71,7 @@ Utils = (
 
   # expose functions
   isEmail           : isEmail
+  isUrl             : isUrl
   parseQuery        : parseQuery
   generateSSOUrl    : generateSSOUrl
   generateReturnUrl : generateReturnUrl

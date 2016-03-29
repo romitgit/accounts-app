@@ -24,7 +24,7 @@ config = (
     template    : require('./views/home')()
   
   states['login'] =
-    url: '/login?retUrl&handle&password'
+    url: '/login?app&retUrl&handle&password'
     title: 'Login'
     controller  : 'LoginController as vm'
     template: require('./views/login')()
@@ -51,7 +51,7 @@ config = (
 
   states['CONNECT_LOGIN'] =
     url: '/connect?retUrl&handle&password'
-    controller  : 'LoginController as vm'
+    controller  : 'ConnectLoginController as vm'
     template: require('./views/connect/login')()
     public: true
 
@@ -76,7 +76,7 @@ config = (
   for key, state of states
     $stateProvider.state key, state
   
-  # Setup Auth0
+  # Setup Auth0 (for Social Login)
   authProvider.init({
     domain: AUTH0_DOMAIN
     clientID: AUTH0_CLIENT_ID

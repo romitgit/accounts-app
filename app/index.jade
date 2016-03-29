@@ -20,15 +20,18 @@ html(ng-app='accounts')
           var path = window.location.pathname;
           if (path && path.length>0) {
             app = path.substring(1);
-            $('body').addClass(app);
           }
+          if (app != 'tc' && app != 'connect') {
+            app = 'tc'
+          }
+          $('body').addClass(app);
         });
       });
-        
+    
   body
     ui-view.view-container
     
-    div(ui-view="footer")
+    div(ui-view="footer", ng-controller="FooterController as vm")
       .account-footer
         p.copyright-notice &copy; {{vm.currentYear}} Topcoder. All Rights Reserved
 

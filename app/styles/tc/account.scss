@@ -235,7 +235,9 @@
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  padding: 0 0 30px;
+  background-color: $gray-lighter;
+  //padding: 0 0 30px;
+  padding: 20px 0 20px 30px;
   .copyright-notice {
     color: $gray-dark;
   }
