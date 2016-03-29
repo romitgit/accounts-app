@@ -41,7 +41,7 @@ SSOLoginController = (
     unless state
       # TODO: home?
       state = $state.href 'home', {}, { absolute: true }
-    callbackUrl = $state.href 'SSO_CALLBACK', {retUrl : encodeURIComponent(state)}, { absolute: true }
+    callbackUrl = $state.href 'SSO_CALLBACK', {retUrl : state}, { absolute: true }
     authUrl = AuthService.generateSSOUrl vm.org, callbackUrl
     $log.info 'redirecting to ' + authUrl
     $window.location.href = authUrl;
