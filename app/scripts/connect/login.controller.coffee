@@ -59,7 +59,7 @@ ConnectLoginController = (
       $log.info 'redirect back to ' + redirectUrl
       $window.location = redirectUrl
     else
-        $state.go 'home'
+      $state.go 'home'
   
   vm.socialLogin = (provider) ->
     callbackUrl = $state.href 'home', {}, { absolute: true }
