@@ -11,6 +11,12 @@ if (process.env.ENV == 'DEV') {
   process.env.MEMBER_LOGOUT_URL = 'https://www.topcoder-dev.com/logout.html';
   process.env.CONNECT_LOGOUT_URL = 'https://connect.topcoder-dev.com/logout.html';
 }
+else if (process.env.ENV == 'QA') {
+  process.env.DOMAIN = 'topcoder-qa.com';
+  process.env.APP_LOGOUT_URL = 'https://sample.topcoder-qa.com/logout.html';
+  process.env.MEMBER_LOGOUT_URL = 'https://www.topcoder-qa.com/logout.html';
+  process.env.CONNECT_LOGOUT_URL = 'https://connect.topcoder-qa.com/logout.html';
+}
 else {
    // for local dev
   process.env.DOMAIN = 'topcoder-dev.com';
