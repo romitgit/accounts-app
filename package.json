@@ -8,7 +8,6 @@
     "dev": "webpack-dev-server --history-api-fallback --dev --inline --progress --port 3000",
     "prod": "webpack-dev-server --history-api-fallback --prod --inline --progress --port 3000",
     "build:connector": "webpack --bail --progress -p --dev --config webpack.config.connector.js",
-    "dev:connector": "webpack-dev-server --history-api-fallback --dev --inline --progress --port 3001 --config webpack.config.connector.js"
   },
   "dependencies": {
     "angular": "^1.4.8",

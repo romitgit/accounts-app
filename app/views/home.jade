@@ -1,6 +1,9 @@
 p
   | Hello {{ vm.account }}
 
+p
+  | Hello {{ vm.iframeAccount }}
+
 p(ng-show='vm.isLoggedIn()')
   button.action(ng-click='vm.logout()') logout
 
