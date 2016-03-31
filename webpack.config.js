@@ -31,7 +31,8 @@ config = require('appirio-tech-webpack-config')({
   entry: {
     app: './app/index'
   },
-  template: './app/index.jade'
+  template: './app/index.jade',
+  favicon: './app/images/favicon.ico'
 });
 
 module.exports = config;

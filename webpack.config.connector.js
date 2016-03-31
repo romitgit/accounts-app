@@ -12,7 +12,7 @@ const config = require('appirio-tech-webpack-config')({
 module.exports = Object.assign(config, {
   entry: path.join(__dirname, '/connector/connector-embed.js'),
   output: {
-    path: path.join(__dirname, 'dist/connector-embed'),
+    path: path.join(__dirname, 'dist/'),
     publicPath: '',
     filename: 'bundle.js'
   },
@@ -20,7 +20,7 @@ module.exports = Object.assign(config, {
     new HtmlWebpackPlugin({
       inject: false,
       template: path.join(__dirname, '/connector/index.jade'),
-      filename: 'index.html'
+      filename: 'connector.html'
     })
   ]
 })
