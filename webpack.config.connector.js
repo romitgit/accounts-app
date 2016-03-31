@@ -14,7 +14,7 @@ module.exports = Object.assign(config, {
   output: {
     path: path.join(__dirname, 'dist/'),
     publicPath: '',
-    filename: 'bundle.js'
+    filename: 'connector.js'
   },
   plugins: [
     new HtmlWebpackPlugin({
