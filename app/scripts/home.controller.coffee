@@ -1,9 +1,13 @@
 'use strict'
 
+{ getToken } = require '../../connector/connector-wrapper.js'
+{ decodeToken } = require '../../core/token.js'
+
 HomeController = (
   $log
   $rootScope
   $state
+  $scope
   AuthService
   TokenService) ->
   
@@ -24,6 +28,11 @@ HomeController = (
       $state.go 'MEMBER_LOGIN'
     else
       vm.account = TokenService.decodeToken().handle
+
+    getToken().then (token) ->
+      $scope.$apply ->
+        vm.iframeAccount = decodeToken(token).handle
+
     vm
   
   init()
@@ -33,6 +42,7 @@ HomeController.$inject = [
   '$log'
   '$rootScope'
   '$state'
+  '$scope'
   'AuthService'
   'TokenService'
 ]

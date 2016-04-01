@@ -1,5 +1,7 @@
 'use strict'
 
+{ logout } = require '../../core/auth.js'
+
 LogoutController = (
     $log
     $rootScope
@@ -17,9 +19,6 @@ LogoutController = (
   vm.error     = false
   vm.loading   = false
   vm.apps      = {}
-  vm.logoutUrl = $sce.trustAsResourceUrl(Constants.APP_LOGOUT_URL)
-  vm.logoutUrlMember = $sce.trustAsResourceUrl(Constants.MEMBER_LOGOUT_URL)
-  vm.logoutUrlConnect = $sce.trustAsResourceUrl(Constants.CONNECT_LOGOUT_URL)
 
   $window.loaded = (src) ->
     $log.info 'logged out from '+src
@@ -39,7 +38,7 @@ LogoutController = (
     $timeout handler, 250
 
   init = ->
-    AuthService.logout().then (res) ->
+    logout().then (res) ->
       $log.debug res
     vm
 
