@@ -7,24 +7,17 @@ if (process.env.TRAVIS_BRANCH == 'qa') process.env.ENV = 'QA'
 
 if (process.env.ENV == 'DEV') {
   process.env.DOMAIN = 'topcoder-dev.com';
-  process.env.APP_LOGOUT_URL = 'https://sample.topcoder-dev.com/logout.html';
-  process.env.MEMBER_LOGOUT_URL = 'https://www.topcoder-dev.com/logout.html';
-  process.env.CONNECT_LOGOUT_URL = 'https://connect.topcoder-dev.com/logout.html';
+  process.env.CONNECTOR_URL = 'https://accounts.topcoder-dev.com/connector.html';
 }
 else if (process.env.ENV == 'QA') {
   process.env.DOMAIN = 'topcoder-qa.com';
-  process.env.APP_LOGOUT_URL = 'https://sample.topcoder-qa.com/logout.html';
-  process.env.MEMBER_LOGOUT_URL = 'https://www.topcoder-qa.com/logout.html';
-  process.env.CONNECT_LOGOUT_URL = 'https://connect.topcoder-qa.com/logout.html';
+  process.env.CONNECTOR_URL = 'https://accounts.topcoder-qa.com/connector.html';
 }
 else {
    // for local dev
   process.env.DOMAIN = 'topcoder-dev.com';
-  process.env.APP_LOGOUT_URL = 'http://local.sample.topcoder-dev.com:3100/logout';
-  process.env.MEMBER_LOGOUT_URL = 'https://www.topcoder-dev.com/logout.html';
-  process.env.CONNECT_LOGOUT_URL = 'https://connect.topcoder-dev.com/logout.html';
+  process.env.CONNECTOR_URL = 'http://local.accounts.topcoder-dev.com:8000/connector.html';
 }
-
 
 config = require('appirio-tech-webpack-config')({
   dirname: __dirname,

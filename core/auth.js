@@ -74,7 +74,9 @@ export function logout() {
   }
 
   return fetchJSON(url, config)
-    .catch(console.error)
+    .catch(function(error){
+      console.error(error)
+    })
 }
 
 function auth0Signin(options) {

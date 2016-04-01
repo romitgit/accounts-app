@@ -67,12 +67,15 @@ Utils = (
     unless validateUrl returnUrlBase
       $log.error 'Invalid URL: ' + returnUrlBase
       return
+    returnUrlBase
+    ###
     v3jwt = TokenService.getAppirioJWT()
     unless v3jwt
       $log.error 'JWT is not found in the storage.'
     v2jwt = TokenService.getAuth0Token() || ''
     v2sso = TokenService.getSSOToken() || ''
     returnUrlBase + '?jwt=' + encodeURIComponent(v3jwt) + '&tcjwt=' + encodeURIComponent(v2jwt) + '&tcsso=' + encodeURIComponent(v2sso)
+    ###
 
   # validate
   validateUrl = (returnUrlBase) ->

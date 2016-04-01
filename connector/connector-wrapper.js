@@ -1,4 +1,4 @@
-import { GET_TOKEN_REQUEST, GET_TOKEN_SUCCESS, GET_TOKEN_FAILURE, REFRESH_TOKEN_REQUEST, REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE } from '../core/constants.js'
+import { GET_TOKEN_REQUEST, GET_TOKEN_SUCCESS, GET_TOKEN_FAILURE, REFRESH_TOKEN_REQUEST, REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, CONNECTOR_URL } from '../core/constants.js'
 import iframe from './iframe.js'
 
 let loading = new Promise(function(resolve, reject) {
@@ -23,7 +23,7 @@ const proxyCall = function(REQUEST, SUCCESS, FAILURE, params = {}) {
 
       const payload = Object.assign({}, { type: REQUEST }, params)
 
-      iframe.contentWindow.postMessage(payload, 'http://local.accounts.topcoder-dev.com:8000')
+      iframe.contentWindow.postMessage(payload, CONNECTOR_URL)
     })
   }
 
@@ -42,4 +42,8 @@ export const getToken = function () {
 export const refreshToken = function () {
   return proxyCall(REFRESH_TOKEN_REQUEST, REFRESH_TOKEN_SUCCESS, REFRESH_TOKEN_FAILURE)
     .then( data => data.token )
+}
+
+export const logout = function () {
+  return proxyCall(LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE)
 }

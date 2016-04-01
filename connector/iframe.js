@@ -1,6 +1,8 @@
+import { CONNECTOR_URL } from '../core/constants.js'
+
 const iframe = document.createElement('iframe')
 
-iframe.src = 'http://local.accounts.topcoder-dev.com:8000/connector.html'
+iframe.src = CONNECTOR_URL
 
 document.body.appendChild(iframe)
 
