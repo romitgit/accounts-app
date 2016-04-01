@@ -3,7 +3,7 @@
 import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
-import { deleteAllTokens, readCookie, isTokenExpired } from './token.js'
+import { clearTokens, readCookie, isTokenExpired } from './token.js'
 import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_SSO, V2_COOKIE, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
 import fetch from 'isomorphic-fetch'
 
@@ -62,6 +62,9 @@ export function getToken() {
 
 export function logout() {
   const jwt = localStorage.getItem(TC_JWT) || ''
+
+  clearTokens()
+
   const url = API_URL + '/v3/authorizations/1'
   const config = {
     method: 'DELETE',
@@ -71,7 +74,6 @@ export function logout() {
   }
 
   return fetchJSON(url, config)
-    .then(deleteAllTokens)
     .catch(console.error)
 }
 

@@ -23,7 +23,7 @@ const proxyCall = function(REQUEST, SUCCESS, FAILURE, params = {}) {
 
       const payload = Object.assign({}, { type: REQUEST }, params)
 
-      iframe.contentWindow.postMessage(payload, 'http://localhost:8000')
+      iframe.contentWindow.postMessage(payload, 'http://local.accounts.topcoder-dev.com:8000')
     })
   }
 

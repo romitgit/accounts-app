@@ -1,5 +1,7 @@
 'use strict'
 
+{ logout } = require '../../core/auth.js'
+
 LogoutController = (
     $log
     $rootScope
@@ -39,7 +41,7 @@ LogoutController = (
     $timeout handler, 250
 
   init = ->
-    AuthService.logout().then (res) ->
+    logout().then (res) ->
       $log.debug res
     vm
 
