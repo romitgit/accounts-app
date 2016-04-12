@@ -16,15 +16,9 @@ AuthService = (
 
   auth0Signin = (options) ->
 
-    $log.info "*** config ***"
-    $log.info auth0.config
-    
     params =
-      #client_id     : AUTH0_CLIENT_ID
       scope         : 'openid profile offline_access'
-      #response_type : 'token'
       connection    : 'LDAP'
-      #device        : 'Browser'
 
     angular.extend params, options
     $log.info "*** params ***"
@@ -40,8 +34,7 @@ AuthService = (
           accessToken : access_token
           state : state
           refreshToken : refresh_token
-        $log.info '*** res ***'
-        $log.info res
+        $log.debug res
         d.resolve res
       (error) ->
         d.reject error
@@ -67,6 +60,8 @@ AuthService = (
       data: params
 
     success = (res) ->
+      # Zendesk jwt
+      TokenService.setZendeskToken res.data?.result?.content?.zendeskJwt
       res.data?.result?.content?.token
 
     $http(config).then (success)

@@ -53,15 +53,26 @@ function fetchJSON(url, options) {
 }
 
 export function isLoggedIn() {
-  return localStorage.getItem(TC_JWT) !== null
+  return getToken() !== null
 }
 
 export function getToken() {
-  return localStorage.getItem(TC_JWT)
+  var token = localStorage.getItem(TC_JWT)
+  if(token) {
+    token = token.replace(/^"|"$/g, '')
+  }
+  return token
 }
 
 export function logout() {
-  const jwt = localStorage.getItem(TC_JWT) || ''
+  
+  //var API_URL = "http://local.topcoder-dev.com:8080"  
+  var token = getToken()
+  if (!token || isTokenExpired(token, 300)) {
+    refreshToken().catch( error => console.error(error) )
+  }
+  
+  const jwt = getToken() || ''
 
   clearTokens()
 
@@ -149,7 +160,8 @@ function setSSOToken() {
 // refreshPromise is needed outside the function scope to allow multiple calls
 // to chain off an existing promise
 export function refreshToken() {
-  const token = localStorage.getItem(TC_JWT)
+  //var API_URL = "http://local.topcoder-dev.com:8080"
+  const token = getToken()
   const url = API_URL + '/v3/authorizations/1'
   const config = {
     headers: {

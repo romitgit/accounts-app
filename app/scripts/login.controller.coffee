@@ -2,9 +2,9 @@
 
 LoginController = (
   $log
-  $window
   $state
   $stateParams
+  Constants
   Utils) ->
   
   vm = this
@@ -29,7 +29,7 @@ LoginController = (
   init = ->
     if isConnectLogin()
       $state.go 'CONNECT_LOGIN', Utils.encodeParams $stateParams
-    else 
+    else
       $state.go 'MEMBER_LOGIN', Utils.encodeParams $stateParams      
     vm
   
@@ -38,9 +38,9 @@ LoginController = (
 
 LoginController.$inject = [
   '$log'
-  '$window'
   '$state'
   '$stateParams'
+  'Constants'
   'Utils'
 ]
 

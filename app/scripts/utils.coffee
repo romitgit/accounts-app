@@ -40,6 +40,16 @@ Utils = (
 
     parseKV kv for kv in query.split '&'
     params
+  
+  # redirect to the given URL
+  redirectTo = (url) ->
+    unless validateUrl url
+      $log.error 'Invalid URL: ' + url
+      return 'Invalid URL: ' + url
+    
+    $log.info 'redirect to ' + url
+    $window.location = url
+    return undefined # no error
 
   # generate URL to Auth0 authentication endpoint with parameters.
   # https://auth0.com/docs/protocols#oauth-for-native-clients-and-javascript-in-the-browser
@@ -56,27 +66,19 @@ Utils = (
       "&device=browser"
     ].join('')
     
-  # generate URL to return application with tokens.
-  # The url is generated with values from:
-  # - TokenService.getAppirioJWT()
-  # - TokenService.getAuth0Token()
-  # - TokenService.getSSOToken()
+  # generate URL to return application with token.
   # format:
-  #   returnUrlBase?jwt={V3_JWT}&tcjwt={V2_JWT}&tcsso={V2_SSO_TOKEN}
+  #   returnUrlBase?jwt={TokenService.getAppirioJWT()}
   generateReturnUrl = (returnUrlBase) ->
-    unless validateUrl returnUrlBase
-      $log.error 'Invalid URL: ' + returnUrlBase
-      return
-    returnUrlBase
-    ###
     v3jwt = TokenService.getAppirioJWT()
     unless v3jwt
       $log.error 'JWT is not found in the storage.'
-    v2jwt = TokenService.getAuth0Token() || ''
-    v2sso = TokenService.getSSOToken() || ''
-    returnUrlBase + '?jwt=' + encodeURIComponent(v3jwt) + '&tcjwt=' + encodeURIComponent(v2jwt) + '&tcsso=' + encodeURIComponent(v2sso)
-    ###
-
+    returnUrlBase + '?jwt=' + encodeURIComponent(v3jwt)
+  
+  # generate URL to return back to Zendesk after authentication
+  generateZendeskReturnUrl = (returnToUrl) ->
+    return "https://#{Constants.ZENDESK_DOMAIN}/access/jwt?jwt=#{TokenService.getZendeskToken()}&return_to=#{returnToUrl}"
+  
   # validate
   validateUrl = (returnUrlBase) ->
     unless isUrl returnUrlBase
@@ -85,7 +87,8 @@ Utils = (
     parser = document?.createElement 'a'
     if parser
       parser.href = returnUrlBase
-      return parser.hostname.toLowerCase().endsWith(Constants.DOMAIN)
+      hostname = parser.hostname.toLowerCase()
+      return hostname.endsWith(Constants.DOMAIN) || hostname.endsWith(Constants.ZENDESK_DOMAIN)
     false
 
   # porting from Helpers in topcoder-app
@@ -96,10 +99,12 @@ Utils = (
   # expose functions
   isEmail           : isEmail
   isUrl             : isUrl
+  redirectTo        : redirectTo
   encodeParams      : encodeParams
   parseQuery        : parseQuery
   generateSSOUrl    : generateSSOUrl
   generateReturnUrl : generateReturnUrl
+  generateZendeskReturnUrl : generateZendeskReturnUrl
   setupLoginEventMetrics : setupLoginEventMetrics
 
 Utils.$inject = [

@@ -55,9 +55,7 @@ ConnectLoginController = (
     unless jwt
       vm.error = true
     else if vm.retUrl
-      redirectUrl = Utils.generateReturnUrl vm.retUrl
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
+      Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else
       $state.go 'home'
   
@@ -70,9 +68,7 @@ ConnectLoginController = (
   init = ->
     jwt = TokenService.getAppirioJWT()
     if jwt && vm.retUrl
-      redirectUrl = Utils.generateReturnUrl vm.retUrl
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
+      Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else if ($stateParams.handle || $stateParams.email) && $stateParams.password
       id = $stateParams.handle || $stateParams.email
       pass = $stateParams.password

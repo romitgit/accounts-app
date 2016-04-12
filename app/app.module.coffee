@@ -16,5 +16,6 @@ angular.module 'accounts', dependencies
 constants =
   ENV : process.env.ENV
   DOMAIN : process.env.DOMAIN
+  ZENDESK_DOMAIN : process.env.ZENDESK_DOMAIN
 
 angular.module('accounts').constant 'Constants', constants

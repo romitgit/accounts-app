@@ -46,16 +46,6 @@ TCLoginController = (
       success   : loginSuccess
 
     $authService.login(loginOptions)
-    ###
-    state = vm.retUrl
-    unless state
-      # TODO: home?
-      state = $state.href 'home', {}, { absolute: true }
-    callbackUrl = $state.href 'SOCIAL_CALLBACK', {retUrl : encodeURIComponent(state)}, { absolute: true }
-    authUrl = AuthService.generateSSOUrl provider, callbackUrl
-    $log.info 'redirecting to ' + authUrl
-    $window.location.href = authUrl;
-    ###
 
   vm.login = ->
     # loading
@@ -116,20 +106,18 @@ TCLoginController = (
     # setup login event for analytics tracking
     Utils.setupLoginEventMetrics(vm.username)
     
-    jwt = TokenService.getAppirioJWT()
-    if vm.retUrl
-      redirectUrl = Utils.generateReturnUrl vm.retUrl
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
+    if $stateParams.return_to
+      Utils.redirectTo Utils.generateZendeskReturnUrl($stateParams.return_to)
+    else if vm.retUrl
+      Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else
         $state.go 'home'
 
   init = ->
-    jwt = TokenService.getAppirioJWT()
-    if jwt && vm.retUrl
-      redirectUrl = Utils.generateReturnUrl vm.retUrl
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
+    if TokenService.getZendeskToken() && $stateParams.return_to
+      Utils.redirectTo Utils.generateZendeskReturnUrl($stateParams.return_to)
+    else if TokenService.getAppirioJWT() && vm.retUrl
+      Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else if ($stateParams.handle || $stateParams.email) && $stateParams.password
       id = $stateParams.handle || $stateParams.email
       pass = $stateParams.password
