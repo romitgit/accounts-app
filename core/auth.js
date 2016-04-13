@@ -168,7 +168,7 @@ function getNewJWT() {
     }
   }
   
-  let API_URL = "http://local.topcoder-dev.com:8080"
+  //let API_URL = "http://local.topcoder-dev.com:8080"
   const url = API_URL + '/v3/authorizations'
   const config = {
     method: 'POST',
