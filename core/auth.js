@@ -4,8 +4,15 @@ import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { clearTokens, readCookie, isTokenExpired } from './token.js'
-import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_SSO, V2_COOKIE, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
+import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, V2_SSO, V2_COOKIE, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
 import fetch from 'isomorphic-fetch'
+import Auth0 from 'auth0-js'
+
+const auth0 = new Auth0({
+    domain      : AUTH0_DOMAIN,
+    clientID    : AUTH0_CLIENT_ID,
+    callbackOnLocationHash: true
+  });
 
 function AuthException(params) {
   Object.assign(this, params)
@@ -67,7 +74,7 @@ export function getToken() {
 export function logout() {
   
   //var API_URL = "http://local.topcoder-dev.com:8080"  
-  var token = getToken()
+  let token = getToken()
   if (!token || isTokenExpired(token, 300)) {
     refreshToken().catch( error => console.error(error) )
   }
@@ -110,6 +117,32 @@ function auth0Signin(options) {
   return fetchJSON(url, config)
 }
 
+function auth0Popup(options) {
+  return new Promise(function(onFulfilled, onRejected) {
+    auth0.login(
+      {
+        scope: options.scope || 'openid profile offline_access',
+        connection: options.connection,
+        popup: true
+      },
+      function(err, profile, id_token, access_token, state, refresh_token) {
+        if (err) {
+          onRejected(err);
+          return;
+        }
+        
+        onFulfilled({
+          profile : profile,
+          id_token : id_token,
+          access_token : access_token,
+          state : state,
+          refresh_token : refresh_token
+        });
+      }
+    );
+  })
+}
+
 function setAuth0Tokens({id_token, refresh_token}) {
   if (id_token === undefined || refresh_token === undefined) {
     throw new AuthException({
@@ -134,7 +167,8 @@ function getNewJWT() {
       refreshToken
     }
   }
-
+  
+  let API_URL = "http://local.topcoder-dev.com:8080"
   const url = API_URL + '/v3/authorizations'
   const config = {
     method: 'POST',
@@ -143,14 +177,24 @@ function getNewJWT() {
   }
 
   function success(data) {
-    return get(data, 'result.content.token')
+    return get(data, 'result.content')
   }
 
   return fetchJSON(url, config).then(success)
 }
 
+function handleAuthResult({token, zendeskJwt}) {
+  setTcJwt(token)
+  setZendeskJwt(zendeskJwt)
+  setSSOToken()
+}
+
 function setTcJwt(token) {
   localStorage.setItem(TC_JWT, token)
+}
+
+function setZendeskJwt(token) {
+  localStorage.setItem(ZENDESK_JWT, token)
 }
 
 function setSSOToken() {
@@ -161,7 +205,7 @@ function setSSOToken() {
 // to chain off an existing promise
 export function refreshToken() {
   //var API_URL = "http://local.topcoder-dev.com:8080"
-  const token = getToken()
+  const token = getToken() || ''
   const url = API_URL + '/v3/authorizations/1'
   const config = {
     headers: {
@@ -183,8 +227,14 @@ export function login(options) {
   return auth0Signin(options)
     .then(setAuth0Tokens)
     .then(getNewJWT)
-    .then(setTcJwt)
-    .then(setSSOToken)
+    .then(handleAuthResult)
+}
+
+export function socialLogin(options) {
+  return auth0Popup(options)
+    .then(setAuth0Tokens)
+    .then(getNewJWT)
+    .then(handleAuthResult)
 }
 
 export function sendResetEmail(email) {
@@ -241,8 +291,7 @@ export function getSSOProvider(handle) {
   const filter = encodeURIComponent('handle=' + handle)
 
   function success(res) {
-    const content = get(res, 'data.result.content')
-
+    const content = get(res, 'result.content')
     if (!content) {
       throw new AuthException({
         message: 'Could not contact login server',
@@ -264,7 +313,7 @@ export function getSSOProvider(handle) {
 
   function failure(res) {
     throw new AuthException({
-      message: get(res, 'data.result.content') || 'Could not contact login server'
+      message: get(res, 'result.content') || 'Could not contact login server'
     })
   }
 

@@ -1,15 +1,13 @@
 'use strict'
 
+{ TC_JWT }   = require '../../../core/constants.js'
+{ login }    = require '../../../core/auth.js'
+{ getToken } = require '../../../core/token.js'
+
 ConnectLoginController = (
     $log
-    $rootScope
-    $location
-    $window
     $state
     $stateParams
-    $timeout
-    AuthService
-    TokenService
     Utils
     Constants) ->
   
@@ -38,10 +36,10 @@ ConnectLoginController = (
       username  : vm.username
       password  : vm.password
       connection: conn
-      error     : loginFailure
-      success   : loginSuccess
-
-    AuthService.login loginOptions
+    
+    login(loginOptions)
+      .then(loginSuccess)
+      .catch(loginFailure)
 
   loginFailure = (error) ->
     vm.error   = true
@@ -51,22 +49,16 @@ ConnectLoginController = (
     vm.error   = false
     vm.loading = false
 
-    jwt = TokenService.getAppirioJWT()
+    jwt = localStorage.getItem 'userJWTToken'
     unless jwt
       vm.error = true
     else if vm.retUrl
       Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else
       $state.go 'home'
-  
-  vm.socialLogin = (provider) ->
-    callbackUrl = $state.href 'home', {}, { absolute: true }
-    authUrl = AuthService.generateSSOUrl provider, callbackUrl
-    $log.info "auth with: "+authUrl
-    $window.location = authUrl
-  
+    
   init = ->
-    jwt = TokenService.getAppirioJWT()
+    jwt = getToken(TC_JWT)
     if jwt && vm.retUrl
       Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else if ($stateParams.handle || $stateParams.email) && $stateParams.password
@@ -75,9 +67,10 @@ ConnectLoginController = (
       loginOptions =
         username: id
         password: pass
-        error   : loginFailure
-        success : loginSuccess
-      AuthService.login loginOptions
+      
+      login(loginOptions)
+        .then(loginSuccess)
+        .catch(loginFailure)
     else
       vm.init = true
     vm
@@ -87,14 +80,8 @@ ConnectLoginController = (
 
 ConnectLoginController.$inject = [
   '$log'
-  '$rootScope'
-  '$location'
-  '$window'
   '$state'
   '$stateParams'
-  '$timeout'
-  'AuthService'
-  'TokenService'
   'Utils'
   'Constants'
 ]

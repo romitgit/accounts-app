@@ -4,16 +4,9 @@
 
 LogoutController = (
     $log
-    $rootScope
-    $location
-    $window
     $state
     $stateParams
-    $sce
-    $timeout
-    AuthService
-    Utils
-    Constants) ->
+    Utils) ->
   
   vm           = this
   vm.title     = 'Logout'
@@ -21,12 +14,10 @@ LogoutController = (
   vm.loading   = false
 
   init = ->
-    AuthService.logout().then (res) ->
+    logout().then (res) ->
       $log.debug res
     if $stateParams.retUrl
-      redirectUrl = Utils.generateReturnUrl $stateParams.retUrl
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
+      Utils.redirectTo Utils.generateReturnUrl(decodeURIComponent($stateParams.retUrl))
     else
       $state.go 'home'
     vm
@@ -35,16 +26,9 @@ LogoutController = (
 
 LogoutController.$inject = [
   '$log'
-  '$rootScope'
-  '$location'
-  '$window'
   '$state'
   '$stateParams'
-  '$sce'
-  '$timeout'
-  'AuthService'
   'Utils'
-  'Constants'
 ]
 
 angular.module('accounts').controller 'LogoutController', LogoutController

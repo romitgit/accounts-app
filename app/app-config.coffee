@@ -57,7 +57,7 @@ config = (
     public: true
     
   states['SOCIAL_CALLBACK'] =
-    url: '/social-callback?retUrl&userJWTToken&tcjwt&tcsso&status&message'
+    url: '/social-callback?retUrl&userJWTToken&status&message'
     template   : require('./views/tc/social-callback')()
     controller : 'SSOCallbackController as vm'
     public: true

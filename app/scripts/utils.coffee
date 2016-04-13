@@ -1,12 +1,14 @@
 'use strict'
 
+{ TC_JWT, ZENDESK_JWT } = require '../../core/constants.js'
+{ getToken }            = require '../../core/token.js'
+
 Utils = (
   $log
   $window
   API_URL
   AUTH0_DOMAIN
   AUTH0_CLIENT_ID
-  TokenService
   Constants
   ) ->
 
@@ -68,16 +70,17 @@ Utils = (
     
   # generate URL to return application with token.
   # format:
-  #   returnUrlBase?jwt={TokenService.getAppirioJWT()}
+  #   returnUrlBase?jwt={TC_JWT}
   generateReturnUrl = (returnUrlBase) ->
-    v3jwt = TokenService.getAppirioJWT()
+    v3jwt = getToken(TC_JWT)
     unless v3jwt
-      $log.error 'JWT is not found in the storage.'
-    returnUrlBase + '?jwt=' + encodeURIComponent(v3jwt)
+      return returnUrlBase
+    else
+      return returnUrlBase + '?jwt=' + encodeURIComponent(v3jwt)
   
   # generate URL to return back to Zendesk after authentication
   generateZendeskReturnUrl = (returnToUrl) ->
-    return "https://#{Constants.ZENDESK_DOMAIN}/access/jwt?jwt=#{TokenService.getZendeskToken()}&return_to=#{returnToUrl}"
+    return "https://#{Constants.ZENDESK_DOMAIN}/access/jwt?jwt=#{getToken(ZENDESK_JWT)}&return_to=#{returnToUrl}"
   
   # validate
   validateUrl = (returnUrlBase) ->
@@ -113,7 +116,6 @@ Utils.$inject = [
   'API_URL'
   'AUTH0_DOMAIN'
   'AUTH0_CLIENT_ID'
-  'TokenService'
   'Constants'
 ]
 

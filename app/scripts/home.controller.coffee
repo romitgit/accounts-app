@@ -1,5 +1,8 @@
 'use strict'
 
+{ TC_JWT }   = require '../../core/constants.js'
+{ getToken } = require '../../core/token.js'
+
 HomeController = (
   $log
   $state
@@ -11,8 +14,7 @@ HomeController = (
   vm.title     = 'Home'
   
   init = ->
-    jwt = TokenService.getAppirioJWT()
-    unless jwt
+    unless getToken(TC_JWT)
       $state.go 'MEMBER_LOGIN'
     else
       $window.location = 'https://www.' + Constants.DOMAIN + '/'

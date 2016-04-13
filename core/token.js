@@ -1,12 +1,25 @@
 'use strict'
 
-import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_SSO } from './constants.js'
+import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_SSO, ZENDESK_JWT } from './constants.js'
 
 export function clearTokens() {
-  localStorage.removeItem(TC_JWT)
-  localStorage.removeItem(AUTH0_REFRESH)
-  localStorage.removeItem(AUTH0_JWT)
-  localStorage.removeItem(V2_SSO)
+  removeToken(TC_JWT)
+  removeToken(AUTH0_REFRESH)
+  removeToken(AUTH0_JWT)
+  removeToken(V2_SSO)  
+  removeToken(ZENDESK_JWT)
+}
+
+export function getToken(key) {
+  return localStorage.getItem(key)
+}
+
+export function setToken(key, token) {
+  localStorage.setItem(key, token)
+}
+
+export function removeToken(key) {
+  localStorage.removeItem(key)
 }
 
 export function decodeToken(token) {
