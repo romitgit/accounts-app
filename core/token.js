@@ -1,6 +1,6 @@
 'use strict'
 
-import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_SSO, ZENDESK_JWT } from './constants.js'
+import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_SSO, V2_COOKIE, ZENDESK_JWT } from './constants.js'
 
 export function clearTokens() {
   removeToken(TC_JWT)
@@ -8,7 +8,7 @@ export function clearTokens() {
   removeToken(AUTH0_JWT)
   removeToken(V2_SSO)  
   removeToken(ZENDESK_JWT)
-  deleteCookie(V2_SSO)
+  deleteCookie(V2_COOKIE)
   deleteCookie('tcjwt')
 }
 

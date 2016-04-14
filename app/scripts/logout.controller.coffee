@@ -14,8 +14,12 @@ LogoutController = (
   vm.loading   = false
 
   init = ->
+    if $stateParams.message
+      alert($stateParams.message)
+    
     logout().then (res) ->
       $log.debug res
+    
     if $stateParams.retUrl
       Utils.redirectTo Utils.generateReturnUrl(decodeURIComponent($stateParams.retUrl))
     else
