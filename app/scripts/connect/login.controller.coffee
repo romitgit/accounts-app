@@ -1,18 +1,14 @@
 'use strict'
 
-{ login } = require '../../../core/auth.js'
-{ TC_JWT } = require '../../../core/constants.js'
+{ TC_JWT }   = require '../../../core/constants.js'
+{ login }    = require '../../../core/auth.js'
+{ getToken } = require '../../../core/token.js'
 
 ConnectLoginController = (
     $log
-    $rootScope
-    $location
-    $window
+    $scope
     $state
     $stateParams
-    $timeout
-    AuthService
-    TokenService
     Utils
     Constants) ->
   
@@ -23,10 +19,11 @@ ConnectLoginController = (
   vm.loading   = false
   vm.init      = false
   vm.$stateParams = $stateParams
-  vm.retUrl    = decodeURIComponent($stateParams.retUrl)
   
-  vm.registrationUrl = 'https://connect.' + Constants.DOMAIN + '/registration'
-  vm.forgotPasswordUrl = 'https://connect.' + Constants.DOMAIN + '/forgot-password'
+  vm.baseUrl = "https://connect.#{Constants.DOMAIN}"
+  vm.registrationUrl   = vm.baseUrl + '/registration'
+  vm.forgotPasswordUrl = vm.baseUrl + '/forgot-password'
+  vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl  
 
   vm.submit = ->
     vm.error   = false
@@ -34,13 +31,13 @@ ConnectLoginController = (
 
     # Auth0 connection
     # handle: "LDAP", email: "TC-User-Database"
-    conn = if Utils.isEmail(vm.username) then 'TC-User-Database' else 'LDAP'
+    conn = Utils.getLoginConnection vm.username
 
     options =
       connection: conn
-      username: vm.username
+      username: vm.username 
       password: vm.password
-
+    
     login(options).then(loginSuccess, loginFailure)
 
   loginFailure = (error) ->
@@ -54,34 +51,25 @@ ConnectLoginController = (
     unless jwt
       vm.error = true
     else if vm.retUrl
-      redirectUrl = Utils.generateReturnUrl vm.retUrl
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
+      Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else
       $state.go 'home'
-  
-  # vm.socialLogin = (provider) ->
-  #   callbackUrl = $state.href 'home', {}, { absolute: true }
-  #   authUrl = AuthService.generateSSOUrl provider, callbackUrl
-  #   $log.info "auth with: "+authUrl
-  #   $window.location = authUrl
-  
+    
   init = ->
-    jwt = localStorage.getItem(TC_JWT)
-
+    jwt = getToken(TC_JWT)
     if jwt && vm.retUrl
-      redirectUrl = Utils.generateReturnUrl vm.retUrl
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
+      Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else if ($stateParams.handle || $stateParams.email) && $stateParams.password
       id = $stateParams.handle || $stateParams.email
       pass = $stateParams.password
-      loginOptions =
+      options =
+        connection: Utils.getLoginConnection id
         username: id
         password: pass
-        error   : loginFailure
-        success : loginSuccess
-      AuthService.login loginOptions
+      
+      login(options)
+        .then(loginSuccess)
+        .catch(loginFailure)
     else
       vm.init = true
     vm
@@ -91,14 +79,9 @@ ConnectLoginController = (
 
 ConnectLoginController.$inject = [
   '$log'
-  '$rootScope'
-  '$location'
-  '$window'
+  '$scope'
   '$state'
   '$stateParams'
-  '$timeout'
-  'AuthService'
-  'TokenService'
   'Utils'
   'Constants'
 ]

@@ -1,42 +1,32 @@
 'use strict'
 
-{ TC_JWT } = require '../../core/constants.js'
-{ decodeToken } = require '../../core/token.js'
-{ isLoggedIn } = require '../../core/auth.js'
+{ TC_JWT }   = require '../../core/constants.js'
+{ getToken } = require '../../core/token.js'
 
 HomeController = (
+  $log
   $state
-  AuthService
-  TokenService) ->
+  $window
+  Constants) ->
   
   vm           = this
   vm.title     = 'Home'
-  vm.account   = null
-  vm.loading   = false
-  
-  vm.logout = ->
-    $state.go 'logout'
-  
-  vm.isLoggedIn = ->
-     isLoggedIn()
   
   init = ->
-    jwt = localStorage.getItem(TC_JWT)
-
-    unless jwt
+    unless getToken(TC_JWT)
       $state.go 'MEMBER_LOGIN'
     else
-      vm.account = decodeToken(jwt).handle
-
+      $window.location = 'https://www.' + Constants.DOMAIN + '/'
     vm
   
   init()
   
 
 HomeController.$inject = [
+  '$log'
   '$state'
-  'AuthService'
-  'TokenService'
+  '$window'
+  'Constants'
 ]
 
 angular.module('accounts').controller 'HomeController', HomeController
