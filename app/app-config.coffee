@@ -43,8 +43,18 @@ config = (
     template: require('./views/login')()
     public: true
 
+  # State parameters
+  # retUrl  : URL to redirect after logging out
+  # message : A message handed by Zendesk when some error occurs
+  # 
+  # Example:
+  # /logout?retUrl=https%3A%2F%2Fconnect.topcoder.com
+  # Zendesk example:
+  # /logout?retUrl=https%3A%2F%2Ftopcoder.zendesk.com%2F
+  # Zendesk Error example:
+  # /logout?kind=error&message=User%20is%20invalid:%20External%20has%20already%20been%20taken&retUrl=https:%2F%2Fkohata.zendesk.com%2F
   states['logout'] =
-    url: '/logout?retUrl'
+    url: '/logout?retUrl&message'
     title: 'Logout'
     controller  : 'LogoutController as vm'
     template: require('./views/logout')()
