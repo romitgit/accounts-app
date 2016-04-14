@@ -1,0 +1,62 @@
+@import "work/work-styles";
+@import "variables";
+
+ui-view {
+  display: block;
+  margin-bottom: 0;
+}
+
+main.layout-main {
+  background-color: $grey-lighter;
+  text-align      : center;
+  padding-right   : 40px;
+  padding-left    : 40px;
+  padding-bottom  : 40px;
+
+  > h1 {
+    color      : $grey-dark;
+    font-weight: 300;
+    margin-top : 40px;
+  }
+
+  > p {
+    @include font-line(18px);
+
+    font-weight: 400;
+    margin-top : 10px;
+    color      : $grey-dark;
+  }
+
+  &.project-page {
+    padding-top: 40px;
+
+    > h1 {
+      margin-top: 0;
+    }
+  }
+
+  > submissions, submission-detail, account-page, timeline, project-details, status-reports, detail-status-report, manage-steps {
+    max-width   : $max-page-width;
+    min-height  : 200px;
+    margin-right: auto;
+    margin-left : auto;
+  }
+
+  &.login-reg {
+    padding-top: 0;
+  }
+
+  timeline, account-page, ng-projects, claimed-projects, open-projects, project-details, status-reports {
+    text-align: left;
+    margin-top: $vertical-big;
+  }
+
+  project-details, status-reports, detail-status-report, account-page {
+    padding: 40px;
+    background-color: $white;
+  }
+}
+
+layout-footer {
+  display: none;
+}

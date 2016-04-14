@@ -1,0 +1,26 @@
+main.layout-main.login-reg.flex.center.middle("role"="main" flush-height="lock")
+  login-reg-shell
+    
+    header.flex.center.middle
+      img(src=require("../../images/connect/asp.svg"))
+
+    main.light-bg.elevated-bottom
+      sso-login
+        loader(ng-if="vm.loading")
+
+        div(ng-show="!vm.success")
+          h1 TopCoder SSO
+
+          p.secondary Please enter the identifier (username or password) you use to login with your SSO provider.
+
+          p.error(ng-show="vm.error") {{ vm.error }}
+
+          form(ng-submit="vm.submit()")
+            input.widest(type="text" ng-model="vm.emailOrHandle" required=true placeholder="Email or handle" autofocus=true)
+
+            button.action(type="submit") Continue
+
+        p.success(ng-show="vm.success") Redirecting to {{ vm.org }} login...
+
+    footer
+      p <a ui-sref="CONNECT_LOGIN({retUrl:vm.retUrl})">Back to Login</a>
