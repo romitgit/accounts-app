@@ -1,15 +1,14 @@
 'use strict'
 
+{ TC_JWT }   = require '../../../core/constants.js'
+{ login }    = require '../../../core/auth.js'
+{ setToken } = require '../../../core/token.js'
+
 SSOCallbackController = (
   $log
   $state
   $stateParams
-  $window
-  $cookies
-  $http
   API_URL
-  TokenService
-  AuthService
   Utils) ->
   
   vm = this
@@ -35,16 +34,11 @@ SSOCallbackController = (
         $log.warn status + ', ' + message
       return vm
   
-    TokenService.setAppirioJWT $stateParams.userJWTToken
-    TokenService.getAuth0Token $stateParams.tcjwt || ''
-    TokenService.setSSOToken $stateParams.tcsso || ''
+    setToken(TC_JWT, $stateParams.userJWTToken)
     
-    redirectUrl = Utils.generateReturnUrl $stateParams.retUrl
-    unless redirectUrl
+    error = Utils.redirectTo Utils.generateReturnUrl($stateParams.retUrl)
+    if error
       vm.error = 'Invalid URL is assigned to the return-URL.'
-    else
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
     vm
   
   init()
@@ -53,12 +47,7 @@ SSOCallbackController.$inject = [
   '$log'
   '$state'
   '$stateParams'
-  '$window'
-  '$cookies'
-  '$http'
   'API_URL'
-  'TokenService'
-  'AuthService'
   'Utils'
 ]
 

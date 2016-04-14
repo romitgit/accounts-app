@@ -22,29 +22,42 @@ config = (
     title       : 'Home'
     controller  : 'HomeController as vm'
     template    : require('./views/home')()
-  
+
+  # State parameters
+  # app      : tc|connect|etc..
+  # retUrl   : URL to redirect after authentication
+  # handle   : direct login with handle/password
+  # password : direct login with handle/password
+  # return_to: URL of Zendesk to redirect after authentication. This is handed by Zendesk.
+  # 
+  # Connect example:
+  # /login?app=connect&retUrl=https%3A%2F%2Fconnect.topcoder.com
+  # Direct login example:
+  # /login?app=connect&handle=jdoe&password=xxxxxx&retUrl=https%3A%2F%2Fconnect.topcoder.com
+  # Zendesk example:
+  # /login?app=zendesk&return_to=https%3A%2F%2Ftopcoder.zendesk.com
   states['login'] =
-    url: '/login?app&retUrl&handle&password'
+    url: '/login?app&retUrl&handle&password&return_to'
     title: 'Login'
     controller  : 'LoginController as vm'
     template: require('./views/login')()
     public: true
 
   states['logout'] =
-    url: '/logout'
+    url: '/logout?retUrl'
     title: 'Logout'
     controller  : 'LogoutController as vm'
     template: require('./views/logout')()
     public: true
 
   states['MEMBER_LOGIN'] =
-    url: '/tc?retUrl&handle&password'
+    url: '/tc?retUrl&handle&password&return_to'
     controller  : 'TCLoginController as vm'
     template: require('./views/tc/login')()
     public: true
     
   states['SOCIAL_CALLBACK'] =
-    url: '/social-callback?retUrl&userJWTToken&tcjwt&tcsso&status&message'
+    url: '/social-callback?retUrl&userJWTToken&status&message'
     template   : require('./views/tc/social-callback')()
     controller : 'SSOCallbackController as vm'
     public: true

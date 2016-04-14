@@ -1,13 +1,12 @@
 'use strict'
 
+{ getSSOProvider, generateSSOUrl } = require '../../../core/auth.js'
+
 SSOLoginController = (
   $log
   $state
   $stateParams
   $window
-  $authService
-  AuthService
-  TokenService
   Utils) ->
   
   vm               = this
@@ -34,7 +33,9 @@ SSOLoginController = (
       vm.loading = false
       vm.error   = err.message
 
-    AuthService.getSSOProvider(vm.emailOrHandle).then(success).catch(failure)
+    getSSOProvider(vm.emailOrHandle)
+      .then(success)
+      .catch(failure)
   
   go = ->
     state = vm.retUrl
@@ -42,7 +43,7 @@ SSOLoginController = (
       # TODO: home?
       state = $state.href 'home', {}, { absolute: true }
     callbackUrl = $state.href 'SSO_CALLBACK', {retUrl : state}, { absolute: true }
-    authUrl = AuthService.generateSSOUrl vm.org, callbackUrl
+    authUrl = generateSSOUrl vm.org, callbackUrl
     $log.info 'redirecting to ' + authUrl
     $window.location.href = authUrl;
   
@@ -55,9 +56,6 @@ SSOLoginController.$inject = [
   '$state'
   '$stateParams'
   '$window'
-  '$authService'
-  'AuthService'
-  'TokenService'
   'Utils'
 ]
 

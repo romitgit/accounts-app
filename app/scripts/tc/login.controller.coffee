@@ -1,17 +1,15 @@
 'use strict'
 
+{ TC_JWT, ZENDESK_JWT } = require '../../../core/constants.js'
+{ login, socialLogin }  = require '../../../core/auth.js'
+{ getToken }            = require '../../../core/token.js'
+
 TCLoginController = (
   $log
   $scope
-  $rootScope
-  $location
   $window
   $state
   $stateParams
-  $timeout
-  $authService
-  AuthService
-  TokenService
   UserService
   Utils
   Constants) ->
@@ -19,12 +17,14 @@ TCLoginController = (
   vm = this
   vm.loading   = false
   vm.init      = false
-  vm.retUrl    =  decodeURIComponent($stateParams.retUrl)
+
+  vm.baseUrl = "https://www.#{Constants.DOMAIN}"
+  vm.registrationUrl      = vm.baseUrl + '/register/'
+  vm.forgotPasswordUrl    = vm.baseUrl + '/reset-password/'
+  vm.accountInactiveUrl   = vm.baseUrl + '/account-inactive/'
+  vm.confirmActivationUrl = vm.baseUrl + '/registered-successfully/'
+  vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl
   
-  vm.registrationUrl      = 'https://www.' + Constants.DOMAIN + '/register/'
-  vm.forgotPasswordUrl    = 'https://www.' + Constants.DOMAIN + '/reset-password/'
-  vm.accountInactiveUrl   = 'https://www.' + Constants.DOMAIN + '/account-inactive/'
-  vm.confirmActivationUrl = 'https://www.' + Constants.DOMAIN + '/registered-successfully/'
   vm.$stateParams = $stateParams
   vm.loginErrors = 
     USERNAME_NONEXISTANT: false
@@ -42,20 +42,10 @@ TCLoginController = (
     loginOptions =
       popup     : true
       connection: provider
-      error     : loginFailure
-      success   : loginSuccess
 
-    $authService.login(loginOptions)
-    ###
-    state = vm.retUrl
-    unless state
-      # TODO: home?
-      state = $state.href 'home', {}, { absolute: true }
-    callbackUrl = $state.href 'SOCIAL_CALLBACK', {retUrl : encodeURIComponent(state)}, { absolute: true }
-    authUrl = AuthService.generateSSOUrl provider, callbackUrl
-    $log.info 'redirecting to ' + authUrl
-    $window.location.href = authUrl;
-    ###
+    socialLogin(loginOptions)
+      .then(loginSuccess)
+      .catch(loginFailure)
 
   vm.login = ->
     # loading
@@ -70,10 +60,10 @@ TCLoginController = (
         if result
           vm.loginErrors.USERNAME_NONEXISTANT = true
         else
-          login(vm.username, vm.currentPassword)
+          doLogin(vm.username, vm.currentPassword)
       .catch (err) ->
         vm.loginErrors.USERNAME_NONEXISTANT = false
-        login(vm.username, vm.currentPassword)
+        doLogin(vm.username, vm.currentPassword)
   
   validateUsername = (username) ->
     validator = if Utils.isEmail(username) then UserService.validateEmail else UserService.validateHandle
@@ -81,31 +71,32 @@ TCLoginController = (
       .then (res) ->
         res?.valid
   
-  login = (username, password) ->
+  doLogin = (username, password) ->
     # Auth0 connection
     # handle: "LDAP", email: "TC-User-Database"
-    conn = if Utils.isEmail(username) then 'TC-User-Database' else 'LDAP'
+    conn = Utils.getLoginConnection vm.username
 
     loginOptions =
       username  : username
       password  : password
       connection: conn
-      error     : loginFailure
-      success   : loginSuccess
 
-    AuthService.login loginOptions
+    login(loginOptions)
+      .then(loginSuccess)
+      .catch(loginFailure)
 
 
-  loginFailure = (res) ->
-    $log.warn(res)
+  loginFailure = (error) ->
+    $log.warn(error)
     vm.loading = false
     
-    if res?.data?.result?.content?.toLowerCase() == 'account inactive'
+    if error?.message?.toLowerCase() == 'account inactive'
       # redirect to the page to prompt activation 
       $log.info 'redirect to #{vm.confirmActivationUrl}'
       $window.location = vm.confirmActivationUrl
-    else if res?.status == 401
+    else if error?.message?.toLowerCase() == 'user is not registered'
       vm.loginErrors.SOCIAL_LOGIN_ERROR = true
+      $scope.$apply() # refreshing the screen
     else
       vm.loginErrors.WRONG_PASSWORD = true
       vm.password = ''
@@ -116,29 +107,29 @@ TCLoginController = (
     # setup login event for analytics tracking
     Utils.setupLoginEventMetrics(vm.username)
     
-    jwt = TokenService.getAppirioJWT()
-    if vm.retUrl
-      redirectUrl = Utils.generateReturnUrl vm.retUrl
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
+    if $stateParams.return_to
+      Utils.redirectTo Utils.generateZendeskReturnUrl($stateParams.return_to)
+    else if vm.retUrl
+      Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else
         $state.go 'home'
 
   init = ->
-    jwt = TokenService.getAppirioJWT()
-    if jwt && vm.retUrl
-      redirectUrl = Utils.generateReturnUrl vm.retUrl
-      $log.info 'redirect back to ' + redirectUrl
-      $window.location = redirectUrl
+    if getToken(ZENDESK_JWT) && $stateParams.return_to
+      Utils.redirectTo Utils.generateZendeskReturnUrl($stateParams.return_to)
+    else if getToken(TC_JWT) && vm.retUrl
+      Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else if ($stateParams.handle || $stateParams.email) && $stateParams.password
       id = $stateParams.handle || $stateParams.email
       pass = $stateParams.password
       loginOptions =
         username: id
         password: pass
-        error   : loginFailure
-        success : loginSuccess
-      AuthService.login loginOptions
+        connection: Utils.getLoginConnection id
+        
+      login(loginOptions)
+        .then(loginSuccess)
+        .catch(loginFailure)
     else
       vm.init = true
     vm
@@ -149,15 +140,9 @@ TCLoginController = (
 TCLoginController.$inject = [
   '$log'
   '$scope'
-  '$rootScope'
-  '$location'
   '$window'
   '$state'
   '$stateParams'
-  '$timeout'
-  '$authService'
-  'AuthService'
-  'TokenService'
   'UserService'
   'Utils'
   'Constants'

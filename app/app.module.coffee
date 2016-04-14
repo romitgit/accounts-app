@@ -16,8 +16,6 @@ angular.module 'accounts', dependencies
 constants =
   ENV : process.env.ENV
   DOMAIN : process.env.DOMAIN
-  APP_LOGOUT_URL : process.env.APP_LOGOUT_URL
-  MEMBER_LOGOUT_URL : process.env.MEMBER_LOGOUT_URL
-  CONNECT_LOGOUT_URL : process.env.CONNECT_LOGOUT_URL
+  ZENDESK_DOMAIN : process.env.ZENDESK_DOMAIN
 
 angular.module('accounts').constant 'Constants', constants

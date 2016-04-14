@@ -1,29 +1,22 @@
 'use strict'
 
+{ TC_JWT }   = require '../../core/constants.js'
+{ getToken } = require '../../core/token.js'
+
 HomeController = (
   $log
-  $rootScope
   $state
-  AuthService
-  TokenService) ->
+  $window
+  Constants) ->
   
   vm           = this
   vm.title     = 'Home'
-  vm.account   = null
-  vm.loading   = false
-  
-  vm.logout = ->
-    $state.go 'logout'
-  
-  vm.isLoggedIn = ->
-     AuthService.isLoggedIn()
   
   init = ->
-    jwt = TokenService.getAppirioJWT()
-    unless jwt
+    unless getToken(TC_JWT)
       $state.go 'MEMBER_LOGIN'
     else
-      vm.account = TokenService.decodeToken().handle
+      $window.location = 'https://www.' + Constants.DOMAIN + '/'
     vm
   
   init()
@@ -31,10 +24,9 @@ HomeController = (
 
 HomeController.$inject = [
   '$log'
-  '$rootScope'
   '$state'
-  'AuthService'
-  'TokenService'
+  '$window'
+  'Constants'
 ]
 
 angular.module('accounts').controller 'HomeController', HomeController
