@@ -1,13 +1,11 @@
 'use strict'
 
-{ getToken } = require '../../connector/connector-wrapper.js'
+{ TC_JWT } = require '../../core/constants.js'
 { decodeToken } = require '../../core/token.js'
+{ isLoggedIn } = require '../../core/auth.js'
 
 HomeController = (
-  $log
-  $rootScope
   $state
-  $scope
   AuthService
   TokenService) ->
   
@@ -20,18 +18,15 @@ HomeController = (
     $state.go 'logout'
   
   vm.isLoggedIn = ->
-     AuthService.isLoggedIn()
+     isLoggedIn()
   
   init = ->
-    jwt = TokenService.getAppirioJWT()
+    jwt = localStorage.getItem(TC_JWT)
+
     unless jwt
       $state.go 'MEMBER_LOGIN'
     else
-      vm.account = TokenService.decodeToken().handle
-
-    getToken().then (token) ->
-      $scope.$apply ->
-        vm.iframeAccount = decodeToken(token).handle
+      vm.account = decodeToken(jwt).handle
 
     vm
   
@@ -39,10 +34,7 @@ HomeController = (
   
 
 HomeController.$inject = [
-  '$log'
-  '$rootScope'
   '$state'
-  '$scope'
   'AuthService'
   'TokenService'
 ]

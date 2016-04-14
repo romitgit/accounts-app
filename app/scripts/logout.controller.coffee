@@ -4,16 +4,11 @@
 
 LogoutController = (
     $log
-    $rootScope
     $location
     $window
     $state
-    $stateParams
-    $sce
     $timeout
-    AuthService
-    Constants) ->
-  
+) ->
   vm           = this
   vm.title     = 'Logout'
   vm.error     = false
@@ -26,15 +21,17 @@ LogoutController = (
     
     handler = () ->
       vm.apps[src] = src
+
       if vm.apps.member && vm.apps.connect && vm.apps.sample
         if $location.search().retUrl
           redirectUrl = $location.search().retUrl
           $log.info 'redirect back to ' + redirectUrl
           $window.location = redirectUrl
+
         else
           $log.info 'move to home'
           $state.go 'home'
-    
+
     $timeout handler, 250
 
   init = ->
@@ -46,15 +43,10 @@ LogoutController = (
 
 LogoutController.$inject = [
   '$log'
-  '$rootScope'
   '$location'
   '$window'
   '$state'
-  '$stateParams'
-  '$sce'
   '$timeout'
-  'AuthService'
-  'Constants'
 ]
 
 angular.module('accounts').controller 'LogoutController', LogoutController

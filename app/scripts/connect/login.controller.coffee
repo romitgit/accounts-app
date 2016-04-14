@@ -1,5 +1,8 @@
 'use strict'
 
+{ login } = require '../../../core/auth.js'
+{ TC_JWT } = require '../../../core/constants.js'
+
 ConnectLoginController = (
     $log
     $rootScope
@@ -25,7 +28,6 @@ ConnectLoginController = (
   vm.registrationUrl = 'https://connect.' + Constants.DOMAIN + '/registration'
   vm.forgotPasswordUrl = 'https://connect.' + Constants.DOMAIN + '/forgot-password'
 
-
   vm.submit = ->
     vm.error   = false
     vm.loading = true
@@ -34,24 +36,21 @@ ConnectLoginController = (
     # handle: "LDAP", email: "TC-User-Database"
     conn = if Utils.isEmail(vm.username) then 'TC-User-Database' else 'LDAP'
 
-    loginOptions =
-      username  : vm.username
-      password  : vm.password
+    options =
       connection: conn
-      error     : loginFailure
-      success   : loginSuccess
+      username: vm.username
+      password: vm.password
 
-    AuthService.login loginOptions
+    login(options).then(loginSuccess, loginFailure)
 
   loginFailure = (error) ->
-    vm.error   = true
-    vm.loading = false
+    $scope.$apply ->
+      vm.error   = true
+      vm.loading = false
 
   loginSuccess = ->
-    vm.error   = false
-    vm.loading = false
+    jwt = localStorage.getItem(TC_JWT)
 
-    jwt = TokenService.getAppirioJWT()
     unless jwt
       vm.error = true
     else if vm.retUrl
@@ -61,14 +60,15 @@ ConnectLoginController = (
     else
       $state.go 'home'
   
-  vm.socialLogin = (provider) ->
-    callbackUrl = $state.href 'home', {}, { absolute: true }
-    authUrl = AuthService.generateSSOUrl provider, callbackUrl
-    $log.info "auth with: "+authUrl
-    $window.location = authUrl
+  # vm.socialLogin = (provider) ->
+  #   callbackUrl = $state.href 'home', {}, { absolute: true }
+  #   authUrl = AuthService.generateSSOUrl provider, callbackUrl
+  #   $log.info "auth with: "+authUrl
+  #   $window.location = authUrl
   
   init = ->
-    jwt = TokenService.getAppirioJWT()
+    jwt = localStorage.getItem(TC_JWT)
+
     if jwt && vm.retUrl
       redirectUrl = Utils.generateReturnUrl vm.retUrl
       $log.info 'redirect back to ' + redirectUrl

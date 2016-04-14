@@ -1,5 +1,5 @@
-export const TC_JWT = process.env.AUTH0_TOKEN_NAME
-export const AUTH0_REFRESH = process.env.AUTH0_REFRESH_TOKEN_NAME
+export const TC_JWT = 'tcJwt'
+export const AUTH0_REFRESH = 'auth0Refresh'
 export const Auth0_JWT = 'auth0Jwt'
 export const V2_SSO = 'v2SSOToken'
 export const V2_COOKIE = 'tcsso'
