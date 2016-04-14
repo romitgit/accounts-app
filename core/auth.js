@@ -190,11 +190,11 @@ function handleAuthResult({token, zendeskJwt}) {
 }
 
 function setTcJwt(token) {
-  localStorage.setItem(TC_JWT, token)
+  localStorage.setItem(TC_JWT, token || '')
 }
 
 function setZendeskJwt(token) {
-  localStorage.setItem(ZENDESK_JWT, token)
+  localStorage.setItem(ZENDESK_JWT, token || '')
 }
 
 function setSSOToken() {

@@ -8,6 +8,8 @@ export function clearTokens() {
   removeToken(AUTH0_JWT)
   removeToken(V2_SSO)  
   removeToken(ZENDESK_JWT)
+  deleteCookie(V2_SSO)
+  deleteCookie('tcjwt')
 }
 
 export function getToken(key) {
@@ -92,4 +94,9 @@ export function readCookie(name) {
     if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length)
   }
   return null
+}
+
+export function deleteCookie(name) {
+  let domain = location.hostname.substring(location.hostname.indexOf('.'));
+  document.cookie = name + "=; path=/; domain=" + domain + "; expires=" + (new Date()).toGMTString()+"; ";
 }

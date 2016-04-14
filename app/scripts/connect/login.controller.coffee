@@ -6,6 +6,7 @@
 
 ConnectLoginController = (
     $log
+    $scope
     $state
     $stateParams
     Utils
@@ -18,11 +19,11 @@ ConnectLoginController = (
   vm.loading   = false
   vm.init      = false
   vm.$stateParams = $stateParams
-  vm.retUrl    = decodeURIComponent($stateParams.retUrl)
   
-  vm.registrationUrl = 'https://connect.' + Constants.DOMAIN + '/registration'
-  vm.forgotPasswordUrl = 'https://connect.' + Constants.DOMAIN + '/forgot-password'
-
+  vm.baseUrl = "https://connect.#{Constants.DOMAIN}"
+  vm.registrationUrl   = vm.baseUrl + '/registration'
+  vm.forgotPasswordUrl = vm.baseUrl + '/forgot-password'
+  vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl  
 
   vm.submit = ->
     vm.error   = false
@@ -30,26 +31,23 @@ ConnectLoginController = (
 
     # Auth0 connection
     # handle: "LDAP", email: "TC-User-Database"
-    conn = if Utils.isEmail(vm.username) then 'TC-User-Database' else 'LDAP'
+    conn = Utils.getLoginConnection vm.username
 
-    loginOptions =
-      username  : vm.username
-      password  : vm.password
+    options =
       connection: conn
+      username: vm.username 
+      password: vm.password
     
-    login(loginOptions)
-      .then(loginSuccess)
-      .catch(loginFailure)
+    login(options).then(loginSuccess, loginFailure)
 
   loginFailure = (error) ->
-    vm.error   = true
-    vm.loading = false
+    $scope.$apply ->
+      vm.error   = true
+      vm.loading = false
 
   loginSuccess = ->
-    vm.error   = false
-    vm.loading = false
+    jwt = localStorage.getItem(TC_JWT)
 
-    jwt = localStorage.getItem 'userJWTToken'
     unless jwt
       vm.error = true
     else if vm.retUrl
@@ -64,11 +62,12 @@ ConnectLoginController = (
     else if ($stateParams.handle || $stateParams.email) && $stateParams.password
       id = $stateParams.handle || $stateParams.email
       pass = $stateParams.password
-      loginOptions =
+      options =
+        connection: Utils.getLoginConnection id
         username: id
         password: pass
       
-      login(loginOptions)
+      login(options)
         .then(loginSuccess)
         .catch(loginFailure)
     else
@@ -80,6 +79,7 @@ ConnectLoginController = (
 
 ConnectLoginController.$inject = [
   '$log'
+  '$scope'
   '$state'
   '$stateParams'
   'Utils'

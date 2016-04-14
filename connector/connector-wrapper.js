@@ -35,8 +35,16 @@ const proxyCall = function(REQUEST, SUCCESS, FAILURE, params = {}) {
 }
 
 export const getToken = function () {
+  function success(data) {
+    return data.token
+  }
+
+  function failure(error) {
+    return error
+  }
+
   return proxyCall(GET_TOKEN_REQUEST, GET_TOKEN_SUCCESS, GET_TOKEN_FAILURE)
-    .then( data => data.token )
+    .then(success, failure)
 }
 
 export const refreshToken = function () {

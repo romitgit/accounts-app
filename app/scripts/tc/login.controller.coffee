@@ -17,12 +17,14 @@ TCLoginController = (
   vm = this
   vm.loading   = false
   vm.init      = false
-  vm.retUrl    =  decodeURIComponent($stateParams.retUrl)
+
+  vm.baseUrl = "https://www.#{Constants.DOMAIN}"
+  vm.registrationUrl      = vm.baseUrl + '/register/'
+  vm.forgotPasswordUrl    = vm.baseUrl + '/reset-password/'
+  vm.accountInactiveUrl   = vm.baseUrl + '/account-inactive/'
+  vm.confirmActivationUrl = vm.baseUrl + '/registered-successfully/'
+  vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl
   
-  vm.registrationUrl      = 'https://www.' + Constants.DOMAIN + '/register/'
-  vm.forgotPasswordUrl    = 'https://www.' + Constants.DOMAIN + '/reset-password/'
-  vm.accountInactiveUrl   = 'https://www.' + Constants.DOMAIN + '/account-inactive/'
-  vm.confirmActivationUrl = 'https://www.' + Constants.DOMAIN + '/registered-successfully/'
   vm.$stateParams = $stateParams
   vm.loginErrors = 
     USERNAME_NONEXISTANT: false
@@ -72,7 +74,7 @@ TCLoginController = (
   doLogin = (username, password) ->
     # Auth0 connection
     # handle: "LDAP", email: "TC-User-Database"
-    conn = if Utils.isEmail(username) then 'TC-User-Database' else 'LDAP'
+    conn = Utils.getLoginConnection vm.username
 
     loginOptions =
       username  : username
@@ -123,6 +125,8 @@ TCLoginController = (
       loginOptions =
         username: id
         password: pass
+        connection: Utils.getLoginConnection id
+        
       login(loginOptions)
         .then(loginSuccess)
         .catch(loginFailure)

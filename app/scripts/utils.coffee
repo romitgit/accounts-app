@@ -12,6 +12,10 @@ Utils = (
   Constants
   ) ->
 
+  # returns Auth0 connection name for password login
+  getLoginConnection = (userId) ->
+    return if isEmail(userId) then 'TC-User-Database' else 'LDAP'
+
   # returns true if the value is a valid email address  
   isEmail = (value) ->
     EMAIL_PATTERN = /^(([^<>()[\]\.,:\s@\"]+(\.[^<>()[\]\.,:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,:\s@\"]+\.)+[^<>()[\]\.,:\s@\"]{2,})$/i
@@ -72,11 +76,12 @@ Utils = (
   # format:
   #   returnUrlBase?jwt={TC_JWT}
   generateReturnUrl = (returnUrlBase) ->
-    v3jwt = getToken(TC_JWT)
-    unless v3jwt
-      return returnUrlBase
-    else
-      return returnUrlBase + '?jwt=' + encodeURIComponent(v3jwt)
+    return returnUrlBase
+    #v3jwt = getToken(TC_JWT)
+    #unless v3jwt
+    #  return returnUrlBase
+    #else
+    #  return returnUrlBase + '?jwt=' + encodeURIComponent(v3jwt)
   
   # generate URL to return back to Zendesk after authentication
   generateZendeskReturnUrl = (returnToUrl) ->
@@ -100,6 +105,7 @@ Utils = (
       $window._kmq.push ['identify', id]
 
   # expose functions
+  getLoginConnection: getLoginConnection
   isEmail           : isEmail
   isUrl             : isUrl
   redirectTo        : redirectTo

@@ -7,7 +7,6 @@ HomeController = (
   $log
   $state
   $window
-  TokenService
   Constants) ->
   
   vm           = this
@@ -27,7 +26,6 @@ HomeController.$inject = [
   '$log'
   '$state'
   '$window'
-  'TokenService'
   'Constants'
 ]
 
