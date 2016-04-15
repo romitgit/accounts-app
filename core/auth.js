@@ -1,8 +1,7 @@
-'use strict'
-
 import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
+import { getLoginConnection } from './utils.js'
 import { clearTokens, readCookie, isTokenExpired } from './token.js'
 import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, V2_SSO, V2_COOKIE, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
 import fetch from 'isomorphic-fetch'
@@ -71,6 +70,29 @@ export function getToken() {
   return token
 }
 
+export function getFreshToken() {
+  const currentToken = (localStorage.getItem(TC_JWT) || '').replace(/^"|"$/g, '')
+
+  // If we have no token, short circuit
+  if (!currentToken) {
+    return Promise.reject('No token found')
+  }
+
+  // If the token is still fresh for at least another minute
+  if ( !isTokenExpired(currentToken, 60) ) {
+
+    // If the token will expire in the next 5m, refresh it in the background
+    if ( isTokenExpired(currentToken, 300) ) {
+      refreshToken()
+    }
+
+    return Promise.resolve(currentToken)
+  }
+
+  // If the token is expired, return a promise for a fresh token
+  return refreshToken()
+}
+
 export function logout() {
   
   //var API_URL = "http://local.topcoder-dev.com:8080"  
@@ -95,6 +117,14 @@ export function logout() {
     .catch(function(error){
       console.error(error)
     })
+}
+
+function setConnection(options) {
+  if (options.connection === undefined) {
+    options.connection = getLoginConnection(options.username)
+  }
+
+  return Promise.resolve(options)
 }
 
 function auth0Signin(options) {
@@ -201,10 +231,14 @@ function setSSOToken() {
   localStorage.setItem(V2_SSO, readCookie(V2_COOKIE) || '' )
 }
 
-// refreshPromise is needed outside the function scope to allow multiple calls
-// to chain off an existing promise
+// refreshPromise is needed outside the refreshToken scope to allow throttling
+let refreshPromise = null
+
 export function refreshToken() {
-  //var API_URL = "http://local.topcoder-dev.com:8080"
+  if (refreshPromise) {
+    return refreshPromise
+  }
+
   const token = getToken() || ''
   const url = API_URL + '/v3/authorizations/1'
   const config = {
@@ -213,18 +247,21 @@ export function refreshToken() {
     }
   }
 
-  return fetchJSON(url, config)
+  return refreshPromise = fetchJSON(url, config)
     .then( data => {
       // Assign it to local storage
       const newToken = get(data, 'result.content.token')
       localStorage.setItem(TC_JWT, newToken)
+
+      refreshPromise = null
 
       return newToken
     })
 }
 
 export function login(options) {
-  return auth0Signin(options)
+  return setConnection(options)
+    .then(auth0Signin)
     .then(setAuth0Tokens)
     .then(getNewJWT)
     .then(handleAuthResult)
