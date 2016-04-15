@@ -78,14 +78,26 @@ config = (
     public: true
 
   states['CONNECT_REGISTRATION'] =
-    url: '/registration?retUrl'
+    url: '/connect/registration?retUrl'
     controller  : 'ConnectRegistrationController as vm'
     template: require('./views/connect/registration.jade')()
     public: true
 
   states['CONNECT_REGISTRATION_SUCCESS'] =
-    url: '/registration-success'
+    url: '/connect/registration-success'
     template: require('./views/connect/registration-success.jade')()
+    public: true
+
+  states['CONNECT_FORGOT_PASSWORD'] =
+    url: '/connect/forgot-password'
+    controller  : 'ConnectForgotPasswordController as vm'
+    template   : require('./views/connect/forgot-password.jade')()
+    public: true
+
+  states['CONNECT_RESET_PASSWORD'] =
+    url: '/connect/reset-password?token&handle'
+    controller  : 'ConnectResetPasswordController as vm'
+    template   : require('./views/connect/reset-password.jade')()
     public: true
 
   states['SSO_LOGIN'] =

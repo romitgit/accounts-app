@@ -1,6 +1,6 @@
 'use strict'
 
-{ registerUser } = require '../../../core/auth.js'
+{ registerUser, getFreshToken } = require '../../../core/auth.js'
 
 RegistrationController = ($state, $stateParams, $scope) ->
   vm              = this
