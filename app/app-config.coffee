@@ -77,6 +77,17 @@ config = (
     template: require('./views/connect/login')()
     public: true
 
+  states['CONNECT_REGISTRATION'] =
+    url: '/registration?retUrl'
+    controller  : 'ConnectRegistrationController as vm'
+    template: require('./views/connect/registration.jade')()
+    public: true
+
+  states['CONNECT_REGISTRATION_SUCCESS'] =
+    url: '/registration-success'
+    template: require('./views/connect/registration-success.jade')()
+    public: true
+
   states['SSO_LOGIN'] =
     url: '/sso-login/:org?retUrl'
     template   : require('./views/connect/sso-login')()

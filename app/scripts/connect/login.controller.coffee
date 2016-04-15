@@ -11,7 +11,6 @@ ConnectLoginController = (
   $state
   $stateParams
 ) ->
-  
   vm           = this
   vm.username  = ''
   vm.password  = ''
@@ -21,7 +20,7 @@ ConnectLoginController = (
   vm.$stateParams = $stateParams
   
   vm.baseUrl = "https://connect.#{DOMAIN}"
-  vm.registrationUrl   = vm.baseUrl + '/registration'
+  vm.registrationUrl   = $state.href('CONNECT_REGISTRATION', { activated: true }, { absolute: true })
   vm.forgotPasswordUrl = vm.baseUrl + '/forgot-password'
   vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl  
 

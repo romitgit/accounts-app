@@ -296,17 +296,11 @@ export function resetPassword(handle, resetToken, password) {
   return fetchJSON(url, config)
 }
 
-export function registerUser({param, options}) {
-  const url = API_URL + '/v3/users'
-  const config = {
+export function registerUser(body) {
+  return fetchJSON(API_URL + '/v3/users', {
     method: 'POST',
-    body: {
-      param,
-      options
-    }
-  }
-
-  return fetchJSON(url, config)
+    body
+  })
 }
 
 export function generateSSOUrl(org, callbackUrl) {
