@@ -247,16 +247,28 @@ export function refreshToken() {
     }
   }
 
-  return refreshPromise = fetchJSON(url, config)
-    .then( data => {
-      // Assign it to local storage
-      const newToken = get(data, 'result.content.token')
-      localStorage.setItem(TC_JWT, newToken)
+  function refreshSuccess(data) {
+    // Assign it to local storage
+    const newToken = get(data, 'result.content.token')
+    localStorage.setItem(TC_JWT, newToken)
 
-      refreshPromise = null
+    refreshPromise = null
 
-      return newToken
+    return newToken
+  }
+
+  function refreshFailure(response) {
+    refreshPromise = null
+
+    throw new AuthException({
+      reason: 'Unable to refresh token',
+      response
     })
+  }
+
+  refreshPromise = fetchJSON(url, config).then(refreshSuccess, refreshFailure)
+
+  return refreshPromise
 }
 
 export function login(options) {
