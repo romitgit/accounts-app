@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 import { GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE } from '../core/constants.js'
 import { getToken, getFreshToken, refreshToken, logout } from '../core/auth.js'
 
