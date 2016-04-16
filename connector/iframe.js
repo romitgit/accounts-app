@@ -12,8 +12,6 @@ iframe.height = 0
 
 iframe.frameborder = 0
 
-iframe.style = "border : none"
-
 document.body.appendChild(iframe)
 
 export default iframe
