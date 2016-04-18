@@ -8,10 +8,10 @@ import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
 const auth0 = new Auth0({
-    domain      : AUTH0_DOMAIN,
-    clientID    : AUTH0_CLIENT_ID,
-    callbackOnLocationHash: true
-  });
+  domain      : AUTH0_DOMAIN,
+  clientID    : AUTH0_CLIENT_ID,
+  callbackOnLocationHash: true
+})
 
 function AuthException(params) {
   Object.assign(this, params)
@@ -63,11 +63,7 @@ export function isLoggedIn() {
 }
 
 export function getToken() {
-  var token = localStorage.getItem(TC_JWT)
-  if(token) {
-    token = token.replace(/^"|"$/g, '')
-  }
-  return token
+  return (localStorage.getItem(TC_JWT) || '').replace(/^"|"$/g, '')
 }
 
 export function getFreshToken() {
@@ -94,9 +90,8 @@ export function getFreshToken() {
 }
 
 export function logout() {
-  
-  //var API_URL = "http://local.topcoder-dev.com:8080"  
-  let token = getToken()
+  const token = getToken()
+
   if (!token || isTokenExpired(token, 300)) {
     refreshToken().catch( error => console.error(error) )
   }
@@ -114,9 +109,6 @@ export function logout() {
   }
 
   return fetchJSON(url, config)
-    .catch(function(error){
-      console.error(error)
-    })
 }
 
 function setConnection(options) {
@@ -129,6 +121,8 @@ function setConnection(options) {
 
 function auth0Signin(options) {
   const url = 'https://' + AUTH0_DOMAIN + '/oauth/ro'
+  
+  /* eslint camelcase: 0 */
   const config = {
     method: 'POST',
     body: {
@@ -148,28 +142,29 @@ function auth0Signin(options) {
 }
 
 function auth0Popup(options) {
-  return new Promise(function(onFulfilled, onRejected) {
+  return new Promise( (resolve, reject) => {
     auth0.login(
       {
         scope: options.scope || 'openid profile offline_access',
         connection: options.connection,
         popup: true
       },
-      function(err, profile, id_token, access_token, state, refresh_token) {
+      (err, profile, id_token, access_token, state, refresh_token) => {
         if (err) {
-          onRejected(err);
-          return;
+          reject(err)
+          return
         }
         
-        onFulfilled({
-          profile : profile,
-          id_token : id_token,
-          access_token : access_token,
-          state : state,
-          refresh_token : refresh_token
-        });
+        /* eslint camelcase: 0 */
+        resolve({
+          profile,
+          id_token,
+          access_token,
+          state,
+          refresh_token
+        })
       }
-    );
+    )
   })
 }
 
@@ -198,7 +193,6 @@ function getNewJWT() {
     }
   }
   
-  //let API_URL = "http://local.topcoder-dev.com:8080"
   const url = API_URL + '/v3/authorizations'
   const config = {
     method: 'POST',
