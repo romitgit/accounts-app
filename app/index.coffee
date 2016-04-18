@@ -17,6 +17,7 @@ require './app-config'
 require './app-run'
 
 require 'appirio-tech-ng-auth'
+require 'appirio-tech-ng-ui-components'
 
 requireContextFiles = (files) ->
   paths = files.keys()

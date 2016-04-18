@@ -16,6 +16,7 @@
     "angular-messages": "^1.5.2",
     "angular-ui-router": "^0.2.18",
     "appirio-tech-ng-auth": "^4.2.5",
+    "appirio-tech-ng-ui-components": "^2.2.4",
     "auth0-angular": "^4.1.0",
     "auth0-js": "^6.8.0",
     "babel-polyfill": "^6.7.4",
