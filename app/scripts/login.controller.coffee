@@ -6,7 +6,6 @@ LoginController = (
   $log
   $state
   $stateParams
-  Constants
 ) ->
   
   vm = this
@@ -42,7 +41,6 @@ LoginController.$inject = [
   '$log'
   '$state'
   '$stateParams'
-  'Constants'
 ]
 
 angular.module('accounts').controller 'LoginController', LoginController
