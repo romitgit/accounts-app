@@ -115,8 +115,10 @@ TCLoginController = (
         $state.go 'home'
 
   init = ->
-    if getToken(ZENDESK_JWT) && $stateParams.return_to
-      Utils.redirectTo Utils.generateZendeskReturnUrl($stateParams.return_to)
+    # "return_to" is handed by Zendesk.
+    # It's in the case of sign-in or session is expired in Zendesk. It always needs to log in.
+    if $stateParams.return_to
+      vm
     else if getToken(TC_JWT) && vm.retUrl
       Utils.redirectTo Utils.generateReturnUrl(vm.retUrl)
     else if ($stateParams.handle || $stateParams.email) && $stateParams.password
