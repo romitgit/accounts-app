@@ -100,7 +100,7 @@ export function logout() {
 
   clearTokens()
 
-  const url = API_URL + '/v3/authorizations/1'
+  const url = API_URL + '/authorizations/1'
   const config = {
     method: 'DELETE',
     headers: {
@@ -193,7 +193,7 @@ function getNewJWT() {
     }
   }
   
-  const url = API_URL + '/v3/authorizations'
+  const url = API_URL + '/authorizations'
   const config = {
     method: 'POST',
     withCredentials: true,
@@ -234,7 +234,7 @@ export function refreshToken() {
   }
 
   const token = getToken() || ''
-  const url = API_URL + '/v3/authorizations/1'
+  const url = API_URL + '/authorizations/1'
   const config = {
     headers: {
       Authorization: 'Bearer ' + token
@@ -281,11 +281,11 @@ export function socialLogin(options) {
 }
 
 export function sendResetEmail(email) {
-  return fetchJSON(API_URL + '/v3/users/resetToken?email=' + email + '&source=connect')
+  return fetchJSON(API_URL + '/users/resetToken?email=' + email + '&source=connect')
 }
 
 export function resetPassword(handle, resetToken, password) {
-  const url = API_URL + '/v3/users/resetPassword'
+  const url = API_URL + '/users/resetPassword'
   const config = {
     method: 'PUT',
     body: {
@@ -303,7 +303,7 @@ export function resetPassword(handle, resetToken, password) {
 }
 
 export function registerUser(body) {
-  return fetchJSON(API_URL + '/v3/users', {
+  return fetchJSON(API_URL + '/users', {
     method: 'POST',
     body
   })
@@ -354,7 +354,7 @@ export function getSSOProvider(handle) {
     })
   }
 
-  return fetchJSON(API_URL + '/v3/identityproviders?filter=' + filter)
+  return fetchJSON(API_URL + '/identityproviders?filter=' + filter)
     .catch(failure)
     .then(success)
 }
