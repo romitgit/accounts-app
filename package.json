@@ -5,10 +5,10 @@
   "main": "exports.js",
   "scripts": {
     "build": "webpack -p --bail --progress --build",
-    "build:dev": "webpack -p --bail --progress --dev",
+    "build:dev": "webpack -p --bail --progress --tc --dev",
     "dev": "webpack-dev-server --history-api-fallback --dev --inline --progress --port 3000",
     "prod": "webpack-dev-server --history-api-fallback --prod --inline --progress --port 3000",
-    "build:connector": "webpack --bail --progress -p --dev --config webpack.config.connector.js"
+    "build:connector": "webpack --bail --progress -p --dev --tc --config webpack.config.connector.js"
   },
   "dependencies": {
     "angular": "^1.4.8",
