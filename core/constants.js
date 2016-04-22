@@ -1,8 +1,8 @@
 export const TC_JWT = 'tcJwt'
 export const AUTH0_REFRESH = 'auth0Refresh'
 export const AUTH0_JWT = 'auth0Jwt'
-export const V2_SSO = 'v2SSOToken'
-export const V2_COOKIE = 'tcsso'
+export const V2_JWT = 'tcjwt'
+export const V2_SSO = 'tcsso'
 export const ZENDESK_JWT = 'zendeskJwt'
 
 export const SCHEME = 'https'
