@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection } from './utils.js'
 import { clearTokens, readCookie, isTokenExpired } from './token.js'
-import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, V2_SSO, V2_COOKIE, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
+import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, V2_JWT, V2_SSO, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -196,7 +196,7 @@ function getNewJWT() {
   const url = API_URL + '/authorizations'
   const config = {
     method: 'POST',
-    withCredentials: true,
+    credentials: 'include',
     body: params
   }
 
@@ -210,7 +210,6 @@ function getNewJWT() {
 function handleAuthResult({token, zendeskJwt}) {
   setTcJwt(token)
   setZendeskJwt(zendeskJwt)
-  setSSOToken()
 }
 
 function setTcJwt(token) {
@@ -219,10 +218,6 @@ function setTcJwt(token) {
 
 function setZendeskJwt(token) {
   localStorage.setItem(ZENDESK_JWT, token || '')
-}
-
-function setSSOToken() {
-  localStorage.setItem(V2_SSO, readCookie(V2_COOKIE) || '' )
 }
 
 // refreshPromise is needed outside the refreshToken scope to allow throttling

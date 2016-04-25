@@ -12,16 +12,28 @@ This repo contains several pieces:
   
 # Using Connector in your app
 
-## Installation
+## Install
 
 ```
 > npm install --save tc-accounts
 ```
 
-## Usage
-We recommend using ES6 imports with webpack/browserify.
+## Configure
 
-**NOTE:** importing this library will attach an iframe to your DOM.
+The connector exports a ``configureConnector`` method that **must** be invoked before any of the other methods, which likely means the entry of your app, or the entry of your auth logic. This will create and attach the connector ``iFrame`` to the DOM in your app.
+
+```javascript
+import { configureConnector } from 'tc-accounts'
+
+configureConnector({
+  connectorUrl: 'https://accounts.topcoder.com/connector.html',
+  frameId: 'tc-accounts-iframe'
+})
+```
+
+## Use
+
+
 
 ```javascript
 import { getFreshToken } from 'tc-accounts'
@@ -48,6 +60,8 @@ const config = function($httpProvider, jwtInterceptorProvider) {
 ```
 
 - **logout()** - Log out of all Topcoder apps. Returns a Promise.
+- **isTokenExpired(token, offsetSeconds = 0)** - Returns whether or not a given JWT is expired. Accepts an offset in seconds.
+- **decodeToken(token)** - Returns the contents of a JWT as a javascript object
 
 # Contributing
 

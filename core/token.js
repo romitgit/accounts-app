@@ -1,13 +1,12 @@
-import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_SSO, V2_COOKIE, ZENDESK_JWT } from './constants.js'
+import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_JWT, V2_SSO, ZENDESK_JWT } from './constants.js'
 
 export function clearTokens() {
   removeToken(TC_JWT)
   removeToken(AUTH0_REFRESH)
   removeToken(AUTH0_JWT)
-  removeToken(V2_SSO)  
   removeToken(ZENDESK_JWT)
-  deleteCookie(V2_COOKIE)
-  deleteCookie('tcjwt')
+  deleteCookie(V2_JWT)
+  deleteCookie(V2_SSO)
 }
 
 export function getToken(key) {
@@ -95,6 +94,6 @@ export function readCookie(name) {
 }
 
 export function deleteCookie(name) {
-  let domain = location.hostname.substring(location.hostname.indexOf('.'));
-  document.cookie = name + "=; path=/; domain=" + domain + "; expires=" + (new Date()).toGMTString()+"; ";
+  let domain = location.hostname.substring(location.hostname.indexOf('.'))
+  document.cookie = name + "=; path=/; domain=" + domain + "; expires=" + (new Date()).toGMTString()+"; "
 }
