@@ -353,3 +353,11 @@ export function getSSOProvider(handle) {
     .catch(failure)
     .then(success)
 }
+
+export function validateClient(clientId, encodedRedirectUrl) {
+  const url = API_URL + '/v3/authorizations/validateClient?clientId=' + clientId + '&rediectUrl=' + encodedRedirectUrl
+  //const url = 'http://local.topcoder-dev.com:8080/v3/authorizations/validateClient?clientId=' + clientId + '&redirectUrl=' + encodedRedirectUrl
+  return fetchJSON(url, {
+    method: 'GET'
+  })
+}

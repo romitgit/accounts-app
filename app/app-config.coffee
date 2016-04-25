@@ -58,9 +58,14 @@ config = (
     controller  : 'LogoutController as vm'
     template: require('./views/logout')()
     public: true
-
+  
+  states['OAUTH'] =
+    url: '/oauth?client_id&response_type&state&redirect_uri&scope'
+    controller  : 'OAuthController as vm'
+    public: true
+  
   states['MEMBER_LOGIN'] =
-    url: '/tc?retUrl&handle&password&return_to'
+    url: '/tc?retUrl&handle&password&return_to&client_id&response_type&state&redirect_uri&scope'
     controller  : 'TCLoginController as vm'
     template: require('./views/tc/login')()
     public: true
