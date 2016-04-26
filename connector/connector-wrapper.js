@@ -1,14 +1,16 @@
-import { GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, CONNECTOR_URL } from '../core/constants.js'
+import { GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE } from '../core/constants.js'
 import createFrame from './iframe.js'
 
 let iframe = null
 let loading = null
+let url = ''
 
 export function configureConnector({connectorUrl, frameId}) {
   if (iframe) {
     console.warn('tc-accounts connector can only be configured once, this request has been ignored')
   } else {
     iframe = createFrame(frameId, connectorUrl)
+    url = connectorUrl 
     
     loading = new Promise( (resolve) => {
       iframe.onload = function() {
@@ -38,7 +40,7 @@ const proxyCall = function(REQUEST, SUCCESS, FAILURE, params = {}) {
 
       const payload = Object.assign({}, { type: REQUEST }, params)
 
-      iframe.contentWindow.postMessage(payload, CONNECTOR_URL)
+      iframe.contentWindow.postMessage(payload, url)
     })
   }
 
