@@ -1,4 +1,5 @@
 import replace from 'lodash/replace'
+import { getToken } from './token.js'
 import { AUTH0_DOMAIN, AUTH0_CLIENT_ID, API_URL, DOMAIN, ZENDESK_DOMAIN } from './constants.js'
 
 export function redirectTo(url) {

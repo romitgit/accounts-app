@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <base href="/">
+    <title>Topcoder</title>
+    <script src="//code.jquery.com/jquery-2.2.2.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script>
+      jQuery(function($) {
+        var AUTH0_TOKEN_NAME = 'auth0Jwt';
+        var AUTH0_REFRESH_TOKEN_NAME = 'userRefreshJWTToken';
+        var USER_TOKEN_NAME = 'userJWTToken';
+        var SSO_TOKEN_NAME = 'v2SSOToken';
+        var API_URL = 'https://api.topcoder-dev.com';
+
+        var store = {};
+        store.set = function(key, val) {
+          if(localStorage) {
+            localStorage.setItem(key, val);
+          }
+        }
+        store.get = function(key) {
+          return localStorage ? localStorage.getItem(key) : null;
+        }
+        
+        function setAuth0Tokens(token, refreshToken) {
+          store.set(AUTH0_TOKEN_NAME, token);
+          store.set(AUTH0_REFRESH_TOKEN_NAME, refreshToken);
+        }
+        function getAuth0Token() {
+          store.get(AUTH0_TOKEN_NAME)
+        }
+        function getAuth0RefreshToken() {
+          store.get(AUTH0_REFRESH_TOKEN_NAME)
+        }
+        
+        function setJWT(jwt) {
+          store.set(USER_TOKEN_NAME, jwt);
+        }
+        function setSSOToken(sso) {
+          store.set(SSO_TOKEN_NAME, sso);
+        }
+        function getNewJWT(id_token, refresh_token, retUrl) {
+          var endpoint = API_URL + "/v3/authorizations",
+            data = {
+              externalToken : store.getAuth0Token(),
+              refreshToken : store.getAuth0RefreshToken()
+            },
+            payload = JSON.stringify({param: data});
+          
+          $.ajax({
+              url : endpoint,
+              type : 'POST',
+              contentType : 'application/json',
+              dataType : 'json',
+              data: payload,
+              xhrFields: {
+                withCredentials: true
+              },
+              success : function(data) {
+                  console.log(data);
+                  var token = data.result.content.token;
+                  setJWT(token);
+                  $("#message").html("Redirecting to "+retUrl);
+                  redirect(
+                    rebuildUrl(retUrl, 'jwt', token));
+              },
+              error : function(xhr,status,error) {
+                console.log(xhr.status + ':' + error);
+                var err = getError(xhr, error);
+                console.log(err);
+                redirect(rebuildUrl(
+                  rebuildUrl(retUrl, 'status', xhr.status),
+                  'message', encodeURIComponent(err)));
+              }
+            });
+        }
+
+        function redirect(to) {
+            if(!to) {
+                return;
+            }
+            location.href = to;
+        }
+
+        function rebuildUrl(url, param, value) {
+          var p = url.indexOf('?'),
+            params;
+          if(p>=0) {
+            params = parseQuery(url.substring(p+1));
+            url = url.substring(0, p);
+          }
+          params = params || {};
+          params[param] = value;
+          url = url+'?';
+          for(var key in params) {
+            url += (key + '=' + encodeURIComponent(params[key]) + '&');
+          }
+          return url.replace(/&$/, '');
+        }
+          
+        function getQueryParameters() {
+          if(1 >= window.location.search.length) {
+            return {};
+          }
+          return parseQuery(window.location.search.substring(1));
+        }
+
+        function getHashParameters() {
+          if(1 >= window.location.hash.length) {
+            return {};
+          }
+          return parseQuery(window.location.hash.substring(1));
+        }
+        
+        function parseQuery(query) {
+          var params = {};
+          if(!query)
+            return params;
+          var kvs = query.split('&');
+          for(var i=0; i<kvs.length; i++) {
+            if(kvs[i].indexOf('=')<0) {
+              params[decodeURIComponent(kvs[i])] = null;
+              continue;
+            }
+            var pair = kvs[i].split('=');
+            params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+          }
+            return params;
+        }
+
+        function getError(xhr, error) {
+          if(xhr && xhr.responseJSON && xhr.responseJSON.result && xhr.responseJSON.result.content) {
+            return xhr.responseJSON.result.content;
+          }
+          return error;
+        }
+        
+        $(document).ready(function() {
+            var params = $.extend(true, getHashParameters(), getQueryParameters()),
+              code = params['code'],
+              id_token = params['id_token'],
+              refresh_token = params['refresh_token'],
+              state = decodeURIComponent(params['state']);
+
+            console.log("callback param[code]: "+code);
+            console.log("callback param[id_token]: "+id_token);
+            console.log("callback param[refresh_token]: "+refresh_token);		
+            console.log("callback param[state]: "+state);
+
+            $("#message").html("Logging in...");
+            getNewJWT(id_token, refresh_token, state);
+        });
+
+      });
+
+    </script>
+
+  </head>
+  <body>
+    <div>
+		  <span id="message"></span>
+	  </div>
+  </body>
+</html>
