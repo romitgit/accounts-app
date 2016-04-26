@@ -275,8 +275,8 @@ export function socialLogin(options) {
     .then(handleAuthResult)
 }
 
-export function sendResetEmail(email) {
-  return fetchJSON(API_URL + '/v3/users/resetToken?email=' + email + '&source=connect')
+export function sendResetEmail(email, resetPasswordUrlPrefix) {
+  return fetchJSON(API_URL + '/v3/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix) )
 }
 
 export function resetPassword(handle, resetToken, password) {
