@@ -58,7 +58,13 @@ config = (
     controller  : 'LogoutController as vm'
     template: require('./views/logout')()
     public: true
-  
+    
+  # State parameters
+  # client_id    : (required) ID for a client which is registered in the client database.
+  # response_type: (required) Only "token" is supported.
+  # redirect_uri : (required) Encoded URL to redirect after authentication. This should be registered in the client database.
+  # state        : (optional)
+  # scope        : (optional) Currently not used in anywhere.
   states['OAUTH'] =
     url: '/oauth?client_id&response_type&state&redirect_uri&scope'
     controller  : 'OAuthController as vm'
