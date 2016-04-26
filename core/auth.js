@@ -275,8 +275,8 @@ export function socialLogin(options) {
     .then(handleAuthResult)
 }
 
-export function sendResetEmail(email) {
-  return fetchJSON(API_URL + '/users/resetToken?email=' + email + '&source=connect')
+export function sendResetEmail(email, resetPasswordUrlPrefix) {
+  return fetchJSON(API_URL + '/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix) )
 }
 
 export function resetPassword(handle, resetToken, password) {
@@ -352,4 +352,17 @@ export function getSSOProvider(handle) {
   return fetchJSON(API_URL + '/identityproviders?filter=' + filter)
     .catch(failure)
     .then(success)
+}
+
+export function validateClient(clientId, redirectUrl, scope) {
+
+  const token = getToken() || ''
+  const url = API_URL + '/authorizations/validateClient?clientId=' + clientId + '&redirectUrl=' + encodeURIComponent(redirectUrl) + '&scope=' + scope
+  
+  return fetchJSON(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  })
 }

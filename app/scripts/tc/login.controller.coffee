@@ -1,8 +1,7 @@
 'use strict'
 
-{ TC_JWT, ZENDESK_JWT, DOMAIN } = require '../../../core/constants.js'
-{ login, socialLogin }  = require '../../../core/auth.js'
-{ getToken }            = require '../../../core/token.js'
+{ DOMAIN } = require '../../../core/constants.js'
+{ login, socialLogin, getToken } = require '../../../core/auth.js'
 { isEmail, setupLoginEventMetrics } = require '../../../core/utils.js'
 { redirectTo, generateZendeskReturnUrl, generateReturnUrl } = require '../../../core/url.js'
 
@@ -102,19 +101,23 @@ TCLoginController = (
     # setup login event for analytics tracking
     setupLoginEventMetrics(vm.username)
 
-    if $stateParams.return_to
+    if $stateParams.redirect_uri
+      # OAuth
+      $state.go 'OAUTH', $stateParams
+    else if $stateParams.return_to
+      # Zendesk
       redirectTo generateZendeskReturnUrl($stateParams.return_to)
     else if vm.retUrl
       redirectTo generateReturnUrl(vm.retUrl)
     else
-        $state.go 'home'
+      $state.go 'home'
 
   init = ->
     # "return_to" is handed by Zendesk.
     # It's in the case of sign-in or session is expired in Zendesk. It always needs to log in.
     if $stateParams.return_to
       vm
-    else if getToken(TC_JWT) && vm.retUrl
+    else if getToken() && vm.retUrl
       redirectTo generateReturnUrl(vm.retUrl)
     else if ($stateParams.handle || $stateParams.email) && $stateParams.password
       id = $stateParams.handle || $stateParams.email

@@ -2,7 +2,7 @@
 
 { sendResetEmail } = require '../../../core/auth.js'
 
-ForgotPasswordController = ($scope) ->
+ForgotPasswordController = ($scope, $state) ->
   vm          = this
   vm.email    = ''
   vm.error    = ''
@@ -10,9 +10,10 @@ ForgotPasswordController = ($scope) ->
 
   vm.submit = ->
     vm.error   = false
-    email      = encodeURIComponent vm.email
+    email      = vm.email
+    resetPasswordUrlPrefix = $state.href('CONNECT_RESET_PASSWORD', {}, { absolute: true })
 
-    sendResetEmail(email).then(success, failure)
+    sendResetEmail(email, resetPasswordUrlPrefix).then(success, failure)
 
   success = ->
     $scope.$apply ->
@@ -26,6 +27,7 @@ ForgotPasswordController = ($scope) ->
 
 ForgotPasswordController.$inject = [
   '$scope'
+  '$state'
 ]
 
 angular.module('accounts').controller 'ConnectForgotPasswordController', ForgotPasswordController
