@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "main": "exports.js",
   "scripts": {
-    "build": "webpack -p --bail --progress --build",
+    "build": "webpack -p --bail --progress --build --tc",
     "build:dev": "webpack -p --bail --progress --tc --dev",
     "dev": "webpack-dev-server --history-api-fallback --dev --inline --progress --port 3000",
     "prod": "webpack-dev-server --history-api-fallback --prod --inline --progress --port 3000",
