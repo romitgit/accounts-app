@@ -357,7 +357,7 @@ export function getSSOProvider(handle) {
 export function validateClient(clientId, redirectUrl, scope) {
 
   const token = getToken() || ''
-  const url = API_URL + '/v3/authorizations/validateClient?clientId=' + clientId + '&rediectUrl=' + encodeURIComponent(redirectUrl) + '&scope=' + scope
+  const url = API_URL + '/v3/authorizations/validateClient?clientId=' + clientId + '&redirectUrl=' + encodeURIComponent(redirectUrl) + '&scope=' + scope
   
   return fetchJSON(url, {
     method: 'GET',
