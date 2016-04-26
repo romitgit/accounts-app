@@ -1,6 +1,6 @@
 'use strict'
 
-{ getFreshToken, validateClient } = require '../../core/auth.js'
+{ getToken, getFreshToken, validateClient } = require '../../core/auth.js'
 { isUrl } = require '../../core/url.js'
 
 OAuthController = (
@@ -11,6 +11,11 @@ OAuthController = (
 ) ->
   
   vm = this
+
+  redirectTo = (url) ->
+    $log.debug "redirect to " + url
+    $window.location.href = url
+    url
 
   # /oauth?client_id&response_type&state&redirect_uri&scope  
   validateParams = ->
@@ -24,13 +29,12 @@ OAuthController = (
       error = {type:'invalid_request', desc:'client_id is required'}
     
     if error
-      $window.location.href = createErrorUrl($stateParams.redirect_uri || '/', error.type, error.desc, $stateParams.state || '')
+      redirectTo createErrorUrl($stateParams.redirect_uri || '/', error.type, error.desc, $stateParams.state || '')
     error
   
   #access_token=&token_type=bearer&state
   createRedirectUrl = (redirectUrl, state) ->
-    url = redirectUrl + '#access_token=' + getToken() + '&token_type=bearer&state=' + state
-    return url
+    redirectUrl + '#access_token=' + getToken() + '&token_type=bearer&state=' + state
   
   createErrorUrl = (redirectUrl, status, message, state) ->
     ###
@@ -69,10 +73,10 @@ OAuthController = (
       scope       = $stateParams.scope || ''
       validateClient(clientId, redirectUrl, scope)
         .then (res) ->
-          $window.location.href = createRedirectUrl(redirectUrl, state)
+          redirectTo createRedirectUrl(redirectUrl, state)
         .catch (err) ->
           $log.error(err)
-          $window.location.href = createErrorUrl(redirectUrl, err?.response?.status, err?.message, state)
+          redirectTo createErrorUrl(redirectUrl, err?.response?.status, err?.message, state)
     
     failure = (err) ->
       $state.go 'MEMBER_LOGIN', $stateParams
