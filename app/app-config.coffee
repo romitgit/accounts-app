@@ -116,6 +116,11 @@ config = (
     template   : require('./views/connect/sso-callback')()
     controller : 'SSOCallbackController as vm'
     public: true
+
+  states['UNAUTHORIZED'] =
+    url: '/401',
+    template   : require('./views/401')()
+    public: true
   
   # This must be the last one in the list
   states['otherwise'] =

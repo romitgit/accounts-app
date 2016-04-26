@@ -1,6 +1,6 @@
 'use strict'
 
-{ getToken, validateClient } = require '../../core/auth.js'
+{ getFreshToken, validateClient } = require '../../core/auth.js'
 { isUrl } = require '../../core/url.js'
 
 OAuthController = (
@@ -36,24 +36,25 @@ OAuthController = (
     ###
     https://tools.ietf.org/html/rfc6749#page-26
     400: 'invalid_request'
-    401: 'access_denied'
-    403: 'unauthorized_client'
+    401: 'unauthorized_client'
+    403: 'access_denied'
     500: 'server_error'
     unsupported_response_type, invalid_scope,  
     ###
     error = ''
     if status == 400
       error = 'invalid_request'
-    else if status == 401
-      error = 'access_denied'
-    else if status == 403
+    else if status == 401 || status == 404
       error = 'unauthorized_client'
+    else if status == 403
+      error = 'access_denied'
     else if status >= 500
       error = 'server_error'
     else
       error = status
     
-    url = redirectUrl + '#error=' + error + '&error_description=' + message + '&state=' + state
+    # TODO
+    url = $state.href('UNAUTHORIZED', {absolute:true}) + '#error=' + error + '&error_description=' + message + '&state=' + state
     return url
   
   init = ->
@@ -61,18 +62,25 @@ OAuthController = (
     if err
       return vm
     
-    unless getToken()
-      $state.go 'MEMBER_LOGIN', $stateParams
-    else
+    success = (res) ->
       redirectUrl = $stateParams.redirect_uri || ''
-      state = $stateParams.state || ''
-      clientId = $stateParams.client_id || ''
-      validateClient(clientId, redirectUrl)
+      state       = $stateParams.state || ''
+      clientId    = $stateParams.client_id || ''
+      scope       = $stateParams.scope || ''
+      validateClient(clientId, redirectUrl, scope)
         .then (res) ->
           $window.location.href = createRedirectUrl(redirectUrl, state)
         .catch (err) ->
           $log.error(err)
           $window.location.href = createErrorUrl(redirectUrl, err?.response?.status, err?.message, state)
+    
+    failure = (err) ->
+      $state.go 'MEMBER_LOGIN', $stateParams
+    
+    getFreshToken()
+      .then(success)
+      .catch(failure)
+    
     vm
   
   init()

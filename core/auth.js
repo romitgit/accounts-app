@@ -354,10 +354,15 @@ export function getSSOProvider(handle) {
     .then(success)
 }
 
-export function validateClient(clientId, encodedRedirectUrl) {
-  const url = API_URL + '/v3/authorizations/validateClient?clientId=' + clientId + '&rediectUrl=' + encodedRedirectUrl
-  //const url = 'http://local.topcoder-dev.com:8080/v3/authorizations/validateClient?clientId=' + clientId + '&redirectUrl=' + encodedRedirectUrl
+export function validateClient(clientId, redirectUrl, scope) {
+
+  const token = getToken() || ''
+  const url = API_URL + '/v3/authorizations/validateClient?clientId=' + clientId + '&rediectUrl=' + encodeURIComponent(redirectUrl) + '&scope=' + scope
+  
   return fetchJSON(url, {
-    method: 'GET'
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
   })
 }
