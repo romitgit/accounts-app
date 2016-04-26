@@ -1,18 +1,17 @@
-'use strict'
-
 import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
+import { getLoginConnection } from './utils.js'
 import { clearTokens, readCookie, isTokenExpired } from './token.js'
-import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, V2_SSO, V2_COOKIE, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
+import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, V2_JWT, V2_SSO, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
 const auth0 = new Auth0({
-    domain      : AUTH0_DOMAIN,
-    clientID    : AUTH0_CLIENT_ID,
-    callbackOnLocationHash: true
-  });
+  domain      : AUTH0_DOMAIN,
+  clientID    : AUTH0_CLIENT_ID,
+  callbackOnLocationHash: true
+})
 
 function AuthException(params) {
   Object.assign(this, params)
@@ -64,17 +63,35 @@ export function isLoggedIn() {
 }
 
 export function getToken() {
-  var token = localStorage.getItem(TC_JWT)
-  if(token) {
-    token = token.replace(/^"|"$/g, '')
+  return (localStorage.getItem(TC_JWT) || '').replace(/^"|"$/g, '')
+}
+
+export function getFreshToken() {
+  const currentToken = (localStorage.getItem(TC_JWT) || '').replace(/^"|"$/g, '')
+
+  // If we have no token, short circuit
+  if (!currentToken) {
+    return Promise.reject('No token found')
   }
-  return token
+
+  // If the token is still fresh for at least another minute
+  if ( !isTokenExpired(currentToken, 60) ) {
+
+    // If the token will expire in the next 5m, refresh it in the background
+    if ( isTokenExpired(currentToken, 300) ) {
+      refreshToken()
+    }
+
+    return Promise.resolve(currentToken)
+  }
+
+  // If the token is expired, return a promise for a fresh token
+  return refreshToken()
 }
 
 export function logout() {
-  
-  //var API_URL = "http://local.topcoder-dev.com:8080"  
-  let token = getToken()
+  const token = getToken()
+
   if (!token || isTokenExpired(token, 300)) {
     refreshToken().catch( error => console.error(error) )
   }
@@ -92,13 +109,20 @@ export function logout() {
   }
 
   return fetchJSON(url, config)
-    .catch(function(error){
-      console.error(error)
-    })
+}
+
+function setConnection(options) {
+  if (options.connection === undefined) {
+    options.connection = getLoginConnection(options.username)
+  }
+
+  return Promise.resolve(options)
 }
 
 function auth0Signin(options) {
   const url = 'https://' + AUTH0_DOMAIN + '/oauth/ro'
+  
+  /* eslint camelcase: 0 */
   const config = {
     method: 'POST',
     body: {
@@ -118,28 +142,29 @@ function auth0Signin(options) {
 }
 
 function auth0Popup(options) {
-  return new Promise(function(onFulfilled, onRejected) {
+  return new Promise( (resolve, reject) => {
     auth0.login(
       {
         scope: options.scope || 'openid profile offline_access',
         connection: options.connection,
         popup: true
       },
-      function(err, profile, id_token, access_token, state, refresh_token) {
+      (err, profile, id_token, access_token, state, refresh_token) => {
         if (err) {
-          onRejected(err);
-          return;
+          reject(err)
+          return
         }
         
-        onFulfilled({
-          profile : profile,
-          id_token : id_token,
-          access_token : access_token,
-          state : state,
-          refresh_token : refresh_token
-        });
+        /* eslint camelcase: 0 */
+        resolve({
+          profile,
+          id_token,
+          access_token,
+          state,
+          refresh_token
+        })
       }
-    );
+    )
   })
 }
 
@@ -168,11 +193,10 @@ function getNewJWT() {
     }
   }
   
-  //let API_URL = "http://local.topcoder-dev.com:8080"
   const url = API_URL + '/v3/authorizations'
   const config = {
     method: 'POST',
-    withCredentials: true,
+    credentials: 'include',
     body: params
   }
 
@@ -186,7 +210,6 @@ function getNewJWT() {
 function handleAuthResult({token, zendeskJwt}) {
   setTcJwt(token)
   setZendeskJwt(zendeskJwt)
-  setSSOToken()
 }
 
 function setTcJwt(token) {
@@ -197,14 +220,14 @@ function setZendeskJwt(token) {
   localStorage.setItem(ZENDESK_JWT, token || '')
 }
 
-function setSSOToken() {
-  localStorage.setItem(V2_SSO, readCookie(V2_COOKIE) || '' )
-}
+// refreshPromise is needed outside the refreshToken scope to allow throttling
+let refreshPromise = null
 
-// refreshPromise is needed outside the function scope to allow multiple calls
-// to chain off an existing promise
 export function refreshToken() {
-  //var API_URL = "http://local.topcoder-dev.com:8080"
+  if (refreshPromise) {
+    return refreshPromise
+  }
+
   const token = getToken() || ''
   const url = API_URL + '/v3/authorizations/1'
   const config = {
@@ -213,18 +236,33 @@ export function refreshToken() {
     }
   }
 
-  return fetchJSON(url, config)
-    .then( data => {
-      // Assign it to local storage
-      const newToken = get(data, 'result.content.token')
-      localStorage.setItem(TC_JWT, newToken)
+  function refreshSuccess(data) {
+    // Assign it to local storage
+    const newToken = get(data, 'result.content.token')
+    localStorage.setItem(TC_JWT, newToken)
 
-      return newToken
+    refreshPromise = null
+
+    return newToken
+  }
+
+  function refreshFailure(response) {
+    refreshPromise = null
+
+    throw new AuthException({
+      reason: 'Unable to refresh token',
+      response
     })
+  }
+
+  refreshPromise = fetchJSON(url, config).then(refreshSuccess, refreshFailure)
+
+  return refreshPromise
 }
 
 export function login(options) {
-  return auth0Signin(options)
+  return setConnection(options)
+    .then(auth0Signin)
     .then(setAuth0Tokens)
     .then(getNewJWT)
     .then(handleAuthResult)
@@ -237,8 +275,8 @@ export function socialLogin(options) {
     .then(handleAuthResult)
 }
 
-export function sendResetEmail(email) {
-  return fetchJSON(API_URL + '/v3/users/resetToken?email=' + email + '&source=connect')
+export function sendResetEmail(email, resetPasswordUrlPrefix) {
+  return fetchJSON(API_URL + '/v3/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix) )
 }
 
 export function resetPassword(handle, resetToken, password) {
@@ -259,17 +297,11 @@ export function resetPassword(handle, resetToken, password) {
   return fetchJSON(url, config)
 }
 
-export function registerUser({param, options}) {
-  const url = API_URL + '/v3/users'
-  const config = {
+export function registerUser(body) {
+  return fetchJSON(API_URL + '/v3/users', {
     method: 'POST',
-    body: {
-      param,
-      options
-    }
-  }
-
-  return fetchJSON(url, config)
+    body
+  })
 }
 
 export function generateSSOUrl(org, callbackUrl) {
@@ -320,4 +352,17 @@ export function getSSOProvider(handle) {
   return fetchJSON(API_URL + '/v3/identityproviders?filter=' + filter)
     .catch(failure)
     .then(success)
+}
+
+export function validateClient(clientId, redirectUrl, scope) {
+
+  const token = getToken() || ''
+  const url = API_URL + '/v3/authorizations/validateClient?clientId=' + clientId + '&redirectUrl=' + encodeURIComponent(redirectUrl) + '&scope=' + scope
+  
+  return fetchJSON(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  })
 }

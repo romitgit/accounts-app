@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "ES6"
+    },
+    "files": [
+        "app",
+        "connector",
+        "core"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

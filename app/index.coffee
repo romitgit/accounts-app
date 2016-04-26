@@ -1,3 +1,5 @@
+require 'babel-polyfill'
+
 scripts    = document.getElementsByTagName 'script'
 src        = scripts[scripts.length - 1].getAttribute 'src'
 publicPath = src.substr 0, src.lastIndexOf('/' + 1)
@@ -15,6 +17,7 @@ require './app-config'
 require './app-run'
 
 require 'appirio-tech-ng-auth'
+require 'appirio-tech-ng-ui-components'
 
 requireContextFiles = (files) ->
   paths = files.keys()
