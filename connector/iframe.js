@@ -1,19 +1,13 @@
-import { CONNECTOR_URL } from '../core/constants.js'
+export default function createFrame(id, src) {
+  const iframe = document.createElement('iframe')
 
-const iframe = document.createElement('iframe')
+  iframe.id = id
+  iframe.src = src
+  iframe.width = 0
+  iframe.height = 0
+  iframe.frameborder = 0
 
-iframe.id = 'TC-CONNECTOR-FRAME'
+  document.body.appendChild(iframe)
 
-iframe.src = CONNECTOR_URL
-
-iframe.width = 0
-
-iframe.height = 0
-
-iframe.frameborder = 0
-
-iframe.style = "border : none"
-
-document.body.appendChild(iframe)
-
-export default iframe
+  return iframe
+}
