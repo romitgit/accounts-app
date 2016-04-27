@@ -92,11 +92,21 @@ export function getFreshToken() {
 export function logout() {
   const token = getToken()
 
-  if (!token || isTokenExpired(token, 300)) {
-    refreshToken().catch( error => console.error(error) )
+  if (!token || isTokenExpired(token)) {
+    // if we don't need to delete token from server, we can just ignore and return
+    // return new Promise( (resolve, reject) => {
+    //   resolve('ALREADY_EXPIRED')
+    // })
+    return refreshToken().then(refreshedToken => {
+      return deleteToken(refreshedToken)
+    }).catch( error => console.error(error) )
+
+  } else {
+    return deleteToken(token)
   }
-  
-  const jwt = getToken() || ''
+}
+
+function deleteToken(jwt) {
 
   clearTokens()
 
