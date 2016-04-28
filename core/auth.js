@@ -13,10 +13,6 @@ const auth0 = new Auth0({
   callbackOnLocationHash: true
 })
 
-function AuthException(params) {
-  Object.assign(this, params)
-}
-
 function fetchJSON(url, options) {
   const config = merge({
     headers: {
@@ -37,20 +33,20 @@ function fetchJSON(url, options) {
           if (json.result.status >= 200 && json.result.status < 300) {
             return json
           } else {
-            throw new AuthException({
-              message: json.result.content,
-              response
-            })
+            const error = new Error(json.result.content)
+            error.response = response
+            
+            throw error
           }
 
         // If this is a non v3 response but still ok
         } else if (response.status >= 200 && response.status < 300) {
           return json
         } else {
-          throw new AuthException({
-            message: response.statusText,
-            response
-          })
+          const error = new Error(response.statusText)
+          error.response = response
+          
+          throw error
         }
       })
   }
@@ -171,12 +167,12 @@ function auth0Popup(options) {
 
 function setAuth0Tokens({id_token, refresh_token}) {
   if (id_token === undefined || refresh_token === undefined) {
-    throw new AuthException({
-      message: 'Unable to contact login server',
-      reason: 'Auth0 response did not contain proper tokens',
-      id_token,
-      refresh_token
-    })
+    const error = new Error('Unable to contact login server')
+    error.reason = 'Auth0 response did not contain proper tokens',
+    error.id_token = id_token
+    error.refresh_token = refresh_token
+
+    throw error
   }
 
   setToken(AUTH0_JWT, id_token)
@@ -249,11 +245,11 @@ export function refreshToken() {
 
   function refreshFailure(response) {
     refreshPromise = null
-
-    throw new AuthException({
-      reason: 'Unable to refresh token',
-      response
-    })
+    
+    const error = new Error('Unable to refresh token')
+    error.reponse = response
+    
+    throw error
   }
 
   refreshPromise = fetchJSON(url, config).then(refreshSuccess, refreshFailure)
@@ -326,28 +322,26 @@ export function getSSOProvider(handle) {
   function success(res) {
     const content = get(res, 'result.content')
     if (!content) {
-      throw new AuthException({
-        message: 'Could not contact login server',
-        reason: 'Body did not contain content',
-        response: res
-      })
+      const error = new Error('Could not contact login server')
+      error.reason = 'Body did not contain content'
+      error.response = res
+      
+      throw error
     }
 
     if (content.type !== 'samlp') {
-      throw new AuthException({
-        message: 'This handle does not appear to have an SSO login associated',
-        reason: 'No provider of type \'samlp\'',
-        response: res
-      })
+      const error = new Error('This handle does not appear to have an SSO login associated')
+      error.reason = 'No provider of type \'samlp\''
+      error.response = res
+      
+      throw error
     }
 
     return content.name
   }
 
   function failure(res) {
-    throw new AuthException({
-      message: get(res, 'result.content') || 'Could not contact login server'
-    })
+    throw new Error( get(res, 'result.content') || 'Could not contact login server' )
   }
 
   return fetchJSON(API_URL + '/identityproviders?filter=' + filter)
