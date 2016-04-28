@@ -10,7 +10,7 @@ UserService = (
   validateEmail = (email) ->    
     config =
       method: 'GET'
-      url: "#{API_URL}/v3/users/validateEmail?email=#{encodeURIComponent(email)}"
+      url: "#{API_URL}/users/validateEmail?email=#{encodeURIComponent(email)}"
       cache: false
       skipAuthorization: true
     
@@ -23,7 +23,7 @@ UserService = (
   validateHandle = (handle) ->    
     config =
       method: 'GET'
-      url: "#{API_URL}/v3/users/validateHandle?handle=#{encodeURIComponent(handle)}"
+      url: "#{API_URL}/users/validateHandle?handle=#{encodeURIComponent(handle)}"
       cache: false
       skipAuthorization: true
     

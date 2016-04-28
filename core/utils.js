@@ -1,4 +1,3 @@
-import { getToken } from './token.js'
 import pickBy from 'lodash/pickBy'
 import mapValues from 'lodash/mapValues'
 import fromPairs from 'lodash/fromPairs'
