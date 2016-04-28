@@ -29,7 +29,6 @@ const proxyCall = function(REQUEST, SUCCESS, FAILURE, params = {}) {
   function request() {
     return new Promise( (resolve, reject) => {
       function receiveMessage(e) {
-        console.log('host event', e.data)
         window.removeEventListener('message', receiveMessage)
 
         if (e.data.type === SUCCESS) resolve(e.data)
