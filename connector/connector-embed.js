@@ -15,14 +15,18 @@ function bindHandler(REQUEST, SUCCESS, FAILURE, action) {
       e.source.postMessage(response, e.origin)
     }
 
-    function failure(data) {
-      if (data instanceof Error) {
-        data = { error: data.message }
+    function failure(error) {
+      if (error instanceof Error) {
+        error = { error: error.message }
+      }
+
+      if (typeof error === 'string') {
+        error = { error }
       }
 
       const response = Object.assign({
         type: FAILURE
-      }, data)
+      }, error)
 
       console.log('Connector iframe: sending response', response)
 
