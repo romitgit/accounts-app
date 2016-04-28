@@ -90,25 +90,25 @@ export function getFreshToken() {
 }
 
 export function logout() {
-  const token = getToken()
+  function getTokenSuccess(token) {
+    clearTokens()
 
-  if (!token || isTokenExpired(token, 300)) {
-    refreshToken().catch( error => console.error(error) )
-  }
-  
-  const jwt = getToken() || ''
-
-  clearTokens()
-
-  const url = API_URL + '/v3/authorizations/1'
-  const config = {
-    method: 'DELETE',
-    headers: {
-      Authorization: 'Bearer ' + jwt
+    const url = API_URL + '/v3/authorizations/1'
+    const config = {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
     }
+
+    return fetchJSON(url, config)
   }
 
-  return fetchJSON(url, config)
+  function getTokenFailure() {
+    console.warn('Failed to get token, assuming we are already logged out')
+  }
+
+  return getFreshToken().then(getTokenSuccess, getTokenFailure)
 }
 
 function setConnection(options) {
