@@ -1,3 +1,5 @@
+const filter = require('lodash/filter')
+
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -11,6 +13,14 @@ const config = require('appirio-tech-webpack-config')({
   dirname: __dirname
 })
 
+const plugins = config.plugins.filter( (plugin) => !plugin instanceof HtmlWebpackPlugin )
+
+plugins.push(new HtmlWebpackPlugin({
+  inject: false,
+  template: path.join(__dirname, '/connector/index.jade'),
+  filename: 'connector.html'
+}))
+
 module.exports = Object.assign(config, {
   entry: path.join(__dirname, '/connector/connector-embed.js'),
   output: {
@@ -18,11 +28,5 @@ module.exports = Object.assign(config, {
     publicPath: '',
     filename: 'connector.js'
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      inject: false,
-      template: path.join(__dirname, '/connector/index.jade'),
-      filename: 'connector.html'
-    })
-  ]
+  plugins
 })
