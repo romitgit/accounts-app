@@ -2,8 +2,8 @@ import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection } from './utils.js'
-import { clearTokens, readCookie, isTokenExpired } from './token.js'
-import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, V2_JWT, V2_SSO, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
+import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
+import { V3_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -59,16 +59,16 @@ function fetchJSON(url, options) {
 }
 
 export function isLoggedIn() {
-  return getToken() !== null
+  return getV3Jwt() !== null
 }
 
-export function getToken() {
-  return (localStorage.getItem(TC_JWT) || '').replace(/^"|"$/g, '')
+export function getV3Jwt() {
+  return getToken(V3_JWT)
 }
 
 export function getFreshToken() {
-  const currentToken = (localStorage.getItem(TC_JWT) || '').replace(/^"|"$/g, '')
-
+  const currentToken = getV3Jwt()
+  
   // If we have no token, short circuit
   if (!currentToken) {
     return Promise.reject('No token found')
@@ -90,10 +90,10 @@ export function getFreshToken() {
 }
 
 export function logout() {
-  function getTokenSuccess(token) {
+  function getJwtSuccess(token) {
     clearTokens()
 
-    const url = API_URL + '/v3/authorizations/1'
+    const url = API_URL + '/authorizations/1'
     const config = {
       method: 'DELETE',
       headers: {
@@ -104,11 +104,12 @@ export function logout() {
     return fetchJSON(url, config)
   }
 
-  function getTokenFailure() {
+  function getJwtFailure() {
+    clearTokens()
     console.warn('Failed to get token, assuming we are already logged out')
   }
 
-  return getFreshToken().then(getTokenSuccess, getTokenFailure)
+  return getFreshToken().then(getJwtSuccess, getJwtFailure)
 }
 
 function setConnection(options) {
@@ -178,13 +179,13 @@ function setAuth0Tokens({id_token, refresh_token}) {
     })
   }
 
-  localStorage.setItem(AUTH0_JWT, id_token)
-  localStorage.setItem(AUTH0_REFRESH, refresh_token)
+  setToken(AUTH0_JWT, id_token)
+  setToken(AUTH0_REFRESH, refresh_token)
 }
 
 function getNewJWT() {
-  const externalToken = localStorage.getItem(AUTH0_JWT)
-  const refreshToken = localStorage.getItem(AUTH0_REFRESH)
+  const externalToken = getToken(AUTH0_JWT)
+  const refreshToken = getToken(AUTH0_REFRESH)
 
   const params = {
     param: {
@@ -193,7 +194,7 @@ function getNewJWT() {
     }
   }
   
-  const url = API_URL + '/v3/authorizations'
+  const url = API_URL + '/authorizations'
   const config = {
     method: 'POST',
     credentials: 'include',
@@ -213,11 +214,11 @@ function handleAuthResult({token, zendeskJwt}) {
 }
 
 function setTcJwt(token) {
-  localStorage.setItem(TC_JWT, token || '')
+  setToken(V3_JWT, token || '')
 }
 
 function setZendeskJwt(token) {
-  localStorage.setItem(ZENDESK_JWT, token || '')
+  setToken(ZENDESK_JWT, token || '')
 }
 
 // refreshPromise is needed outside the refreshToken scope to allow throttling
@@ -228,8 +229,8 @@ export function refreshToken() {
     return refreshPromise
   }
 
-  const token = getToken() || ''
-  const url = API_URL + '/v3/authorizations/1'
+  const token = getV3Jwt() || ''
+  const url = API_URL + '/authorizations/1'
   const config = {
     headers: {
       Authorization: 'Bearer ' + token
@@ -239,7 +240,7 @@ export function refreshToken() {
   function refreshSuccess(data) {
     // Assign it to local storage
     const newToken = get(data, 'result.content.token')
-    localStorage.setItem(TC_JWT, newToken)
+    setToken(V3_JWT, newToken)
 
     refreshPromise = null
 
@@ -276,11 +277,11 @@ export function socialLogin(options) {
 }
 
 export function sendResetEmail(email, resetPasswordUrlPrefix) {
-  return fetchJSON(API_URL + '/v3/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix) )
+  return fetchJSON(API_URL + '/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix) )
 }
 
 export function resetPassword(handle, resetToken, password) {
-  const url = API_URL + '/v3/users/resetPassword'
+  const url = API_URL + '/users/resetPassword'
   const config = {
     method: 'PUT',
     body: {
@@ -298,7 +299,7 @@ export function resetPassword(handle, resetToken, password) {
 }
 
 export function registerUser(body) {
-  return fetchJSON(API_URL + '/v3/users', {
+  return fetchJSON(API_URL + '/users', {
     method: 'POST',
     body
   })
@@ -349,15 +350,14 @@ export function getSSOProvider(handle) {
     })
   }
 
-  return fetchJSON(API_URL + '/v3/identityproviders?filter=' + filter)
+  return fetchJSON(API_URL + '/identityproviders?filter=' + filter)
     .catch(failure)
     .then(success)
 }
 
 export function validateClient(clientId, redirectUrl, scope) {
-
-  const token = getToken() || ''
-  const url = API_URL + '/v3/authorizations/validateClient?clientId=' + clientId + '&redirectUrl=' + encodeURIComponent(redirectUrl) + '&scope=' + scope
+  const token = getV3Jwt() || ''
+  const url = API_URL + '/authorizations/validateClient?clientId=' + clientId + '&redirectUrl=' + encodeURIComponent(redirectUrl) + '&scope=' + scope
   
   return fetchJSON(url, {
     method: 'GET',

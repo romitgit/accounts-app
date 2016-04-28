@@ -1,6 +1,6 @@
 'use strict'
 
-{ TC_JWT }   = require '../../../core/constants.js'
+{ V3_JWT }   = require '../../../core/constants.js'
 { login }    = require '../../../core/auth.js'
 { setToken } = require '../../../core/token.js'
 { generateReturnUrl, redirectTo } = require '../../../core/url.js'
@@ -34,7 +34,7 @@ SSOCallbackController = (
         $log.warn status + ', ' + message
       return vm
   
-    setToken(TC_JWT, $stateParams.userJWTToken)
+    setToken(V3_JWT, $stateParams.userJWTToken)
     
     error = redirectTo generateReturnUrl($stateParams.retUrl)
     if error

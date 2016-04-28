@@ -1,7 +1,7 @@
 'use strict'
 
-{ TC_JWT, DOMAIN }   = require '../../core/constants.js'
-{ getToken } = require '../../core/token.js'
+{ DOMAIN }   = require '../../core/constants.js'
+{ getV3Jwt } = require '../../core/token.js'
 
 HomeController = (
   $log
@@ -13,7 +13,7 @@ HomeController = (
   vm.title     = 'Home'
   
   init = ->
-    unless getToken(TC_JWT)
+    unless getV3Jwt()
       $state.go 'MEMBER_LOGIN'
     else
       $window.location = 'https://www.' + DOMAIN + '/'

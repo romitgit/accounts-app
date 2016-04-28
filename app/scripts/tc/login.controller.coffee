@@ -1,7 +1,7 @@
 'use strict'
 
 { DOMAIN } = require '../../../core/constants.js'
-{ login, socialLogin, getToken } = require '../../../core/auth.js'
+{ login, socialLogin, getV3Jwt } = require '../../../core/auth.js'
 { isEmail, setupLoginEventMetrics } = require '../../../core/utils.js'
 { redirectTo, generateZendeskReturnUrl, generateReturnUrl } = require '../../../core/url.js'
 
@@ -117,7 +117,7 @@ TCLoginController = (
     # It's in the case of sign-in or session is expired in Zendesk. It always needs to log in.
     if $stateParams.return_to
       vm
-    else if getToken() && vm.retUrl
+    else if getV3Jwt() && vm.retUrl
       redirectTo generateReturnUrl(vm.retUrl)
     else if ($stateParams.handle || $stateParams.email) && $stateParams.password
       id = $stateParams.handle || $stateParams.email

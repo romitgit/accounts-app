@@ -1,6 +1,6 @@
 'use strict'
 
-{ getToken, getFreshToken, validateClient } = require '../../core/auth.js'
+{ getV3Jwt, getFreshToken, validateClient } = require '../../core/auth.js'
 { isUrl } = require '../../core/url.js'
 
 OAuthController = (
@@ -34,7 +34,7 @@ OAuthController = (
   
   #access_token=&token_type=bearer&state
   createRedirectUrl = (redirectUrl, state) ->
-    redirectUrl + '#access_token=' + getToken() + '&token_type=bearer&state=' + state
+    redirectUrl + '#access_token=' + getV3Jwt() + '&token_type=bearer&state=' + state
   
   createErrorUrl = (redirectUrl, status, message, state) ->
     ###
