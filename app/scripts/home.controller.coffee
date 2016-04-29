@@ -1,14 +1,13 @@
 'use strict'
 
 { DOMAIN }   = require '../../core/constants.js'
-{ getV3Jwt } = require '../../core/token.js'
+{ getV3Jwt } = require '../../core/auth.js'
 
 HomeController = (
   $log
   $state
   $window
 ) ->
-  
   vm           = this
   vm.title     = 'Home'
   
@@ -20,7 +19,6 @@ HomeController = (
     vm
   
   init()
-  
 
 HomeController.$inject = [
   '$log'
