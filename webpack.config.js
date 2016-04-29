@@ -1,7 +1,5 @@
 require('./node_modules/coffee-script/register')
 const filter = require('lodash/filter')
-const CompressionPlugin = require('compression-webpack-plugin')
-const UglifyJsPlugin = require('webpack').optimize.UglifyJsPlugin
 
 if (process.env.TRAVIS_BRANCH === 'master') process.env.ENV = 'PROD'
 if (process.env.TRAVIS_BRANCH === 'dev') process.env.ENV = 'DEV'
@@ -30,8 +28,6 @@ const config = require('appirio-tech-webpack-config')({
   template: './app/index.jade',
   favicon: './app/images/favicon.ico'
 })
-
-config.plugins = config.plugins.filter( (plugin) => !(plugin instanceof CompressionPlugin) && !(plugin instanceof UglifyJsPlugin) )
 
 console.log(config.plugins)
 
