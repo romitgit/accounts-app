@@ -4,10 +4,15 @@ import createFrame from './iframe.js'
 let iframe = null
 let loading = null
 let url = ''
+let mock = false
+let token = ''
 
-export function configureConnector({connectorUrl, frameId}) {
-  if (iframe) {
-    console.warn('tc-accounts connector can only be configured once, this request has been ignored')
+export function configureConnector({connectorUrl, frameId, mockMode, mockToken}) {
+  if (mockMode) {
+    mock = true
+    token = mockToken
+  } else if (iframe) {
+    console.warn('tc-accounts connector can only be configured once, this request has been ignored.')
   } else {
     iframe = createFrame(frameId, connectorUrl)
     url = connectorUrl 
@@ -22,8 +27,12 @@ export function configureConnector({connectorUrl, frameId}) {
 }
 
 const proxyCall = function(REQUEST, SUCCESS, FAILURE, params = {}) {
+  if (mock) {
+    throw new Error('connector is running in mock mode. This method (proxyCall) should not be invoked.')
+  }
+
   if (!iframe) {
-    throw new Error('connector has not yet been configured')
+    throw new Error('connector has not yet been configured.')
   }
 
   function request() {
@@ -51,6 +60,14 @@ const proxyCall = function(REQUEST, SUCCESS, FAILURE, params = {}) {
 }
 
 export function getFreshToken() {
+  if (mock) {
+    if (token) {
+      return Promise.resolve(token)
+    } else {
+      return Promise.reject('connector is running in mock mode, but no token has been specified.')
+    }
+  }
+
   return proxyCall(GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE)
     .then( data => data.token )
 }
