@@ -1,5 +1,4 @@
 import { V3_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_JWT, V2_SSO, ZENDESK_JWT } from './constants.js'
-import map from 'lodash/map'
 import fromPairs from 'lodash/fromPairs'
 
 export function clearTokens() {
@@ -10,8 +9,6 @@ export function clearTokens() {
   deleteCookie(V2_JWT)
   deleteCookie(V2_SSO)
 }
-
-window.clearTokens = clearTokens
 
 export function getToken(key) {
   return readCookie(key)
