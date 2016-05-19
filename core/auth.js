@@ -2,8 +2,8 @@ import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection } from './utils.js'
-import { clearTokens, readCookie, isTokenExpired } from './token.js'
-import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, V2_JWT, V2_SSO, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
+import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
+import { V3_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -12,10 +12,6 @@ const auth0 = new Auth0({
   clientID    : AUTH0_CLIENT_ID,
   callbackOnLocationHash: true
 })
-
-function AuthException(params) {
-  Object.assign(this, params)
-}
 
 function fetchJSON(url, options) {
   const config = merge({
@@ -37,20 +33,20 @@ function fetchJSON(url, options) {
           if (json.result.status >= 200 && json.result.status < 300) {
             return json
           } else {
-            throw new AuthException({
-              message: json.result.content,
-              response
-            })
+            const error = new Error(json.result.content)
+            error.response = response
+            
+            throw error
           }
 
         // If this is a non v3 response but still ok
         } else if (response.status >= 200 && response.status < 300) {
           return json
         } else {
-          throw new AuthException({
-            message: response.statusText,
-            response
-          })
+          const error = new Error(response.statusText)
+          error.response = response
+          
+          throw error
         }
       })
   }
@@ -59,16 +55,16 @@ function fetchJSON(url, options) {
 }
 
 export function isLoggedIn() {
-  return getToken() !== null
+  return getV3Jwt() !== null
 }
 
-export function getToken() {
-  return (localStorage.getItem(TC_JWT) || '').replace(/^"|"$/g, '')
+export function getV3Jwt() {
+  return getToken(V3_JWT)
 }
 
 export function getFreshToken() {
-  const currentToken = (localStorage.getItem(TC_JWT) || '').replace(/^"|"$/g, '')
-
+  const currentToken = getV3Jwt()
+  
   // If we have no token, short circuit
   if (!currentToken) {
     return Promise.reject('No token found')
@@ -90,35 +86,25 @@ export function getFreshToken() {
 }
 
 export function logout() {
-  const token = getToken()
+  function getJwtSuccess(token) {
+    clearTokens()
 
-  if (!token || isTokenExpired(token)) {
-    // if we don't need to delete token from server, we can just ignore and return
-    // return new Promise( (resolve, reject) => {
-    //   resolve('ALREADY_EXPIRED')
-    // })
-    return refreshToken().then(refreshedToken => {
-      return deleteToken(refreshedToken)
-    }).catch( error => console.error(error) )
-
-  } else {
-    return deleteToken(token)
-  }
-}
-
-function deleteToken(jwt) {
-
-  clearTokens()
-
-  const url = API_URL + '/authorizations/1'
-  const config = {
-    method: 'DELETE',
-    headers: {
-      Authorization: 'Bearer ' + jwt
+    const url = API_URL + '/authorizations/1'
+    const config = {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
     }
+    return fetchJSON(url, config)
   }
 
-  return fetchJSON(url, config)
+  function getJwtFailure() {
+    clearTokens()
+    console.warn('Failed to get token, assuming we are already logged out')
+  }
+
+  return getFreshToken().then(getJwtSuccess, getJwtFailure)
 }
 
 function setConnection(options) {
@@ -180,21 +166,21 @@ function auth0Popup(options) {
 
 function setAuth0Tokens({id_token, refresh_token}) {
   if (id_token === undefined || refresh_token === undefined) {
-    throw new AuthException({
-      message: 'Unable to contact login server',
-      reason: 'Auth0 response did not contain proper tokens',
-      id_token,
-      refresh_token
-    })
+    const error = new Error('Unable to contact login server')
+    error.reason = 'Auth0 response did not contain proper tokens',
+    error.id_token = id_token
+    error.refresh_token = refresh_token
+
+    throw error
   }
 
-  localStorage.setItem(AUTH0_JWT, id_token)
-  localStorage.setItem(AUTH0_REFRESH, refresh_token)
+  setToken(AUTH0_JWT, id_token)
+  setToken(AUTH0_REFRESH, refresh_token)
 }
 
 function getNewJWT() {
-  const externalToken = localStorage.getItem(AUTH0_JWT)
-  const refreshToken = localStorage.getItem(AUTH0_REFRESH)
+  const externalToken = getToken(AUTH0_JWT)
+  const refreshToken = getToken(AUTH0_REFRESH)
 
   const params = {
     param: {
@@ -223,11 +209,11 @@ function handleAuthResult({token, zendeskJwt}) {
 }
 
 function setTcJwt(token) {
-  localStorage.setItem(TC_JWT, token || '')
+  setToken(V3_JWT, token || '')
 }
 
 function setZendeskJwt(token) {
-  localStorage.setItem(ZENDESK_JWT, token || '')
+  setToken(ZENDESK_JWT, token || '')
 }
 
 // refreshPromise is needed outside the refreshToken scope to allow throttling
@@ -238,7 +224,7 @@ export function refreshToken() {
     return refreshPromise
   }
 
-  const token = getToken() || ''
+  const token = getV3Jwt() || ''
   const url = API_URL + '/authorizations/1'
   const config = {
     headers: {
@@ -249,7 +235,7 @@ export function refreshToken() {
   function refreshSuccess(data) {
     // Assign it to local storage
     const newToken = get(data, 'result.content.token')
-    localStorage.setItem(TC_JWT, newToken)
+    setToken(V3_JWT, newToken)
 
     refreshPromise = null
 
@@ -258,11 +244,11 @@ export function refreshToken() {
 
   function refreshFailure(response) {
     refreshPromise = null
-
-    throw new AuthException({
-      reason: 'Unable to refresh token',
-      response
-    })
+    
+    const error = new Error('Unable to refresh token')
+    error.reponse = response
+    
+    throw error
   }
 
   refreshPromise = fetchJSON(url, config).then(refreshSuccess, refreshFailure)
@@ -335,28 +321,26 @@ export function getSSOProvider(handle) {
   function success(res) {
     const content = get(res, 'result.content')
     if (!content) {
-      throw new AuthException({
-        message: 'Could not contact login server',
-        reason: 'Body did not contain content',
-        response: res
-      })
+      const error = new Error('Could not contact login server')
+      error.reason = 'Body did not contain content'
+      error.response = res
+      
+      throw error
     }
 
     if (content.type !== 'samlp') {
-      throw new AuthException({
-        message: 'This handle does not appear to have an SSO login associated',
-        reason: 'No provider of type \'samlp\'',
-        response: res
-      })
+      const error = new Error('This handle does not appear to have an SSO login associated')
+      error.reason = 'No provider of type \'samlp\''
+      error.response = res
+      
+      throw error
     }
 
     return content.name
   }
 
   function failure(res) {
-    throw new AuthException({
-      message: get(res, 'result.content') || 'Could not contact login server'
-    })
+    throw new Error( get(res, 'result.content') || 'Could not contact login server' )
   }
 
   return fetchJSON(API_URL + '/identityproviders?filter=' + filter)
@@ -365,8 +349,7 @@ export function getSSOProvider(handle) {
 }
 
 export function validateClient(clientId, redirectUrl, scope) {
-
-  const token = getToken() || ''
+  const token = getV3Jwt() || ''
   const url = API_URL + '/authorizations/validateClient?clientId=' + clientId + '&redirectUrl=' + encodeURIComponent(redirectUrl) + '&scope=' + scope
   
   return fetchJSON(url, {

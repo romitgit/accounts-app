@@ -1,7 +1,8 @@
-import { TC_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_JWT, V2_SSO, ZENDESK_JWT } from './constants.js'
+import { V3_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_JWT, V2_SSO, ZENDESK_JWT } from './constants.js'
+import fromPairs from 'lodash/fromPairs'
 
 export function clearTokens() {
-  removeToken(TC_JWT)
+  removeToken(V3_JWT)
   removeToken(AUTH0_REFRESH)
   removeToken(AUTH0_JWT)
   removeToken(ZENDESK_JWT)
@@ -10,15 +11,15 @@ export function clearTokens() {
 }
 
 export function getToken(key) {
-  return localStorage.getItem(key)
+  return readCookie(key)
 }
 
 export function setToken(key, token) {
-  localStorage.setItem(key, token)
+  updateCookie(key, token)
 }
 
 export function removeToken(key) {
-  localStorage.removeItem(key)
+  deleteCookie(key)
 }
 
 export function decodeToken(token) {
@@ -82,18 +83,28 @@ function getTokenExpirationDate(token) {
   return d
 }
 
-export function readCookie(name) {
-  const nameEQ = name + '='
-  const ca = document.cookie.split('')
-  for(let i=0; i < ca.length; i++) {
-    let c = ca[i]
-    while ( c.charAt(0) ===' ' ) c = c.substring(1,c.length)
-    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length)
-  }
-  return null
+function parseCookie(cookie) {
+  return fromPairs( cookie.split(';').map( (pair) => pair.split('=').map( (part) => part.trim() ) ) )
 }
 
-export function deleteCookie(name) {
-  let domain = location.hostname.substring(location.hostname.indexOf('.'))
-  document.cookie = name + "=; path=/; domain=" + domain + "; expires=" + (new Date()).toGMTString()+"; "
+export function readCookie(name) {
+  return parseCookie( document.cookie )[name]
+}
+
+export function updateCookie(name, value, days) {
+  let expires = ''
+
+  if (days) {
+    const date = new Date()
+    date.setTime( date.getTime() + (days * 24 * 60 * 60 * 1000) )
+    expires = '; expires=' + date.toGMTString()
+  }  else {
+    expires = ''
+  }
+
+  document.cookie = name + '=' + value + expires + '; path=/'
+}
+
+function deleteCookie(name) {
+	updateCookie(name,"",-1);
 }

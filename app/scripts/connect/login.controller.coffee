@@ -1,8 +1,8 @@
 'use strict'
 
-{ TC_JWT, DOMAIN }   = require '../../../core/constants.js'
+{ DOMAIN }   = require '../../../core/constants.js'
 { getFreshToken, login }    = require '../../../core/auth.js'
-{ getToken } = require '../../../core/token.js'
+{ getV3Jwt } = require '../../../core/auth.js'
 { getLoginConnection } = require '../../../core/utils.js'
 { generateReturnUrl, redirectTo } = require '../../../core/url.js'
 
@@ -33,7 +33,7 @@ ConnectLoginController = (
       vm.loading = false
 
   loginSuccess = ->
-    jwt = localStorage.getItem(TC_JWT)
+    jwt = getV3Jwt()
 
     unless jwt
       vm.error = true
@@ -55,13 +55,13 @@ ConnectLoginController = (
   init = ->
     { handle, email, password } = $stateParams
 
-    getTokenSuccess = (jwt) ->
+    getJwtSuccess = (jwt) ->
       if jwt && vm.retUrl
         redirectTo generateReturnUrl(vm.retUrl)
       else if (handle || email) && password
         callLogin(handle || email, password)
 
-    getFreshToken().then(getTokenSuccess)
+    getFreshToken().then(getJwtSuccess)
 
     vm
 

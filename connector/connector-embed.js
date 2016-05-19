@@ -1,37 +1,57 @@
 import 'babel-polyfill'
 
 import { GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE } from '../core/constants.js'
-import { getToken, getFreshToken, refreshToken, logout } from '../core/auth.js'
+import { getFreshToken, logout } from '../core/auth.js'
 
-window.addEventListener('message', function(e) {
+function bindHandler(REQUEST, SUCCESS, FAILURE, action) {
+  window.addEventListener('message', (e) => {
+    function success(data) {
+      const response = Object.assign({
+        type: SUCCESS
+      }, data)
+
+      console.log('Connector iframe: sending response', response)
+
+      e.source.postMessage(response, e.origin)
+    }
+
+    function failure(error) {
+      if (error instanceof Error) {
+        error = { error: error.message }
+      }
+
+      if (typeof error === 'string') {
+        error = { error }
+      }
+
+      const response = Object.assign({
+        type: FAILURE
+      }, error)
+
+      console.log('Connector iframe: sending response', response)
+
+      e.source.postMessage(response, e.origin)
+    }
+
+    if (e.data.type === REQUEST) {
+      console.log('Connector iframe: request received', e.data)
+      action(success, failure)
+    }
+  })
+}
+
+bindHandler(GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE, (sendSuccess, sendError) => {
   function success(token) {
-    e.source.postMessage({
-      type: GET_FRESH_TOKEN_SUCCESS,
-      token
-    }, e.origin)
+    sendSuccess({ token })
   }
 
-  function failure(error) {
-    e.source.postMessage({
-      type: GET_FRESH_TOKEN_FAILURE
-    }, e.origin)
-  }
-
-  if (e.data.type === GET_FRESH_TOKEN_REQUEST) {
-    console.log('iframe event', e.data)
-    getFreshToken().then(success, failure)
-  }
+  getFreshToken().then(success, sendError)
 })
 
-window.addEventListener('message', function(e) {
-  function success(resp) {
-    e.source.postMessage({
-      type: LOGOUT_SUCCESS
-    }, e.origin)
+bindHandler(LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, (sendSuccess, sendError) => {
+  function success(response ) {
+    sendSuccess({ response  })
   }
 
-  if (e.data.type === LOGOUT_REQUEST) {
-    console.log('iframe event', e.data)
-    logout().then(success)
-  }
+  logout().then(success, sendError)
 })
