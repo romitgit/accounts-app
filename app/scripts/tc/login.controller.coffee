@@ -19,10 +19,10 @@ TCLoginController = (
   vm.init      = false
 
   vm.baseUrl = "https://www.#{DOMAIN}"
-  vm.registrationUrl      = vm.baseUrl + '/register/'
-  vm.forgotPasswordUrl    = vm.baseUrl + '/reset-password/'
+  vm.registrationUrl      = vm.baseUrl + '/registration/'
+  vm.forgotPasswordUrl    = vm.baseUrl + '/forgot-password/'
   vm.accountInactiveUrl   = vm.baseUrl + '/account-inactive/'
-  vm.confirmActivationUrl = vm.baseUrl + '/registered-successfully/'
+  vm.confirmActivationUrl = vm.baseUrl + '/registration-success/'
   vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl
   
   vm.$stateParams = $stateParams
