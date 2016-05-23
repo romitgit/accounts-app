@@ -33,9 +33,21 @@ UserService = (
    
     $http(config).then(success)
 
+  validateSocialProfile = (userId, provider) ->
+    config =
+      method: 'GET'
+      url: "#{API_URL}/users/validateSocial?socialUserId=#{userId}&socialProvider=#{encodeURIComponent(provider)}"
+      cache: false
+      skipAuthorization: true
+    success = (res) ->
+      res.data?.result?.content
+   
+    $http(config).then(success)
+
   # expose
   validateEmail : validateEmail
   validateHandle : validateHandle
+  validateSocialProfile : validateSocialProfile
   
   
 ###
