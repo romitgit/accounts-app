@@ -19,10 +19,9 @@ TCLoginController = (
   vm.init      = false
 
   vm.baseUrl = "https://www.#{DOMAIN}"
-  vm.registrationUrl      = vm.baseUrl + '/registration/'
-  vm.forgotPasswordUrl    = vm.baseUrl + '/forgot-password/'
-  vm.accountInactiveUrl   = vm.baseUrl + '/account-inactive/'
-  vm.confirmActivationUrl = vm.baseUrl + '/registration-success/'
+  vm.registrationUrl   = $state.href('MEMBER_REGISTRATION', { activated: true })
+  vm.forgotPasswordUrl = $state.href('MEMBER_FORGOT_PASSWORD', { absolute: true })
+  vm.confirmActivationUrl = $state.href('MEMBER_REGISTRATION_SUCCESS', { absolute: true })
   vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl
   
   vm.$stateParams = $stateParams

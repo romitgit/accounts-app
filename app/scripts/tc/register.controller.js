@@ -9,9 +9,9 @@ import { npad } from '../../../core/utils.js'
 
   angular.module('accounts').controller('TCRegistrationController', TCRegistrationController)
 
-  TCRegistrationController.$inject = ['$log', '$state', '$stateParams', 'UserService', 'ISO3166']
+  TCRegistrationController.$inject = ['$log', '$scope', '$state', '$stateParams', 'UserService', 'ISO3166']
 
-  function TCRegistrationController($log, $state, $stateParams, UserService, ISO3166) {
+  function TCRegistrationController($log, $scope, $state, $stateParams, UserService, ISO3166) {
     var vm = this
     vm.registering = false
     // prepares utm params, if available
@@ -94,6 +94,7 @@ import { npad } from '../../../core/utils.js'
     }
 
     vm.socialRegister = function(provider) {
+      vm.errMsg = null
       socialRegistration(provider, null)
       .then(function(resp) {
         if (resp.status === 'SUCCESS') {
@@ -122,6 +123,7 @@ import { npad } from '../../../core/utils.js'
         } else {
           vm.isSocialRegistration = false
         }
+        $scope.$apply()
       })
       .catch(function(err) {
         switch (err.status) {
@@ -138,6 +140,7 @@ import { npad } from '../../../core/utils.js'
           $log.error('Error registering user with social account', err)
         }
         vm.isSocialRegistration = false
+        $scope.$apply()
       })
     }
 

@@ -1,13 +1,14 @@
 import angular from 'angular'
+import { login, sendResetEmail, resetPassword } from '../../../core/auth.js'
 
 (function() {
   'use strict'
 
   angular.module('accounts').controller('TCResetPasswordController', TCResetPasswordController)
 
-  TCResetPasswordController.$inject = ['$state', '$stateParams', 'UserService', 'TcAuthService']
+  TCResetPasswordController.$inject = ['$scope', '$state', '$stateParams', 'UserService']
 
-  function TCResetPasswordController($state, $stateParams, UserService, TcAuthService) {
+  function TCResetPasswordController($scope, $state, $stateParams, UserService) {
     var vm = this
     vm.token = $stateParams.token
     vm.handle = $stateParams.handle
@@ -25,19 +26,25 @@ import angular from 'angular'
     vm.sendLink = function() {
       if (vm.generateTokenForm.$valid) {
         vm.loading = true
-        UserService.generateResetToken(vm.email).then(
+        var resetPasswordUrlPrefix = $state.href('MEMBER_RESET_PASSWORD', {}, { absolute: true })
+        sendResetEmail(vm.email, resetPasswordUrlPrefix).then(
           function() {
-            vm.resetTokenSent = true
-            vm.loading = false
+            console.log('success')
+            $scope.$apply(function() {
+              vm.resetTokenSent = true
+              vm.loading = false
+            })
           },
           function(err) {
-            if (err.status == 400)
-              vm.alreadySent = true
-            else if (err.status == 404)
-              vm.emailNotFound = true
+            $scope.$apply(function() {
+              if (err.status == 400)
+                vm.alreadySent = true
+              else if (err.status == 404)
+                vm.emailNotFound = true
 
-            vm.resetTokenFailed = true
-            vm.loading = false
+              vm.resetTokenFailed = true
+              vm.loading = false
+            })
           }
         )
       }
@@ -46,20 +53,28 @@ import angular from 'angular'
     vm.resetPassword = function() {
       vm.loading = true
       if (vm.resetPasswordForm.$valid) {
-        UserService.resetPassword(vm.handle, vm.password, vm.token).then(
+        resetPassword(vm.handle, vm.token, vm.password).then(
           function() {
-            TcAuthService.login(vm.handle, vm.password).then(
+            var loginOptions = {
+              username  : vm.handle,
+              password  : vm.password
+            }
+
+            login(loginOptions).then(
               function() {
                 $state.go('dashboard', { 'notifyReset': true })
               },
               function(err) {
-                $state.go('login', { 'notifyReset': true })
+                $state.go('MEMBER_LOGIN', { 'notifyReset': true })
               }
             )
+            // $state.go('MEMBER_LOGIN', { 'notifyReset': true })
           },
           function(err) {
-            vm.resetFailed = true
-            vm.loading = false
+            $scope.$apply(function() {
+              vm.resetFailed = true
+              vm.loading = false
+            })
           }
         )
       }

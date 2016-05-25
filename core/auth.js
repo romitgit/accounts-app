@@ -35,6 +35,7 @@ function fetchJSON(url, options) {
           } else {
             const error = new Error(json.result.content)
             error.response = response
+            error.status = json.result.status
             
             throw error
           }
@@ -301,33 +302,43 @@ export function registerUser(body) {
 }
 
 export function socialRegistration(provider, state) {
-  return $q(function(resolve, reject) {
+  return new Promise(function(resolve, reject) {
     // supported backends
     var providers = ['facebook', 'google-oauth2', 'twitter', 'github']
     if (providers.indexOf(provider) > -1) {
-      Auth0.signin({
+      auth0.signin({
         popup: true,
         connection: provider,
         scope: 'openid profile offline_access',
         state: state
       },
-        function(profile, idToken, accessToken, state, refreshToken) {
+        function(error, profile, idToken, accessToken, state, refreshToken) {
+          console.log('error ')
+          console.log(error)
+          if (error) {
+            console.warning('onSocialLoginFailure ' + JSON.stringify(error))
+            reject(error)
+            return
+          }
+          console.log(profile)
+          console.log(accessToken)
           var socialData = extractSocialUserData(profile, accessToken)
+          console.log(socialData)
 
-          UserService.validateSocialProfile(socialData.socialUserId, socialData.socialProvider)
+          validateSocialProfile(socialData.socialUserId, socialData.socialProvider)
             .then(function(resp) {
-              logger.debug(JSON.stringify(resp))
+              console.debug(JSON.stringify(resp))
               if (resp.valid) {
                 // success
                 var result = {
                   status: 'SUCCESS',
                   data: socialData
                 }
-                logger.debug('socialRegister Result: ' + JSON.stringify(result))
+                console.debug('socialRegister Result: ' + JSON.stringify(result))
                 resolve(result)
               } else {
                 if (resp.reasonCode === 'ALREADY_IN_USE') {
-                  logger.error('Social handle already exists')
+                  console.error('Social handle already exists')
                   reject({
                     status: 'SOCIAL_PROFILE_ALREADY_EXISTS'
                   })
@@ -336,16 +347,12 @@ export function socialRegistration(provider, state) {
 
             })
             .catch(function(err) {
-              logger.debug(JSON.stringify(err))
+              console.debug(JSON.stringify(err))
             })
-        },
-        function(error) {
-          logger.warning('onSocialLoginFailure ' + JSON.stringify(error))
-          reject(error)
         }
       )
     } else {
-      logger.error('Unsupported social login provider', provider)
+      console.error('Unsupported social login provider', provider)
 
       reject({
         status: 'FAILED',
@@ -484,4 +491,22 @@ export function validateClient(clientId, redirectUrl, scope) {
       Authorization: 'Bearer ' + token
     }
   })
+}
+
+export function validateSocialProfile(userId, provider) {
+  const url = API_URL + '/users/validateSocial?socialUserId=' + userId + '&socialProvider=' + encodeURIComponent(provider)
+  var config = {
+    method: 'GET',
+    cache: false,
+    skipAuthorization: true
+  }
+  var success = function(res) {
+    if (res.result && res.result.status === 200) {
+      return res.result.content ? res.result.content : null
+    } else {
+      return null
+    }
+  }
+ 
+  return fetchJSON(url, config).then(success)
 }
