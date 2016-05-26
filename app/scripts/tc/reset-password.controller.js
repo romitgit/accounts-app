@@ -6,9 +6,9 @@ import { login, sendResetEmail, resetPassword } from '../../../core/auth.js'
 
   angular.module('accounts').controller('TCResetPasswordController', TCResetPasswordController)
 
-  TCResetPasswordController.$inject = ['$scope', '$state', '$stateParams', 'UserService']
+  TCResetPasswordController.$inject = ['$scope', '$state', '$stateParams', '$location', 'UserService']
 
-  function TCResetPasswordController($scope, $state, $stateParams, UserService) {
+  function TCResetPasswordController($scope, $state, $stateParams, $location, UserService) {
     var vm = this
     vm.token = $stateParams.token
     vm.handle = $stateParams.handle
@@ -62,7 +62,7 @@ import { login, sendResetEmail, resetPassword } from '../../../core/auth.js'
 
             login(loginOptions).then(
               function() {
-                $state.go('dashboard', { 'notifyReset': true })
+                $location.url('https://www.' + DOMAIN + '/my-dashboard')
               },
               function(err) {
                 $state.go('MEMBER_LOGIN', { 'notifyReset': true })
