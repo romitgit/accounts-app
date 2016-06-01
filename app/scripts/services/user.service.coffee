@@ -1,6 +1,6 @@
 'use strict'
 
-`import API_URL from '../../../core/constants.js'`
+{ API_URL } = require '../../../core/constants.js'
 
 UserService = (
   $log
@@ -20,7 +20,8 @@ UserService = (
     $http(config).then(success)
 
   # /users/validateHandle
-  validateHandle = (handle) ->    
+  validateHandle = (handle) ->   
+    console.log API_URL 
     config =
       method: 'GET'
       url: "#{API_URL}/users/validateHandle?handle=#{encodeURIComponent(handle)}"
@@ -32,9 +33,21 @@ UserService = (
    
     $http(config).then(success)
 
+  validateSocialProfile = (userId, provider) ->
+    config =
+      method: 'GET'
+      url: "#{API_URL}/users/validateSocial?socialUserId=#{userId}&socialProvider=#{encodeURIComponent(provider)}"
+      cache: false
+      skipAuthorization: true
+    success = (res) ->
+      res.data?.result?.content
+   
+    $http(config).then(success)
+
   # expose
   validateEmail : validateEmail
   validateHandle : validateHandle
+  validateSocialProfile : validateSocialProfile
   
   
 ###

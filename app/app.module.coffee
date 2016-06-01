@@ -6,6 +6,8 @@ dependencies = [
   'ngMessages'
   'auth0'
   'appirio-tech-ng-ui-components'
+  'ngIsoConstants'
+  'accounts.directives'
 ]
 
 angular.module 'accounts', dependencies

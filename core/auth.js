@@ -35,6 +35,7 @@ function fetchJSON(url, options) {
           } else {
             const error = new Error(json.result.content)
             error.response = response
+            error.status = json.result.status
             
             throw error
           }
@@ -96,7 +97,6 @@ export function logout() {
         Authorization: 'Bearer ' + token
       }
     }
-
     return fetchJSON(url, config)
   }
 
@@ -301,6 +301,138 @@ export function registerUser(body) {
   })
 }
 
+export function socialRegistration(provider, state) {
+  return new Promise(function(resolve, reject) {
+    // supported backends
+    var providers = ['facebook', 'google-oauth2', 'twitter', 'github']
+    if (providers.indexOf(provider) > -1) {
+      auth0.signin({
+        popup: true,
+        connection: provider,
+        scope: 'openid profile offline_access',
+        state: state
+      },
+        function(error, profile, idToken, accessToken, state, refreshToken) {
+          console.log('error ')
+          console.log(error)
+          if (error) {
+            console.warning('onSocialLoginFailure ' + JSON.stringify(error))
+            reject(error)
+            return
+          }
+          console.log(profile)
+          console.log(accessToken)
+          var socialData = extractSocialUserData(profile, accessToken)
+          console.log(socialData)
+
+          validateSocialProfile(socialData.socialUserId, socialData.socialProvider)
+            .then(function(resp) {
+              console.debug(JSON.stringify(resp))
+              if (resp.valid) {
+                // success
+                var result = {
+                  status: 'SUCCESS',
+                  data: socialData
+                }
+                console.debug('socialRegister Result: ' + JSON.stringify(result))
+                resolve(result)
+              } else {
+                if (resp.reasonCode === 'ALREADY_IN_USE') {
+                  console.error('Social handle already exists')
+                  reject({
+                    status: 'SOCIAL_PROFILE_ALREADY_EXISTS'
+                  })
+                }
+              }
+
+            })
+            .catch(function(err) {
+              console.debug(JSON.stringify(err))
+            })
+        }
+      )
+    } else {
+      console.error('Unsupported social login provider', provider)
+
+      reject({
+        status: 'FAILED',
+        'error': 'Unsupported social login provider \'' + provider + '\''
+      })
+    }
+  })
+}
+
+function extractSocialUserData(profile, accessToken) {
+  var socialProvider = profile.identities[0].connection
+  var firstName = '',
+    lastName = '',
+    handle = '',
+    email = ''
+
+  var socialUserId = profile.user_id.substring(profile.user_id.lastIndexOf('|') + 1)
+  var splitName
+
+  if (socialProvider === 'google-oauth2') {
+    firstName = profile.given_name
+    lastName = profile.family_name
+    handle = profile.nickname
+    email = profile.email
+  } else if (socialProvider === 'facebook') {
+    firstName = profile.given_name
+    lastName = profile.family_name
+    handle = firstName + '.' + lastName
+    email = profile.email
+  } else if (socialProvider === 'twitter') {
+    splitName = profile.name.split(' ')
+    firstName = splitName[0]
+    if (splitName.length > 1) {
+      lastName = splitName[1]
+    }
+    handle = profile.screen_name
+  } else if (socialProvider === 'github') {
+    splitName = profile.name.split(' ')
+    firstName = splitName[0]
+    if (splitName.length > 1) {
+      lastName = splitName[1]
+    }
+    handle = profile.nickname
+    email = profile.email
+  } else if (socialProvider === 'bitbucket') {
+    firstName = profile.first_name
+    lastName = profile.last_name
+    handle = profile.username
+    email = profile.email
+  } else if (socialProvider === 'stackoverflow') {
+    firstName = profile.first_name
+    lastName = profile.last_name
+    handle = socialUserId
+    email = profile.email
+  } else if (socialProvider === 'dribbble') {
+    firstName = profile.first_name
+    lastName = profile.last_name
+    handle = socialUserId
+    email = profile.email
+  }
+
+  var token = accessToken
+  var tokenSecret = null
+  if (profile.identities && profile.identities.length > 0) {
+    token = profile.identities[0].access_token
+    tokenSecret = profile.identities[0].access_token_secret
+  }
+  return {
+    socialUserId: socialUserId,
+    username: handle,
+    firstname: firstName,
+    lastname: lastName,
+    email: email,
+    socialProfile: profile,
+    socialProvider: socialProvider,
+    accessToken: token,
+    accessTokenSecret : tokenSecret
+  }
+}
+
 export function generateSSOUrl(org, callbackUrl) {
   const apiUrl = replace(API_URL, 'api-work', 'api')
 
@@ -359,4 +491,22 @@ export function validateClient(clientId, redirectUrl, scope) {
       Authorization: 'Bearer ' + token
     }
   })
+}
+
+export function validateSocialProfile(userId, provider) {
+  const url = API_URL + '/users/validateSocial?socialUserId=' + userId + '&socialProvider=' + encodeURIComponent(provider)
+  var config = {
+    method: 'GET',
+    cache: false,
+    skipAuthorization: true
+  }
+  var success = function(res) {
+    if (res.result && res.result.status === 200) {
+      return res.result.content ? res.result.content : null
+    } else {
+      return null
+    }
+  }
+ 
+  return fetchJSON(url, config).then(success)
 }
