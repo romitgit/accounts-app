@@ -33,3 +33,34 @@ export function setupLoginEventMetrics(id) {
     return window._kmq.push(['identify', id])
   }
 }
+
+export function npad(input, n) {
+  if(input === undefined) input = ''
+  var inputStr = input
+  if (typeof input !== 'string') {
+    inputStr = input.toString()
+  }
+  if(inputStr.length >= n)
+    return inputStr
+  var zeros = new Array( n + 1 ).join('0')
+  return (zeros + inputStr).slice(-1 * n)
+}
+
+export function supplant(template, values, pattern) {
+  pattern = pattern || /\{([^\{\}]*)\}/g
+
+  return template.replace(pattern, function(a, b) {
+    var p = b.split('.'),
+      r = values
+
+    try {
+      for (var s in p) {
+        r = r[p[s]]
+      }
+    } catch (e) {
+      r = a
+    }
+
+    return (typeof r === 'string' || typeof r === 'number') ? r : a
+  })
+}

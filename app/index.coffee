@@ -11,13 +11,18 @@ require 'angular-ui-router'
 require 'angular-messages'
 require 'auth0-angular'
 require 'auth0-js'
+require 'appirio-tech-ng-iso-constants'
+require 'angucomplete-alt'
 
+require './app.directives'
 require './app.module'
 require './app-config'
 require './app-run'
 
 require 'appirio-tech-ng-auth'
 require 'appirio-tech-ng-ui-components'
+
+require('../node_modules/angucomplete-alt/angucomplete-alt.css')
 
 requireContextFiles = (files) ->
   paths = files.keys()
@@ -27,3 +32,4 @@ requireContextFiles = (files) ->
 
 requireContextFiles require.context './styles/', true, /^(.*\.(scss$))[^.]*$/igm
 requireContextFiles require.context './scripts/', true, /^(.*\.(coffee$))[^.]*$/igm
+requireContextFiles require.context './scripts/', true, /^(.*\.(js$))[^.]*$/igm
