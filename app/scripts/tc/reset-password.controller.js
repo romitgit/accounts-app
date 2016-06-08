@@ -1,5 +1,6 @@
 import angular from 'angular'
 import { login, sendResetEmail, resetPassword } from '../../../core/auth.js'
+{ DOMAIN } = require '../../../core/constants.js'
 
 (function() {
   'use strict'
