@@ -1,6 +1,7 @@
 'use strict'
 
 { registerUser, getFreshToken } = require '../../../core/auth.js'
+{ DOMAIN } = require '../../../core/constants.js'
 
 RegistrationController = ($state, $stateParams, $scope) ->
   vm              = this
@@ -11,6 +12,7 @@ RegistrationController = ($state, $stateParams, $scope) ->
   vm.submit       = null
   vm.loading      = false
 
+  afterActivationURL = $stateParams.returnUrl ? 'https://connect.' + DOMAIN
   vm.submit = ->
     vm.error = false
     vm.loading = true
@@ -25,7 +27,7 @@ RegistrationController = ($state, $stateParams, $scope) ->
         credential        :
           password        : vm.password
       options:
-        afterActivationURL: $stateParams.returnUrl
+        afterActivationURL: afterActivationURL
 
     registerUser(config).then(registerSuccess, registerError)
 
