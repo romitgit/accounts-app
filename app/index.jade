@@ -17,7 +17,6 @@ html(ng-app='accounts')
   body.tc
     .building(ng-show="loadingState")
       .img
-      .text #[span Building your world...]
     ui-view.view-container
     
     div(ui-view="footer", ng-controller="FooterController as vm")
