@@ -1,9 +1,9 @@
 run = ($log, $rootScope, $state, $urlRouter) ->
   $log.debug('run')
   $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
-    $rootScope.stateLoading = true
+    $rootScope.stateLoaded = false
   $rootScope.$on '$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) ->
-    $rootScope.stateLoading = false
+    $rootScope.stateLoaded = true
 
 run.$inject = ['$log', '$rootScope', '$state', '$urlRouter']
 

@@ -15,13 +15,13 @@ html(ng-app='accounts')
       try {Typekit.load({ async: true });} catch(e){}
 
   body.tc
-    .building(ng-show="loadingState")
+    .building(ng-hide="stateLoaded")
       .img
     ui-view.view-container
     
     div(ui-view="footer", ng-controller="FooterController as vm")
       .account-footer
-        p.copyright-notice &copy; {{vm.currentYear}} Topcoder. All Rights Reserved
+        p.copyright-notice(ng-bind-html="vm.copyrightNotice")
 
     
     include ./views/google.analytics.jade
