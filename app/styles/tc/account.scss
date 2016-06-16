@@ -45,7 +45,7 @@
   }
   // Basic element stylings
   h1 {
-    @include font-with-weight('Sofia Pro', 300);
+    @include font-with-weight('Roboto', 300);
     color: $gray-darkest;
     align-self: center;
     width: 380px;
@@ -120,7 +120,7 @@
         filter: brightness(80%);
       }
       span {
-        @include font-with-weight('Sofia Pro', 500);
+        @include font-with-weight('Roboto', 500);
         color: $accent-gray;
         cursor: pointer;
         font-size: 10px;
@@ -155,7 +155,7 @@
         flex-direction: column;
         align-items: center;
         p {
-          @include font-with-weight('Sofia Pro', 500);
+          @include font-with-weight('Roboto', 500);
           color: $accent-gray;
           cursor: pointer;
           font-size: 10px;
@@ -210,7 +210,7 @@
 
 // Register Link styles
 .join-topcoder {
-  @include font-with-weight('Sofia Pro', 500);
+  @include font-with-weight('Roboto', 500);
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
@@ -302,7 +302,7 @@
     background: $white;
     border: none;
     display: inline-block;
-    font-family: 'Sofia Pro', Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     font-size: 10px;
     font-weight: 500;
     padding: 0 15px;
