@@ -10,16 +10,18 @@ html(ng-app='accounts')
       .ng-hide {
       display: none !important;
       }
-    script(src='//use.typekit.net/jjo6pal.js')
+    script(src='//use.typekit.net/gig7sjk.js')
     script.
       try {Typekit.load({ async: true });} catch(e){}
 
   body.tc
+    .building(ng-hide="stateLoaded")
+      .img
     ui-view.view-container
     
     div(ui-view="footer", ng-controller="FooterController as vm")
       .account-footer
-        p.copyright-notice &copy; {{vm.currentYear}} Topcoder. All Rights Reserved
+        p.copyright-notice(ng-bind-html="vm.copyrightNotice")
 
     
     include ./views/google.analytics.jade
