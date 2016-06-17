@@ -1,4 +1,4 @@
-import { V3_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_JWT, V2_SSO, ZENDESK_JWT } from './constants.js'
+import { V3_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_JWT, V2_SSO, ZENDESK_JWT, DOMAIN } from './constants.js'
 import fromPairs from 'lodash/fromPairs'
 
 export function clearTokens() {
@@ -6,8 +6,8 @@ export function clearTokens() {
   removeToken(AUTH0_REFRESH)
   removeToken(AUTH0_JWT)
   removeToken(ZENDESK_JWT)
-  deleteCookie(V2_JWT)
-  deleteCookie(V2_SSO)
+  deleteCookie(V2_JWT, DOMAIN)
+  deleteCookie(V2_SSO, DOMAIN)
 }
 
 export function getToken(key) {
@@ -91,7 +91,7 @@ export function readCookie(name) {
   return parseCookie( document.cookie )[name]
 }
 
-export function updateCookie(name, value, days) {
+export function updateCookie(name, value, days, domain) {
   let expires = ''
 
   if (days) {
@@ -102,9 +102,11 @@ export function updateCookie(name, value, days) {
     expires = ''
   }
 
-  document.cookie = name + '=' + value + expires + '; path=/'
+  domain = domain ? (';domain=' + domain) : ''
+
+  document.cookie = name + '=' + value + expires + domain + '; path=/'
 }
 
-function deleteCookie(name) {
-	updateCookie(name,"",-1);
+function deleteCookie(name, domain) {
+	updateCookie(name,"", -1, domain);
 }
