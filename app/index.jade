@@ -12,11 +12,13 @@ html(ng-app='accounts')
       }
 
   body.tc
+    .building(ng-hide="stateLoaded")
+      .img
     ui-view.view-container
     
     div(ui-view="footer", ng-controller="FooterController as vm")
       .account-footer
-        p.copyright-notice &copy; {{vm.currentYear}} Topcoder. All Rights Reserved
+        p.copyright-notice(ng-bind-html="vm.copyrightNotice")
 
     
     include ./views/google.analytics.jade

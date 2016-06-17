@@ -1,7 +1,7 @@
 'use strict'
 
 { DOMAIN } = require '../../../core/constants.js'
-{ login, socialLogin, getV3Jwt } = require '../../../core/auth.js'
+{ login, socialLogin, getFreshToken } = require '../../../core/auth.js'
 { isEmail, setupLoginEventMetrics } = require '../../../core/utils.js'
 { redirectTo, generateZendeskReturnUrl, generateReturnUrl } = require '../../../core/url.js'
 
@@ -112,24 +112,20 @@ TCLoginController = (
       $state.go 'home'
 
   init = ->
+    { handle, email, password } = $stateParams
+
+    getJwtSuccess = (jwt) ->
+      if jwt && vm.retUrl
+        redirectTo generateReturnUrl(vm.retUrl)
+      else if (handle || email) && password
+        doLogin(handle || email, password)
+
     # "return_to" is handed by Zendesk.
     # It's in the case of sign-in or session is expired in Zendesk. It always needs to log in.
     if $stateParams.return_to
       vm
-    else if getV3Jwt() && vm.retUrl
-      redirectTo generateReturnUrl(vm.retUrl)
-    else if ($stateParams.handle || $stateParams.email) && $stateParams.password
-      id = $stateParams.handle || $stateParams.email
-      pass = $stateParams.password
-      loginOptions =
-        username: id
-        password: pass
-        
-      login(loginOptions)
-        .then(loginSuccess)
-        .catch(loginFailure)
     else
-      vm.init = true
+      getFreshToken().then(getJwtSuccess)
     vm
   
   init()

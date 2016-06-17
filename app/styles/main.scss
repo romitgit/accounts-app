@@ -3,6 +3,21 @@ ui-view {
   display: block;
 }
 
+.building {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 60px 0px;
+  
+  .img {
+    background: url('../images/tc/logo_mobile.svg');
+    background-size: cover;
+    width: 153px;
+    height: 54px;
+  }
+}
+
 @font-face {
   font-family: 'Sofia Pro';
   src: url('./fonts/sofiapro/sofiapro-bold-webfont.eot');
