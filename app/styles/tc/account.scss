@@ -26,15 +26,15 @@
     // CSS-olny Arrow
     &:after {
       border: solid transparent;
-      border-bottom-color: $white;
       border-color: rgba(255, 255, 255, 0);
-      border-width: 13px;
+      border-bottom-color: $white;
+      border-width: 10px;
       bottom: 0;
       content: ' ';
       height: 0;
       width: 0;
       left: 50%;
-      margin-left: -16px;
+      margin-left: -13px;
       pointer-events: none;
       position: absolute;
     }

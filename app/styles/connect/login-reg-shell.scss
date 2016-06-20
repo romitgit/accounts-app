@@ -30,13 +30,32 @@ login-reg-shell {
   }
 
   header {
-    padding: 10px;
-
-    img {
-      height: 45px;
+    background-color: $gray-darkest;
+    border-radius: 3px 3px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70px;
+    position: relative;
+    // CSS-olny Arrow
+    &:after {
+      border: solid transparent;
+      border-color: rgba(255, 255, 255, 0);
+      border-bottom-color: $white;
+      border-width: 10px;
+      bottom: 0;
+      content: ' ';
+      height: 0;
+      width: 0;
+      left: 50%;
+      margin-left: -13px;
+      pointer-events: none;
+      position: absolute;
     }
-
-    background-color: $grey-darkest;
+    img {
+      display: inline-block;
+      height: 30px;
+    }
   }
 
   footer {
