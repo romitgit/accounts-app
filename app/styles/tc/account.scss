@@ -23,21 +23,7 @@
     justify-content: center;
     height: 70px;
     position: relative;
-    // CSS-olny Arrow
-    &:after {
-      border: solid transparent;
-      border-color: rgba(255, 255, 255, 0);
-      border-bottom-color: $white;
-      border-width: 10px;
-      bottom: 0;
-      content: ' ';
-      height: 0;
-      width: 0;
-      left: 50%;
-      margin-left: -13px;
-      pointer-events: none;
-      position: absolute;
-    }
+    
     .logo-link img {
       display: inline-block;
       height: 30px;
