@@ -29,6 +29,15 @@ login-reg-shell {
     }
   }
 
+  h1 {
+    font-weight: 300;
+    color: $gray-darkest;
+    text-align: center;
+    font-size: 20px;
+    line-height: 30px;
+    text-transform: uppercase;
+  }
+
   header {
     background-color: $gray-darkest;
     border-radius: 3px 3px 0 0;
@@ -37,21 +46,6 @@ login-reg-shell {
     justify-content: center;
     height: 70px;
     position: relative;
-    // CSS-olny Arrow
-    &:after {
-      border: solid transparent;
-      border-color: rgba(255, 255, 255, 0);
-      border-bottom-color: $white;
-      border-width: 10px;
-      bottom: 0;
-      content: ' ';
-      height: 0;
-      width: 0;
-      left: 50%;
-      margin-left: -13px;
-      pointer-events: none;
-      position: absolute;
-    }
     img {
       display: inline-block;
       height: 30px;

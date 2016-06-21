@@ -1,4 +1,5 @@
 @import 'topcoder/tc-includes';
+@import 'topcoder/tc-forms';
 
 .login-container,
 .register-container,
@@ -23,21 +24,7 @@
     justify-content: center;
     height: 70px;
     position: relative;
-    // CSS-olny Arrow
-    &:after {
-      border: solid transparent;
-      border-color: rgba(255, 255, 255, 0);
-      border-bottom-color: $white;
-      border-width: 10px;
-      bottom: 0;
-      content: ' ';
-      height: 0;
-      width: 0;
-      left: 50%;
-      margin-left: -13px;
-      pointer-events: none;
-      position: absolute;
-    }
+    
     .logo-link img {
       display: inline-block;
       height: 30px;
@@ -64,22 +51,11 @@
     line-height: 20px;
     padding-bottom: 20px;
   }
-  // registration sizes, remove
-  input[name='firstname'],
-  input[name='lastname'] {
-    width: 185px;
-    padding-right: 45px;
-  }
-  input[name='username'],
-  input[name='email'] {
-    padding-right: 85px;
-  }
   input[type='text'],
-  toggle-password {
+  input[type='email'],
+  toggle-password,
+  toggle-password-with-tips {
     width: 380px;
-  }
-  input:not([type='checkbox']) {
-    width: 300px;
   }
   .tips,
   .email-tips,
@@ -103,10 +79,6 @@
   button {
     align-self: center;
     margin-top: 20px;
-  }
-  input[type='text'],
-  toggle-password {
-    width: 380px;
   }
   // Social section
   .networks {
@@ -255,7 +227,7 @@
     }
     form {
       width: 100%;
-      margin-left: 0;
+      margin: 0px;
       padding: 0 20px;
       input[type='text'],
       input[type='email'],
