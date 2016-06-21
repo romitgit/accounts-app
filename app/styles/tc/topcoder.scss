@@ -1,4 +1,4 @@
-@import 'lib/import.scss';
+@import 'topcoder/tc-includes';
 
 @include glyphicons-halflings;
 
@@ -203,6 +203,10 @@ body.tc {
   &.success-bar:before {
     background-color: $success;
     display: block;
+  }
+
+  @media (max-width: 767px) {
+    width: 100%;
   }
 }
 

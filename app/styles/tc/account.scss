@@ -1,4 +1,5 @@
 @import 'topcoder/tc-includes';
+@import 'topcoder/tc-forms';
 
 .login-container,
 .register-container,
@@ -50,22 +51,11 @@
     line-height: 20px;
     padding-bottom: 20px;
   }
-  // registration sizes, remove
-  input[name='firstname'],
-  input[name='lastname'] {
-    width: 185px;
-    padding-right: 45px;
-  }
-  input[name='username'],
-  input[name='email'] {
-    padding-right: 85px;
-  }
   input[type='text'],
-  toggle-password {
+  input[type='email'],
+  toggle-password,
+  toggle-password-with-tips {
     width: 380px;
-  }
-  input:not([type='checkbox']) {
-    width: 300px;
   }
   .tips,
   .email-tips,
@@ -89,10 +79,6 @@
   button {
     align-self: center;
     margin-top: 20px;
-  }
-  input[type='text'],
-  toggle-password {
-    width: 380px;
   }
   // Social section
   .networks {
@@ -241,7 +227,7 @@
     }
     form {
       width: 100%;
-      margin-left: 0;
+      margin: 0px;
       padding: 0 20px;
       input[type='text'],
       input[type='email'],
