@@ -159,6 +159,10 @@ body.tc {
   margin-bottom: 10px;
   padding: 10px;
   text-align: left;
+  width: 100%;
+  @media (min-width: 768px) {
+    width: 380px;
+  }
 }
 
 .form-label {
