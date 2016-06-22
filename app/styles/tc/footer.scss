@@ -27,9 +27,12 @@
 
 .copyright-notice {
 	text-align: center;
-    font-size: 12px;
-    line-height: 14px;
-    color: #656565;
+  font-size: 12px;
+  line-height: 14px;
+  color: #656565;
+  @include font-with-weight('Sofia Pro', 500);
+	justify-content: center;
+	text-transform: uppercase;
 }
 
 /*
