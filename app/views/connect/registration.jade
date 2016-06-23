@@ -4,9 +4,7 @@ main.layout-main.login-reg.flex.center.middle("role"="main")
       img(src=require("../../images/logo_mobile.svg"))
 
     main.light-bg.elevated-bottom
-      h1 welcome to topcoder
-
-      p.secondary Let's start building your app.  Create your account below to begin.
+      h1 Join Topcoder
 
       registration
         p.error(ng-class="{ hide: !vm.error }") {{ vm.errorMessage }}
@@ -14,10 +12,8 @@ main.layout-main.login-reg.flex.center.middle("role"="main")
         loader(ng-if="vm.loading")
 
         form(ng-submit="vm.submit()")
-          .first-name
+          .first-last-names
             input.widest(type="text" name="first-name" ng-model="vm.firstName" required=true placeholder="First Name" maxlength="64" autofocus=true)
-
-          .last-name
             input.widest(type="text" name="last-name" ng-model="vm.lastName" required=true placeholder="Last Name" maxlength="64")
 
           .organization
