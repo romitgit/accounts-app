@@ -5,13 +5,7 @@
     display: flex;
     flex-flow: column wrap;
     justify-content: center;
-    margin: 0 90px;
-    input[type='text'],
-    toggle-password {
-      width: 380px;
-    }
-    toggle-password {
-    }
+    align-items: center;
 
     p + button {
       margin-top: 0;

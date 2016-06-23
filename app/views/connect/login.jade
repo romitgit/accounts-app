@@ -1,14 +1,12 @@
-main.layout-main.login-reg.flex.center.middle("role"="main" flush-height="lock")
+main.layout-main.login-reg.flex.center.middle("role"="main")
   login-reg-shell
 
     header.flex.center.middle
-      img(src=require("../../images/connect/asp.svg"))
+      img(src=require("../../images/logo_mobile.svg"))
 
 
     main.light-bg.elevated-bottom
-      h1 welcome back to topcoder
-
-      p.secondary Let's start building your app.  Login or create your account below to begin.
+      h1 LOG IN TO TOPCODER
 
       login
         p.error.transition(ng-class="{ hide: !vm.error }") We can't find an account with the email / password you entered. Please try again.
@@ -32,7 +30,7 @@ main.layout-main.login-reg.flex.center.middle("role"="main" flush-height="lock")
 
           p Or use your enterprise account
 
-          a.button(ui-sref="SSO_LOGIN({retUrl:vm.$stateParams.retUrl})") Single Sign On
+          a.button.sso-signon(ui-sref="SSO_LOGIN({retUrl:vm.$stateParams.retUrl})") Single Sign On
 
     footer
       p Don't have an account? <a href="{{vm.registrationUrl}}">Register Now</a>

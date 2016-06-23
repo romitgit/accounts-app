@@ -1,12 +1,10 @@
-main.layout-main.login-reg.flex.center.middle("role"="main" flush-height="lock")
+main.layout-main.login-reg.flex.center.middle("role"="main")
   login-reg-shell
     header.flex.center.middle
-      img(src=require("../../images/connect/asp.svg"))
+      img(src=require("../../images/logo_mobile.svg"))
 
     main.light-bg.elevated-bottom
-      h1 welcome to topcoder
-
-      p.secondary Let's start building your app.  Create your account below to begin.
+      h1 Join Topcoder
 
       registration
         p.error(ng-class="{ hide: !vm.error }") {{ vm.errorMessage }}
@@ -14,10 +12,8 @@ main.layout-main.login-reg.flex.center.middle("role"="main" flush-height="lock")
         loader(ng-if="vm.loading")
 
         form(ng-submit="vm.submit()")
-          .first-name
+          .first-last-names
             input.widest(type="text" name="first-name" ng-model="vm.firstName" required=true placeholder="First Name" maxlength="64" autofocus=true)
-
-          .last-name
             input.widest(type="text" name="last-name" ng-model="vm.lastName" required=true placeholder="Last Name" maxlength="64")
 
           .organization
@@ -56,5 +52,5 @@ main.layout-main.login-reg.flex.center.middle("role"="main" flush-height="lock")
           button.action.submit(type="submit") Register
 
     footer
-      p Already have an account? <a ui-sref="CONNECT_LOGIN">Login Here</a>
+      p Already have an account? <a ui-sref="CONNECT_LOGIN">Log in</a>
 

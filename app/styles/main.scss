@@ -11,9 +11,186 @@ ui-view {
   margin: 60px 0px;
   
   .img {
-    background: url('../images/tc/logo_mobile.svg');
+    background: url('../images/logo_mobile.svg');
     background-size: cover;
     width: 153px;
     height: 54px;
   }
+}
+
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url('./fonts/sofiapro/sofiapro-bold-webfont.eot');
+  src: url('./fonts/sofiapro/sofiapro-bold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sofiapro/sofiapro-bold-webfont.woff2') format('woff2'),
+       url('./fonts/sofiapro/sofiapro-bold-webfont.woff') format('woff'),
+       url('./fonts/sofiapro/sofiapro-bold-webfont.ttf') format('truetype'),
+       url('./fonts/sofiapro/sofiapro-bold-webfont.svg') format('svg');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url('./fonts/sofiapro/sofiapro-bold-italic-webfont.eot');
+  src: url('./fonts/sofiapro/sofiapro-bold-italic-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sofiapro/sofiapro-bold-italic-webfont.woff2') format('woff2'),
+       url('./fonts/sofiapro/sofiapro-bold-italic-webfont.woff') format('woff'),
+       url('./fonts/sofiapro/sofiapro-bold-italic-webfont.ttf') format('truetype'),
+       url('./fonts/sofiapro/sofiapro-bold-italic-webfont.svg') format('svg');
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url('./fonts/sofiapro/sofiapro-semibold-webfont.eot');
+  src: url('./fonts/sofiapro/sofiapro-semibold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sofiapro/sofiapro-semibold-webfont.woff2') format('woff2'),
+       url('./fonts/sofiapro/sofiapro-semibold-webfont.woff') format('woff'),
+       url('./fonts/sofiapro/sofiapro-semibold-webfont.ttf') format('truetype'),
+       url('./fonts/sofiapro/sofiapro-semibold-webfont.svg') format('svg');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url('./fonts/sofiapro/sofiapro-semibold-italic-webfont.eot');
+  src: url('./fonts/sofiapro/sofiapro-semibold-italic-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sofiapro/sofiapro-semibold-italic-webfont.woff2') format('woff2'),
+       url('./fonts/sofiapro/sofiapro-semibold-italic-webfont.woff') format('woff'),
+       url('./fonts/sofiapro/sofiapro-semibold-italic-webfont.ttf') format('truetype'),
+       url('./fonts/sofiapro/sofiapro-semibold-italic-webfont.svg') format('svg');
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url('./fonts/sofiapro/sofiapro-medium-webfont.eot');
+  src: url('./fonts/sofiapro/sofiapro-medium-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sofiapro/sofiapro-medium-webfont.woff2') format('woff2'),
+       url('./fonts/sofiapro/sofiapro-medium-webfont.woff') format('woff'),
+       url('./fonts/sofiapro/sofiapro-medium-webfont.ttf') format('truetype'),
+       url('./fonts/sofiapro/sofiapro-medium-webfont.svg') format('svg');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url('./fonts/sofiapro/sofiapro-medium-italic-webfont.eot');
+  src: url('./fonts/sofiapro/sofiapro-medium-italic-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sofiapro/sofiapro-medium-italic-webfont.woff2') format('woff2'),
+       url('./fonts/sofiapro/sofiapro-medium-italic-webfont.woff') format('woff'),
+       url('./fonts/sofiapro/sofiapro-medium-italic-webfont.ttf') format('truetype'),
+       url('./fonts/sofiapro/sofiapro-medium-italic-webfont.svg') format('svg');
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url('./fonts/sofiapro/sofiapro-regular-webfont.eot');
+  src: url('./fonts/sofiapro/sofiapro-regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sofiapro/sofiapro-regular-webfont.woff2') format('woff2'),
+       url('./fonts/sofiapro/sofiapro-regular-webfont.woff') format('woff'),
+       url('./fonts/sofiapro/sofiapro-regular-webfont.ttf') format('truetype'),
+       url('./fonts/sofiapro/sofiapro-regular-webfont.svg') format('svg');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url('./fonts/sofiapro/sofiapro-regular-italic-webfont.eot');
+  src: url('./fonts/sofiapro/sofiapro-regular-italic-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sofiapro/sofiapro-regular-italic-webfont.woff2') format('woff2'),
+       url('./fonts/sofiapro/sofiapro-regular-italic-webfont.woff') format('woff'),
+       url('./fonts/sofiapro/sofiapro-regular-italic-webfont.ttf') format('truetype'),
+       url('./fonts/sofiapro/sofiapro-regular-italic-webfont.svg') format('svg');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url('./fonts/sofiapro/sofiapro-light-webfont.eot');
+  src: url('./fonts/sofiapro/sofiapro-light-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sofiapro/sofiapro-light-webfont.woff2') format('woff2'),
+       url('./fonts/sofiapro/sofiapro-light-webfont.woff') format('woff'),
+       url('./fonts/sofiapro/sofiapro-light-webfont.ttf') format('truetype'),
+       url('./fonts/sofiapro/sofiapro-light-webfont.svg') format('svg');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sofia Pro';
+  src: url('./fonts/sofiapro/sofiapro-light-italic-webfont.eot');
+  src: url('./fonts/sofiapro/sofiapro-light-italic-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sofiapro/sofiapro-light-italic-webfont.woff2') format('woff2'),
+       url('./fonts/sofiapro/sofiapro-light-italic-webfont.woff') format('woff'),
+       url('./fonts/sofiapro/sofiapro-light-italic-webfont.ttf') format('truetype'),
+       url('./fonts/sofiapro/sofiapro-light-italic-webfont.svg') format('svg');
+  font-weight: 300;
+  font-style: italic;
+}
+
+// Source Sans Pro
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('./fonts/sourcesanspro/SourceSansPro-Bold-webfont.eot');
+  src: url('./fonts/sourcesanspro/SourceSansPro-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sourcesanspro/SourceSansPro-Bold-webfont.woff2') format('woff2'),
+       url('./fonts/sourcesanspro/SourceSansPro-Bold-webfont.woff') format('woff'),
+       url('./fonts/sourcesanspro/SourceSansPro-Bold-webfont.ttf') format('truetype'),
+       url('./fonts/sourcesanspro/SourceSansPro-Bold-webfont.svg') format('svg');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('./fonts/sourcesanspro/SourceSansPro-Semibold-webfont.eot');
+  src: url('./fonts/sourcesanspro/SourceSansPro-Semibold-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sourcesanspro/SourceSansPro-Semibold-webfont.woff2') format('woff2'),
+       url('./fonts/sourcesanspro/SourceSansPro-Semibold-webfont.woff') format('woff'),
+       url('./fonts/sourcesanspro/SourceSansPro-Semibold-webfont.ttf') format('truetype'),
+       url('./fonts/sourcesanspro/SourceSansPro-Semibold-webfont.svg') format('svg');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('./fonts/sourcesanspro/SourceSansPro-Regular-webfont.eot');
+  src: url('./fonts/sourcesanspro/SourceSansPro-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sourcesanspro/SourceSansPro-Regular-webfont.woff2') format('woff2'),
+       url('./fonts/sourcesanspro/SourceSansPro-Regular-webfont.woff') format('woff'),
+       url('./fonts/sourcesanspro/SourceSansPro-Regular-webfont.ttf') format('truetype'),
+       url('./fonts/sourcesanspro/SourceSansPro-Regular-webfont.svg') format('svg');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('./fonts/sourcesanspro/SourceSansPro-It-webfont.eot');
+  src: url('./fonts/sourcesanspro/SourceSansPro-It-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sourcesanspro/SourceSansPro-It-webfont.woff2') format('woff2'),
+       url('./fonts/sourcesanspro/SourceSansPro-It-webfont.woff') format('woff'),
+       url('./fonts/sourcesanspro/SourceSansPro-It-webfont.ttf') format('truetype'),
+       url('./fonts/sourcesanspro/SourceSansPro-It-webfont.svg') format('svg');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url('./fonts/sourcesanspro/SourceSansPro-Light-webfont.eot');
+  src: url('./fonts/sourcesanspro/SourceSansPro-Light-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./fonts/sourcesanspro/SourceSansPro-Light-webfont.woff2') format('woff2'),
+       url('./fonts/sourcesanspro/SourceSansPro-Light-webfont.woff') format('woff'),
+       url('./fonts/sourcesanspro/SourceSansPro-Light-webfont.ttf') format('truetype'),
+       url('./fonts/sourcesanspro/SourceSansPro-Light-webfont.svg') format('svg');
+  font-weight: 300;
+  font-style: normal;
 }

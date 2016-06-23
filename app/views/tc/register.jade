@@ -1,7 +1,7 @@
 .register-container
   header
     a.logo-link(href="/")
-      img(src=require("../../images/tc/logo_mobile.svg"), alt="Topcoder Logo")
+      img(src=require("../../images/logo_mobile.svg"), alt="Topcoder Logo")
     .arrow
   //- h1 Join the Topcoder technology community to earn, learn, and connect
   h1 Join Topcoder
@@ -82,7 +82,7 @@
 
       p.form-error(ng-message="required") Please enter an email address.
 
-    .validation-bar(ng-class="{ 'error-bar': (vm.registerForm.password.$dirty && vm.registerForm.password.$invalid) }")
+    .validation-bar
       toggle-password-with-tips(ng-if="!vm.isSocialRegistration", placeholder="Create Password")
 
       .tips.password-tips(ng-show="vm.passwordFocus")
