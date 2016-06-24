@@ -71,9 +71,32 @@ config = (
     public: true
   
   states['MEMBER_LOGIN'] =
-    url: '/tc?retUrl&handle&password&return_to&client_id&response_type&state&redirect_uri&scope'
+    url: '/member?retUrl&handle&password&return_to&client_id&response_type&state&redirect_uri&scope'
     controller  : 'TCLoginController as vm'
     template: require('./views/tc/login')()
+    public: true
+
+  states['MEMBER_REGISTRATION'] =
+    url: '/member/registration?retUrl'
+    controller  : 'TCRegistrationController as vm'
+    template: require('./views/tc/register.jade')()
+    public: true
+
+  states['MEMBER_REGISTRATION_SUCCESS'] =
+    url: '/member/registration-success'
+    template: require('./views/tc/registered-successfully.jade')()
+    public: true
+
+  states['MEMBER_FORGOT_PASSWORD'] =
+    url: '/member/forgot-password'
+    controller  : 'TCResetPasswordController as vm'
+    template   : require('./views/tc/reset-password.jade')()
+    public: true
+
+  states['MEMBER_RESET_PASSWORD'] =
+    url: '/member/reset-password?token&handle'
+    controller  : 'TCResetPasswordController as vm'
+    template   : require('./views/tc/reset-password.jade')()
     public: true
     
   states['SOCIAL_CALLBACK'] =

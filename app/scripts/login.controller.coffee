@@ -1,6 +1,7 @@
 'use strict'
 
-`import { isUrl, encodeParams } from '../../core/utils.js'`
+`import { encodeParams } from '../../core/utils.js'`
+`import { isUrl } from '../../core/url.js'`
 
 LoginController = (
   $log
