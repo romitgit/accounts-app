@@ -77,7 +77,7 @@ config = (
     public: true
 
   states['MEMBER_REGISTRATION'] =
-    url: '/member/registration?retUrl'
+    url: '/member/registration?retUrl&utm_source&utm_medium&utm_campaign'
     controller  : 'TCRegistrationController as vm'
     template: require('./views/tc/register.jade')()
     public: true
