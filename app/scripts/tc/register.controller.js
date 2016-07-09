@@ -20,7 +20,6 @@ import { npad } from '../../../core/utils.js'
       medium : $stateParams && $stateParams.utm_medium ? $stateParams.utm_medium : '',
       campaign : $stateParams && $stateParams.utm_campaign ? $stateParams.utm_campaign : ''
     }
-    console.log(utm)
 
     // Set default for toggle password directive
     vm.defaultPlaceholder = 'Create Password'
