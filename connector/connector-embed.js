@@ -12,7 +12,8 @@ function bindHandler(REQUEST, SUCCESS, FAILURE, action) {
 
       console.log('Connector iframe: sending response', response)
 
-      e.source.postMessage(response, e.origin)
+      var origin = e.origin || e.originalEvent.origin;
+      e.source.postMessage(response, origin)
     }
 
     function failure(error) {
