@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
-import { V3_JWT, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
+import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -63,23 +63,32 @@ export function getV3Jwt() {
   return getToken(V3_JWT)
 }
 
+export function getV2Jwt() {
+  return getToken(V2_JWT)
+}
+
+export function getV2Sso() {
+  return getToken(V2_SSO)  
+}
+
 export function getFreshToken() {
-  const currentToken = getV3Jwt()
+  const v3Token = getV3Jwt()
+  const v2TokenExists = getV2Jwt() && getV2Sso()
   
   // If we have no token, short circuit
-  if (!currentToken) {
+  if (!v3Token || !v2TokenExists) {
     return Promise.reject('No token found')
   }
 
   // If the token is still fresh for at least another minute
-  if ( !isTokenExpired(currentToken, 60) ) {
+  if ( !isTokenExpired(v3Token, 60) ) {
 
     // If the token will expire in the next 5m, refresh it in the background
-    if ( isTokenExpired(currentToken, 300) ) {
+    if ( isTokenExpired(v3Token, 300) ) {
       refreshToken()
     }
 
-    return Promise.resolve(currentToken)
+    return Promise.resolve(v3Token)
   }
 
   // If the token is expired, return a promise for a fresh token
