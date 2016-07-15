@@ -1,4 +1,4 @@
-import { GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE } from '../core/constants.js'
+import { GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, DOMAIN } from '../core/constants.js'
 import createFrame from './iframe.js'
 
 let iframe = null
@@ -38,10 +38,17 @@ const proxyCall = function(REQUEST, SUCCESS, FAILURE, params = {}) {
   function request() {
     return new Promise( (resolve, reject) => {
       function receiveMessage(e) {
-        window.removeEventListener('message', receiveMessage)
+        // ignore anything that is not our message
+        // check origin and more strict message format
+        var origin = e.origin || e.originalEvent.origin;
+        const safeOrigin = origin && origin.endsWith(DOMAIN)
+        const safeFormat = e.data.type === SUCCESS || e.data.type === FAILURE
+        if (safeOrigin && safeFormat) {
+          window.removeEventListener('message', receiveMessage)
 
-        if (e.data.type === SUCCESS) resolve(e.data)
-        if (e.data.type === FAILURE) reject(e.error)
+          if (e.data.type === SUCCESS) resolve(e.data)
+          if (e.data.type === FAILURE) reject(e.error)
+        }
       }
 
       window.addEventListener('message', receiveMessage)
