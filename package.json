@@ -28,7 +28,7 @@
     "ng-onload": "^0.2.1"
   },
   "devDependencies": {
-    "appirio-tech-webpack-config": "^0.3.0",
+    "appirio-tech-webpack-config": "https://github.com/appirio-tech/webpack-config.git#feature/auth0-idp-migration",
     "coffee-loader": "^0.7.2",
     "coffee-script": "^1.10.0",
     "eslint": "^2.7.0",
