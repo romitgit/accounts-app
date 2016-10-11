@@ -36,7 +36,7 @@ function fetchJSON(url, options) {
             const error = new Error(json.result.content)
             error.response = response
             error.status = json.result.status
-            
+
             throw error
           }
 
@@ -46,7 +46,7 @@ function fetchJSON(url, options) {
         } else {
           const error = new Error(response.statusText)
           error.response = response
-          
+
           throw error
         }
       })
@@ -56,7 +56,11 @@ function fetchJSON(url, options) {
 }
 
 export function isLoggedIn() {
-  return getV3Jwt() !== null
+  // make sure all tokens are set
+  const v3jwt = getV3Jwt()
+  const v2jwt = getV2Jwt()
+  const v2sso = getV2Sso()
+  return !!v3jwt && !!v2jwt && !!v2sso
 }
 
 export function getV3Jwt() {
@@ -68,13 +72,13 @@ export function getV2Jwt() {
 }
 
 export function getV2Sso() {
-  return getToken(V2_SSO)  
+  return getToken(V2_SSO)
 }
 
 export function getFreshToken() {
   const v3Token = getV3Jwt()
   const v2TokenExists = getV2Jwt() && getV2Sso()
-  
+
   // If we have no token, short circuit
   if (!v3Token || !v2TokenExists) {
     return Promise.reject('No token found')
@@ -127,7 +131,7 @@ function setConnection(options) {
 
 function auth0Signin(options) {
   const url = 'https://' + AUTH0_DOMAIN + '/oauth/ro'
-  
+
   /* eslint camelcase: 0 */
   const config = {
     method: 'POST',
@@ -160,7 +164,7 @@ function auth0Popup(options) {
           reject(err)
           return
         }
-        
+
         /* eslint camelcase: 0 */
         resolve({
           profile,
@@ -198,7 +202,7 @@ function getNewJWT() {
       refreshToken
     }
   }
-  
+
   const url = API_URL + '/authorizations'
   const config = {
     method: 'POST',
@@ -254,10 +258,10 @@ export function refreshToken() {
 
   function refreshFailure(response) {
     refreshPromise = null
-    
+
     const error = new Error('Unable to refresh token')
     error.reponse = response
-    
+
     throw error
   }
 
@@ -466,7 +470,7 @@ export function getSSOProvider(handle) {
       const error = new Error('Could not contact login server')
       error.reason = 'Body did not contain content'
       error.response = res
-      
+
       throw error
     }
 
@@ -474,7 +478,7 @@ export function getSSOProvider(handle) {
       const error = new Error('This handle does not appear to have an SSO login associated')
       error.reason = 'No provider of type \'samlp\''
       error.response = res
-      
+
       throw error
     }
 
@@ -493,7 +497,7 @@ export function getSSOProvider(handle) {
 export function validateClient(clientId, redirectUrl, scope) {
   const token = getV3Jwt() || ''
   const url = API_URL + '/authorizations/validateClient?clientId=' + clientId + '&redirectUrl=' + encodeURIComponent(redirectUrl) + '&scope=' + scope
-  
+
   return fetchJSON(url, {
     method: 'GET',
     headers: {
@@ -516,6 +520,6 @@ export function validateSocialProfile(userId, provider) {
       return null
     }
   }
- 
+
   return fetchJSON(url, config).then(success)
 }
