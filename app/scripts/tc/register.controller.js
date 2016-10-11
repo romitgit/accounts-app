@@ -66,7 +66,8 @@ import { npad } from '../../../core/utils.js'
           providerType: vm.socialProvider,
           context: {
             handle: vm.username,
-            accessToken: vm.socialContext.accessToken
+            accessToken: vm.socialContext.accessToken,
+            auth0UserId: vm.socialProfile.user_id
           }
         }
       }
