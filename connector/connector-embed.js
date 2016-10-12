@@ -1,10 +1,17 @@
 import 'babel-polyfill'
 
-import { GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE } from '../core/constants.js'
+import { GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, ALLOWED_ORIGINS } from '../core/constants.js'
 import { getFreshToken, logout } from '../core/auth.js'
 
 function bindHandler(REQUEST, SUCCESS, FAILURE, action) {
   window.addEventListener('message', (e) => {
+
+    var origin = e.origin || e.originalEvent.origin;
+    if (ALLOWED_ORIGINS.indexOf(origin) === -1) {
+      console.error(origin, 'is not allowed');
+      return;
+    }
+
     function success(data) {
       const response = Object.assign({
         type: SUCCESS
