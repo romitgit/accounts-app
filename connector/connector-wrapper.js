@@ -38,17 +38,9 @@ const proxyCall = function(REQUEST, SUCCESS, FAILURE, params = {}) {
   function request() {
     return new Promise( (resolve, reject) => {
       function receiveMessage(e) {
-        // ignore anything that is not our message
-        // check origin and more strict message format
-        var origin = e.origin || e.originalEvent.origin;
-        const safeOrigin = origin && origin.endsWith(DOMAIN)
-        const safeFormat = e.data.type === SUCCESS || e.data.type === FAILURE
-        if (safeOrigin && safeFormat) {
-          window.removeEventListener('message', receiveMessage)
-
-          if (e.data.type === SUCCESS) resolve(e.data)
-          if (e.data.type === FAILURE) reject(e.error)
-        }
+        window.removeEventListener('message', receiveMessage)
+        if (e.data.type === SUCCESS) resolve(e.data)
+        if (e.data.type === FAILURE) reject(e.error)
       }
 
       window.addEventListener('message', receiveMessage)
