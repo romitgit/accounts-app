@@ -6,8 +6,16 @@ import { getFreshToken, logout } from '../core/auth.js'
 function bindHandler(REQUEST, SUCCESS, FAILURE, action) {
   window.addEventListener('message', (e) => {
 
-    var origin = e.origin || e.originalEvent.origin;
-    if (ALLOWED_ORIGINS.indexOf(origin) === -1) {
+    var origin = e.origin || e.originalEvent.origin,
+        validOrigin = false;
+    
+    ALLOWED_ORIGINS.forEach((allowedOrigin) => {
+      if (!validOrigin && origin.endsWith(allowedOrigin)) {
+        validOrigin = true;
+      }
+    })
+
+    if (!validOrigin) {
       console.error(origin, 'is not allowed');
       return;
     }
