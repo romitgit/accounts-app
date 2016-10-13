@@ -21,3 +21,5 @@ export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE'
 
 export const BUSY_PROGRESS_MESSAGE = 'Processing...'
+
+export const ALLOWED_ORIGINS = [DOMAIN, 'http://localhost:3000']
