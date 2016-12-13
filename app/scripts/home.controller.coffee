@@ -13,7 +13,7 @@ HomeController = (
   
   init = ->
     unless getV3Jwt()
-      $state.go 'CONNECT_LOGIN'
+      $state.go 'login'
     else
       $window.location = 'https://www.' + DOMAIN + '/'
     vm

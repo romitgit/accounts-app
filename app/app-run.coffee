@@ -1,5 +1,5 @@
 run = ($log, $rootScope, $state, $urlRouter) ->
-  $log.debug('run-debug2')
+  $log.debug('run-debug3')
   $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
     $rootScope.stateLoaded = false
   $rootScope.$on '$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) ->

@@ -29,7 +29,7 @@ LoginController = (
     false
   
   init = ->
-    console.log('******* LoginController#init() isConnectLogin(): '+isConnectLogin())
+    console.log('******* LoginController#init::isConnectLogin(): '+isConnectLogin())
     if isConnectLogin()
       $state.go 'CONNECT_LOGIN', encodeParams $stateParams
     else
