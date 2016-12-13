@@ -16,11 +16,11 @@ config = (
 
   # customer routes
   
-  # states['home'] =
-  #  url         : '/'
-  #  title       : 'Home'
-  #  controller  : 'HomeController as vm'
-  #  template    : require('./views/home')()
+  states['home'] =
+    url         : '/'
+    title       : 'Home'
+    controller  : 'HomeController as vm'
+    template    : require('./views/home')()
 
   # State parameters
   # app      : tc|connect|etc..
