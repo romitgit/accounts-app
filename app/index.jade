@@ -18,8 +18,7 @@ html(ng-app='accounts')
     
     div(ui-view="footer", ng-controller="FooterController as vm")
       .account-footer
-        a.privacy-policy(ng-href="https://www.topcoder.com/community/how-it-works/privacy-policy/", target="_blank")
-          | Privacy Policy
         p.copyright-notice(ng-bind-html="vm.copyrightNotice")
 
+    
     include ./views/google.analytics.jade
