@@ -12,7 +12,7 @@ config = (
   
   states = {}
 
-  $locationProvider.html5Mode true
+  # $locationProvider.html5Mode true
 
   # customer routes
   
