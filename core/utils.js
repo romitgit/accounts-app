@@ -2,8 +2,10 @@ import pickBy from 'lodash/pickBy'
 import mapValues from 'lodash/mapValues'
 import fromPairs from 'lodash/fromPairs'
 
-export function getLoginConnection(userId) {
-  return isEmail(userId) ? 'TC-User-Database' : 'LDAP'
+export function getLoginConnection(userId) { /* eslint no-unused-vars: 0 */
+  // Always use TC-User-Database for both email and handle login.
+  //return isEmail(userId) ? 'TC-User-Database' : 'LDAP'
+  return 'TC-User-Database'
 }
 
 export function isEmail(value) {
