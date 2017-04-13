@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
-import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
+import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -448,14 +448,13 @@ function extractSocialUserData(profile, accessToken) {
 }
 
 export function generateSSOUrl(org, callbackUrl) {
-  const apiUrl = replace(API_URL, 'api-work', 'api')
-
+  
   return [
     'https://' + AUTH0_DOMAIN + '/authorize?',
     'response_type=token',
     '&client_id=' + AUTH0_CLIENT_ID,
     '&connection=' + org,
-    '&redirect_uri=' + apiUrl + '/pub/callback.html',
+    '&redirect_uri=' + AUTH0_CALLBACK,
     '&state=' + (encodeURIComponent(callbackUrl)),
     '&scope=openid%20profile%20offline_access',
     '&device=device'
