@@ -43,6 +43,8 @@ SSOLoginController = (
       # TODO: home?
       state = $state.href 'home', {}, { absolute: true }
     callbackUrl = $state.href 'SSO_CALLBACK', {retUrl : state}, { absolute: true }
+    # 2017.04.12 - the callback does not work without hash bang when getting back from IdP
+    callbackUrl = callbackUrl.replace 'sso-callback', '#!/sso-callback'
     authUrl = generateSSOUrl vm.org, callbackUrl
     $log.info 'redirecting to ' + authUrl
     $window.location.href = authUrl;
