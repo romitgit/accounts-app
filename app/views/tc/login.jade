@@ -53,6 +53,9 @@
       li.network.twitter
         a.ico(ng-click="vm.socialLogin('twitter')")
         span Twitter
+      li.network.sso
+        a.ico(ui-sref="SSO_LOGIN({app:'member',retUrl:vm.$stateParams.retUrl})")
+        span Single Sign On
 
 p.join-topcoder Not a member yet? &nbsp;
   a(href="{{vm.registrationUrl}}") Join Now

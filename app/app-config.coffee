@@ -134,8 +134,12 @@ config = (
     template   : require('./views/connect/reset-password.jade')()
     public: true
 
+  # State parameters
+  # org    : (optional) The id of tenant to sign on. Actually, this shoule be Auth0 SAMLP connection name.
+  # app    : (optional, default:connect) member | connect
+  # retUrl : (optional) Encoded URL to redirect after authentication.
   states['SSO_LOGIN'] =
-    url: '/sso-login/:org?retUrl'
+    url: '/sso-login/:org?app&retUrl'
     template   : require('./views/connect/sso-login')()
     controller : 'SSOLoginController as vm'
     public: true
