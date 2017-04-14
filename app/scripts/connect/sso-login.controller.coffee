@@ -16,6 +16,7 @@ SSOLoginController = (
   vm.emailOrHandle = ''
   vm.org           = $stateParams.org
   vm.retUrl        = $stateParams.retUrl
+  vm.app           = $stateParams.app
 
   activate = ->
     if vm.org
@@ -36,7 +37,14 @@ SSOLoginController = (
     getSSOProvider(vm.emailOrHandle)
       .then(success)
       .catch(failure)
-  
+
+  vm.showLoginPage = ->
+    $log.info 'showLoginPage!'
+    if vm.app == 'member'
+      $state.go 'MEMBER_LOGIN', $stateParams
+    else
+      $state.go 'CONNECT_LOGIN', $stateParams
+
   go = ->
     state = vm.retUrl
     unless state
