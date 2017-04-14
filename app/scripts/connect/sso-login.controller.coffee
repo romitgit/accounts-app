@@ -4,6 +4,7 @@
 
 SSOLoginController = (
   $log
+  $scope
   $state
   $stateParams
   $window
@@ -33,6 +34,7 @@ SSOLoginController = (
     failure = (err) ->
       vm.loading = false
       vm.error   = err.message
+      $scope.$apply()
 
     getSSOProvider(vm.emailOrHandle)
       .then(success)
@@ -63,6 +65,7 @@ SSOLoginController = (
 
 SSOLoginController.$inject = [
   '$log'
+  '$scope'
   '$state'
   '$stateParams'
   '$window'
