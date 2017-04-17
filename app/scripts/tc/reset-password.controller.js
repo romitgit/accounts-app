@@ -21,7 +21,7 @@ import { DOMAIN } from '../../../core/constants.js'
       vm.alreadySent = false
       vm.emailNotFound = false
       vm.unableToRest = false
-      vm.resetError = false
+      vm.unkownError = false
     }
     vm.clearState()
 
@@ -45,6 +45,8 @@ import { DOMAIN } from '../../../core/constants.js'
                 vm.unableToRest = true
               else if (err.status == 404)
                 vm.emailNotFound = true
+              else
+                vm.unkownError = true
 
               vm.resetTokenFailed = true
               vm.loading = false
