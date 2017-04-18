@@ -144,8 +144,14 @@ config = (
     controller : 'SSOLoginController as vm'
     public: true
 
+  # State parameters
+  # retUrl       : (required) URL to redirect after SSO
+  # userJWTToken : (optional) v3 JWT Token
+  # auth0Jwt     : (optional) Auth0(v2) JWT Token
+  # auth0Refresh : (optional) Auth0 Refresh Token
+  # message      : (optional) A message handed by Identity Service when some error occurs
   states['SSO_CALLBACK'] =
-    url: '/sso-callback?retUrl&userJWTToken&tcjwt&tcsso&status&message'
+    url: '/sso-callback?retUrl&userJWTToken&auth0Jwt&auth0Refresh&message'
     template   : require('./views/connect/sso-callback')()
     controller : 'SSOCallbackController as vm'
     public: true
