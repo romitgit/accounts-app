@@ -99,8 +99,14 @@ config = (
     template   : require('./views/tc/reset-password.jade')()
     public: true
     
+  # State parameters
+  # retUrl       : (required) URL to redirect after SSO
+  # userJWTToken : (optional) v3 JWT Token
+  # auth0Jwt     : (optional) Auth0(v2) JWT Token
+  # auth0Refresh : (optional) Auth0 Refresh Token
+  # message      : (optional) A message handed by Identity Service when some error occurs
   states['SOCIAL_CALLBACK'] =
-    url: '/social-callback?retUrl&userJWTToken&status&message'
+    url: '/social-callback?retUrl&userJWTToken&auth0Jwt&auth0Refresh&message'
     template   : require('./views/tc/social-callback')()
     controller : 'SSOCallbackController as vm'
     public: true
@@ -135,17 +141,21 @@ config = (
     public: true
 
   # State parameters
-  # org    : (optional) The id of tenant to sign on. Actually, this shoule be Auth0 SAMLP connection name.
-  # app    : (optional, default:connect) member | connect
-  # retUrl : (optional) Encoded URL to redirect after authentication.
+  # see SOCIAL_CALLBACK
   states['SSO_LOGIN'] =
     url: '/sso-login/:org?app&retUrl'
     template   : require('./views/connect/sso-login')()
     controller : 'SSOLoginController as vm'
     public: true
 
+  # State parameters
+  # retUrl       : (required) URL to redirect after SSO
+  # userJWTToken : (optional) v3 JWT Token
+  # auth0Jwt     : (optional) Auth0(v2) JWT Token
+  # auth0Refresh : (optional) Auth0 Refresh Token
+  # message      : (optional) A message handed by Identity Service when some error occurs
   states['SSO_CALLBACK'] =
-    url: '/sso-callback?retUrl&userJWTToken&tcjwt&tcsso&status&message'
+    url: '/sso-callback?retUrl&userJWTToken&auth0Jwt&auth0Refresh&message'
     template   : require('./views/connect/sso-callback')()
     controller : 'SSOCallbackController as vm'
     public: true
