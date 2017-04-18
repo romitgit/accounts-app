@@ -3,9 +3,11 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
-import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK } from './constants.js'
+import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, /*API_URL,*/ AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
+
+const API_URL = 'http://local.topcoder-dev.com:8080/v3'
 
 /// Adding a temp comment to kick off a fresh deploy
 const auth0 = new Auth0({
@@ -454,7 +456,8 @@ export function generateSSOUrl(org, callbackUrl) {
     'response_type=token',
     '&client_id=' + AUTH0_CLIENT_ID,
     '&connection=' + org,
-    '&redirect_uri=' + AUTH0_CALLBACK,
+    //'&redirect_uri=' + AUTH0_CALLBACK,
+    '&redirect_uri=http://local.topcoder-dev.com:8080/pub/callback.html',
     '&state=' + (encodeURIComponent(callbackUrl)),
     '&scope=openid%20profile%20offline_access',
     '&device=device'
