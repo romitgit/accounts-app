@@ -456,8 +456,7 @@ export function generateSSOUrl(org, callbackUrl) {
     'response_type=token',
     '&client_id=' + AUTH0_CLIENT_ID,
     '&connection=' + org,
-    //'&redirect_uri=' + AUTH0_CALLBACK,
-    '&redirect_uri=http://local.topcoder-dev.com:8080/pub/callback.html',
+    '&redirect_uri=' + AUTH0_CALLBACK,
     '&state=' + (encodeURIComponent(callbackUrl)),
     '&scope=openid%20profile%20offline_access',
     '&device=device'
