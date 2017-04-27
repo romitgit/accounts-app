@@ -26,7 +26,7 @@ export function decodeToken(token) {
   const parts = token.split('.')
 
   if (parts.length !== 3) {
-    throw new Error('JWT must have 3 parts')
+    throw new Error('The token is invalid')
   }
 
   const decoded = urlBase64Decode(parts[1])

@@ -20,7 +20,8 @@ import { DOMAIN } from '../../../core/constants.js'
       vm.resetTokenFailed = false
       vm.alreadySent = false
       vm.emailNotFound = false
-      vm.resetError = false
+      vm.unableToRest = false
+      vm.unkownError = false
     }
     vm.clearState()
 
@@ -40,8 +41,12 @@ import { DOMAIN } from '../../../core/constants.js'
             $scope.$apply(function() {
               if (err.status == 400)
                 vm.alreadySent = true
+              else if (err.status == 403)
+                vm.unableToRest = true
               else if (err.status == 404)
                 vm.emailNotFound = true
+              else
+                vm.unkownError = true
 
               vm.resetTokenFailed = true
               vm.loading = false
