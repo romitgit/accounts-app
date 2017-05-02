@@ -9,13 +9,13 @@ config = (
   $stateProvider
   authProvider
 ) ->
-  
+
   states = {}
 
   $locationProvider.html5Mode true
 
   # customer routes
-  
+
   states['home'] =
     url         : '/'
     title       : 'Home'
@@ -28,7 +28,7 @@ config = (
   # handle   : direct login with handle/password
   # password : direct login with handle/password
   # return_to: URL of Zendesk to redirect after authentication. This is handed by Zendesk.
-  # 
+  #
   # Connect example:
   # /login?app=connect&retUrl=https%3A%2F%2Fconnect.topcoder.com
   # Direct login example:
@@ -45,7 +45,7 @@ config = (
   # State parameters
   # retUrl  : URL to redirect after logging out
   # message : A message handed by Zendesk when some error occurs
-  # 
+  #
   # Example:
   # /logout?retUrl=https%3A%2F%2Fconnect.topcoder.com
   # Zendesk example:
@@ -58,7 +58,7 @@ config = (
     controller  : 'LogoutController as vm'
     template: require('./views/logout')()
     public: true
-    
+
   # State parameters
   # client_id    : (required) ID for a client which is registered in the client database.
   # response_type: (required) Only "token" is supported.
@@ -69,10 +69,16 @@ config = (
     url: '/oauth?client_id&response_type&state&redirect_uri&scope'
     controller  : 'OAuthController as vm'
     public: true
-  
+
   states['MEMBER_LOGIN'] =
     url: '/member?retUrl&handle&password&return_to&client_id&response_type&state&redirect_uri&scope'
     controller  : 'TCLoginController as vm'
+    template: require('./views/tc/login')()
+    public: true
+
+  states['GATEWAY_LOGIN'] =
+    url: '/gateway?client_id&response_type&state&redirect_uri&scope'
+    controller  : 'TCGatewayLoginController as vm'
     template: require('./views/tc/login')()
     public: true
 
@@ -98,7 +104,7 @@ config = (
     controller  : 'TCResetPasswordController as vm'
     template   : require('./views/tc/reset-password.jade')()
     public: true
-    
+
   states['SOCIAL_CALLBACK'] =
     url: '/social-callback?retUrl&userJWTToken&status&message'
     template   : require('./views/tc/social-callback')()
@@ -150,7 +156,7 @@ config = (
     url: '/401',
     template   : require('./views/401')()
     public: true
-  
+
   # This must be the last one in the list
   states['otherwise'] =
     url: '*path',
@@ -159,7 +165,7 @@ config = (
 
   for key, state of states
     $stateProvider.state key, state
-  
+
   # Setup Auth0 (for Social Login)
   authProvider.init({
     domain: AUTH0_DOMAIN
@@ -173,6 +179,4 @@ config.$inject = [
   '$stateProvider'
   'authProvider'
 ]
-
 angular.module('accounts').config config
-

@@ -52,7 +52,7 @@ export function validateUrl(returnUrlBase) {
   if (parser) {
     parser.href = returnUrlBase
     hostname = parser.hostname.toLowerCase()
-    return hostname.endsWith(DOMAIN) || hostname.endsWith(ZENDESK_DOMAIN)
+    return hostname.endsWith(DOMAIN) || hostname.endsWith(ZENDESK_DOMAIN) || hostname.endsWith('apigee.net')
   }
   return false
 }
