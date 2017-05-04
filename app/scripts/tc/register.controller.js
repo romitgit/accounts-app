@@ -26,6 +26,7 @@ import { npad } from '../../../core/utils.js'
     // Set default for toggle password directive
     vm.defaultPlaceholder = 'Create Password'
     vm.busyMessage = BUSY_PROGRESS_MESSAGE
+    vm.retUrl = $stateParams && $stateParams.retUrl ? $stateParams.retUrl : null
 
     vm.countries = ISO3166.getAllCountryObjects()
 
@@ -73,7 +74,7 @@ import { npad } from '../../../core/utils.js'
           }
         }
       }
-      var redirectURL = $stateParams.retUrl ? $stateParams.retUrl : SKILL_PICKER_URL;
+      var redirectURL = vm.retUrl ? vm.retUrl : SKILL_PICKER_URL;
       var body = {
         param: userInfo,
         options: {
