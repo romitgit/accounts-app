@@ -4,10 +4,10 @@ import { BUSY_PROGRESS_MESSAGE, DOMAIN } from '../../../core/constants.js'
 import { registerUser, socialRegistration } from '../../../core/auth.js'
 import { npad } from '../../../core/utils.js'
 
-const SKILL_PICKER_URL = 'https://www.' + DOMAIN + '/skill-picker'
-
 (function() {
   'use strict'
+
+  const SKILL_PICKER_URL = 'https://www.' + DOMAIN + '/skill-picker'
 
   angular.module('accounts').controller('TCRegistrationController', TCRegistrationController)
 
