@@ -83,7 +83,7 @@
       p.form-error(ng-message="required") Please enter an email address.
 
     .validation-bar
-      toggle-password-with-tips(ng-if="!vm.isSocialRegistration", placeholder="Create Password")
+      toggle-password-with-tips(ng-if="!vm.isSocialRegistration && !vm.tcUser", placeholder="Create Password")
 
       .tips.password-tips(ng-show="vm.passwordFocus")
         .arrow
@@ -117,6 +117,9 @@
       li.network.facebook
         a.ico(ng-click="vm.socialRegister('facebook')")
         span Facebook
+      li.network.sso
+        a.ico(ui-sref="SSO_REGISTRATION({app:'member',retUrl: vm.registrationUrl })")
+        span Single Sign On
 
 .join-topcoder
   span Have an account? &nbsp;

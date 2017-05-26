@@ -76,8 +76,17 @@ config = (
     template: require('./views/tc/login')()
     public: true
 
+  # State parameters
+  # retUrl       : (required) URL to redirect after SSO
+  # utm_source   : (optional) UTM source for the registration
+  # utm_medium   : (optional) UTM medium for the registration
+  # utm_campaign : (optional) UTM campaign for the registration
+  # userJWTToken : (optional) v3 JWT Token
+  # auth0Jwt     : (optional) Auth0(v2) JWT Token
+  # auth0Refresh : (optional) Auth0 Refresh Token
+  # message      : (optional) A message handed by Identity Service when some error occurs
   states['MEMBER_REGISTRATION'] =
-    url: '/member/registration?retUrl&utm_source&utm_medium&utm_campaign'
+    url: '/member/registration?retUrl&utm_source&utm_medium&utm_campaign&userJWTToken&auth0Jwt&auth0Refresh&message'
     controller  : 'TCRegistrationController as vm'
     template: require('./views/tc/register.jade')()
     public: true
@@ -158,6 +167,15 @@ config = (
     url: '/sso-callback?retUrl&userJWTToken&auth0Jwt&auth0Refresh&message'
     template   : require('./views/connect/sso-callback')()
     controller : 'SSOCallbackController as vm'
+    public: true
+
+  # State parameters
+  # app          : (required) application (member or connect) for which registration is to be done
+  # retUrl       : (required) URL to redirect after registration
+  states['SSO_REGISTRATION'] =
+    url: '/sso-registration/:org?app&retUrl'
+    template   : require('./views/connect/sso-registration')()
+    controller : 'SSORegistrationController as vm'
     public: true
 
   states['UNAUTHORIZED'] =

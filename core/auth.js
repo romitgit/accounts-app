@@ -334,14 +334,10 @@ export function socialRegistration(provider, state) {
             reject(error)
             return
           }
-          console.log(profile)
-          console.log(accessToken)
           var socialData = extractSocialUserData(profile, accessToken)
-          console.log(socialData)
 
           validateSocialProfile(socialData.socialUserId, socialData.socialProvider)
             .then(function(resp) {
-              console.debug(JSON.stringify(resp))
               if (resp.valid) {
                 // success
                 var result = {

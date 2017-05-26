@@ -1,8 +1,9 @@
 import angular from 'angular'
 import _ from 'lodash'
-import { BUSY_PROGRESS_MESSAGE, DOMAIN } from '../../../core/constants.js'
+import { BUSY_PROGRESS_MESSAGE, DOMAIN, V3_JWT } from '../../../core/constants.js'
 import { registerUser, socialRegistration } from '../../../core/auth.js'
 import { npad } from '../../../core/utils.js'
+import { getToken, decodeToken } from '../../../core/token.js'
 
 (function() {
   'use strict'
@@ -27,8 +28,33 @@ import { npad } from '../../../core/utils.js'
     vm.defaultPlaceholder = 'Create Password'
     vm.busyMessage = BUSY_PROGRESS_MESSAGE
     vm.retUrl = $stateParams && $stateParams.retUrl ? $stateParams.retUrl : null
+    vm.registrationUrl   = encodeURIComponent($state.href('MEMBER_REGISTRATION', { activated: true }, { absolute: true }))
 
     vm.countries = ISO3166.getAllCountryObjects()
+
+    vm.$stateParams = $stateParams
+
+    vm.tcUser = $stateParams.userJWTToken ? decodeToken($stateParams.userJWTToken) : null
+    vm.auth0User = $stateParams.auth0Jwt ? decodeToken($stateParams.auth0Jwt) : null
+    console.log(vm.auth0User)
+    if (vm.auth0User && vm.auth0User.given_name) {
+      vm.firstname = vm.auth0User.given_name
+    }
+    if (vm.auth0User && vm.auth0User.family_name) {
+      vm.lastname = vm.auth0User.family_name
+    }
+    if (vm.tcUser && vm.tcUser.email) {
+      vm.email = vm.tcUser.email
+    }
+
+    // adds watch to registerForm so that we can update form's state
+    $scope.$watch('vm.registerForm', function(registerForm) {
+      if(registerForm) { 
+        if (vm.email) {
+          registerForm.email.$setDirty()
+        }
+      }      
+    });
 
     vm.updateCountry = function (angucompleteCountryObj) {
       var countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
@@ -60,6 +86,16 @@ import { npad } from '../../../core/utils.js'
 
       if (!vm.isSocialRegistration) {
         userInfo.credential = { password: vm.password }
+      } else if (vm.auth0User) {//SSO user
+        var ssoUserId = vm.auth0User.user_id
+        ssoUserId = ssoUserId ? ssoUserId.substring(ssoUserId.lastIndexOf('|') + 1) : ''
+        userInfo.profile = {
+          name: vm.auth0User.name,
+          email: vm.auth0User.email,
+          providerType: 'samplp',
+          provider: _.get(vm.auth0User, "identities[0].connection", ''),
+          userId: ssoUserId
+        }
       } else {
         userInfo.profile = {
           userId: vm.socialUserId,
@@ -147,7 +183,5 @@ import { npad } from '../../../core/utils.js'
         $scope.$apply()
       })
     }
-
-    vm.$stateParams = $stateParams
   }
 })()
