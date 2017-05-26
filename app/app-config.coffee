@@ -153,7 +153,7 @@ config = (
   # see SOCIAL_CALLBACK
   states['SSO_LOGIN'] =
     url: '/sso-login/:org?app&retUrl'
-    template   : require('./views/connect/sso-login')()
+    template   : require('./views/sso/sso-login')()
     controller : 'SSOLoginController as vm'
     public: true
 
@@ -165,7 +165,7 @@ config = (
   # message      : (optional) A message handed by Identity Service when some error occurs
   states['SSO_CALLBACK'] =
     url: '/sso-callback?retUrl&userJWTToken&auth0Jwt&auth0Refresh&message'
-    template   : require('./views/connect/sso-callback')()
+    template   : require('./views/sso/sso-callback')()
     controller : 'SSOCallbackController as vm'
     public: true
 
@@ -174,7 +174,7 @@ config = (
   # retUrl       : (required) URL to redirect after registration
   states['SSO_REGISTRATION'] =
     url: '/sso-registration/:org?app&retUrl'
-    template   : require('./views/connect/sso-registration')()
+    template   : require('./views/sso/sso-registration')()
     controller : 'SSORegistrationController as vm'
     public: true
 
