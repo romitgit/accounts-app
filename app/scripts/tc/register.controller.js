@@ -32,23 +32,22 @@ import { getToken, decodeToken } from '../../../core/token.js'
 
     vm.$stateParams = $stateParams
 
-    vm.tcUser = $stateParams.userJWTToken ? decodeToken($stateParams.userJWTToken) : null
     vm.auth0User = $stateParams.auth0Jwt ? decodeToken($stateParams.auth0Jwt) : null
     console.log(vm.auth0User)
-    if (vm.auth0User && vm.auth0User.given_name) {
-      vm.firstname = vm.auth0User.given_name
-    }
-    if (vm.auth0User && vm.auth0User.family_name) {
-      vm.lastname = vm.auth0User.family_name
-    }
-    if (vm.tcUser && vm.tcUser.email) {
-      vm.email = vm.tcUser.email
-    }
-
+    
     // adds watch to registerForm so that we can update form's state
     $scope.$watch('vm.registerForm', function(registerForm) {
       if(registerForm) { 
-        if (vm.email) {
+        if (vm.auth0User && vm.auth0User.given_name) {
+          vm.firstname = vm.auth0User.given_name
+          registerForm.firstname.$setDirty()
+        }
+        if (vm.auth0User && vm.auth0User.family_name) {
+          vm.lastname = vm.auth0User.family_name
+          registerForm.lastname.$setDirty()
+        }
+        if (vm.auth0User && vm.auth0User.email) {
+          vm.email = vm.auth0User.email
           registerForm.email.$setDirty()
         }
       }      
@@ -82,7 +81,7 @@ import { getToken, decodeToken } from '../../../core/token.js'
         utmCampaign: utm.campaign
       }
 
-      if (!vm.isSocialRegistration) {
+      if (!vm.isSocialRegistration && !vm.auth0User) {// if not social or sso registration
         userInfo.credential = { password: vm.password }
       } else if (vm.auth0User) {//SSO user
         var ssoUserId = vm.auth0User.user_id

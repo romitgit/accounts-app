@@ -60,6 +60,13 @@ registration {
     margin: $vertical-smallest 0;
   }
 
+  .register-options {
+
+    .sso-signon {
+      margin: 20px auto;
+    }
+  }
+
   .username, .password {
     position: relative;
     width: 100%;

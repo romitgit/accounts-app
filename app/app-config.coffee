@@ -127,7 +127,7 @@ config = (
     public: true
 
   states['CONNECT_REGISTRATION'] =
-    url: '/connect/registration?retUrl'
+    url: '/connect/registration?retUrl&userJWTToken&auth0Jwt&auth0Refresh&message'
     controller  : 'ConnectRegistrationController as vm'
     template: require('./views/connect/registration.jade')()
     public: true
