@@ -28,8 +28,6 @@ import { getToken, decodeToken } from '../../../core/token.js'
     vm.defaultPlaceholder = 'Create Password'
     vm.busyMessage = BUSY_PROGRESS_MESSAGE
     vm.retUrl = $stateParams && $stateParams.retUrl ? $stateParams.retUrl : null
-    vm.registrationUrl   = encodeURIComponent($state.href('MEMBER_REGISTRATION', { activated: true }, { absolute: true }))
-
     vm.countries = ISO3166.getAllCountryObjects()
 
     vm.$stateParams = $stateParams
