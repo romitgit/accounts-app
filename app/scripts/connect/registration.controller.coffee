@@ -14,27 +14,11 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm.errorMessage = 'Error Creating User'
   vm.submit       = null
   vm.loading      = false
+  vm.isSSORegistration = false
+  vm.ssoUser
   vm.retUrl = $stateParams && $stateParams.retUrl ? null
 
   vm.countries = ISO3166.getAllCountryObjects()
-
-  vm.auth0User
-  if $stateParams.auth0Jwt
-    vm.auth0User = decodeToken $stateParams.auth0Jwt
-  console.log(vm.auth0User)
-
-  # adds watch to registerForm so that we can update form's state
-  $scope.$watch 'vm.registerForm', (registerForm) ->
-    if registerForm
-      if vm.auth0User && vm.auth0User.given_name
-        vm.firstName = vm.auth0User.given_name
-        registerForm['first-name'].$setDirty()
-      if vm.auth0User && vm.auth0User.family_name
-        vm.lastName = vm.auth0User.family_name
-        registerForm['last-name'].$setDirty()
-      if vm.auth0User && vm.auth0User.email
-        vm.email = vm.auth0User.email
-        registerForm.email.$setDirty()
 
   vm.updateCountry = (angucompleteCountryObj) ->
     countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
@@ -51,16 +35,13 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
     vm.loading = true
 
     profile = null
-    if vm.auth0User #SSO user
-      ssoUserId = vm.auth0User.user_id
-      if ssoUserId
-        ssoUserId = ssoUserId.substring ssoUserId.lastIndexOf('|') + 1
+    if vm.ssoUser #SSO user
       profile =
-        name: vm.auth0User.name
-        email: vm.auth0User.email
+        name: vm.ssoUser.name
+        email: vm.ssoUser.email
         providerType: 'samplp'
-        provider: _.get(vm.auth0User, "identities[0].connection", '')
-        userId: ssoUserId
+        provider: vm.ssoUser.ssoProvider
+        userId: vm.ssoUser.ssoUserId
 
     config =
       param:
@@ -91,6 +72,28 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
 
   registerSuccess = ->
     $state.go 'CONNECT_REGISTRATION_SUCCESS'
+
+  vm.ssoRegister = ->
+    vm.isSSORegistration = true
+
+  vm.ssoRegisterCancel = ->
+    vm.isSSORegistration = false
+
+  vm.onSSORegister = (ssoUser) ->
+    vm.isSSORegistration = false
+    vm.ssoUser = ssoUser
+    
+    if ssoUser && ssoUser.firstName
+      vm.firstName = ssoUser.firstName
+      vm.registerForm['first-name'].$setDirty()
+
+    if ssoUser && ssoUser.lastName
+      vm.lastName = ssoUser.lastName
+      vm.registerForm['last-name'].$setDirty()
+
+    if ssoUser && ssoUser.email
+      vm.email = ssoUser.email
+      vm.registerForm.email.$setDirty()
 
   vm
 

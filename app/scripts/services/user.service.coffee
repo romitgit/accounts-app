@@ -20,8 +20,7 @@ UserService = (
     $http(config).then(success)
 
   # /users/validateHandle
-  validateHandle = (handle) ->   
-    console.log API_URL 
+  validateHandle = (handle) ->
     config =
       method: 'GET'
       url: "#{API_URL}/users/validateHandle?handle=#{encodeURIComponent(handle)}"

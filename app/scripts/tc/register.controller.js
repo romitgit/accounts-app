@@ -17,6 +17,8 @@ import { getToken, decodeToken } from '../../../core/token.js'
   function TCRegistrationController($log, $scope, $state, $stateParams, UserService, ISO3166) {
     var vm = this
     vm.registering = false
+    vm.isSSORegistration = false
+    vm.ssoUser = null
     // prepares utm params, if available
     var utm = {
       source : $stateParams && $stateParams.utm_source ? $stateParams.utm_source : '',
@@ -31,27 +33,6 @@ import { getToken, decodeToken } from '../../../core/token.js'
     vm.countries = ISO3166.getAllCountryObjects()
 
     vm.$stateParams = $stateParams
-
-    vm.auth0User = $stateParams.auth0Jwt ? decodeToken($stateParams.auth0Jwt) : null
-    console.log(vm.auth0User)
-    
-    // adds watch to registerForm so that we can update form's state
-    $scope.$watch('vm.registerForm', function(registerForm) {
-      if(registerForm) { 
-        if (vm.auth0User && vm.auth0User.given_name) {
-          vm.firstname = vm.auth0User.given_name
-          registerForm.firstname.$setDirty()
-        }
-        if (vm.auth0User && vm.auth0User.family_name) {
-          vm.lastname = vm.auth0User.family_name
-          registerForm.lastname.$setDirty()
-        }
-        if (vm.auth0User && vm.auth0User.email) {
-          vm.email = vm.auth0User.email
-          registerForm.email.$setDirty()
-        }
-      }      
-    });
 
     vm.updateCountry = function (angucompleteCountryObj) {
       var countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
@@ -81,17 +62,15 @@ import { getToken, decodeToken } from '../../../core/token.js'
         utmCampaign: utm.campaign
       }
 
-      if (!vm.isSocialRegistration && !vm.auth0User) {// if not social or sso registration
+      if (!vm.isSocialRegistration && !vm.ssoUser) {// if not social or sso registration
         userInfo.credential = { password: vm.password }
-      } else if (vm.auth0User) {//SSO user
-        var ssoUserId = vm.auth0User.user_id
-        ssoUserId = ssoUserId ? ssoUserId.substring(ssoUserId.lastIndexOf('|') + 1) : ''
+      } else if (vm.ssoUser) {//SSO user
         userInfo.profile = {
-          name: vm.auth0User.name,
-          email: vm.auth0User.email,
+          name: vm.ssoUser.name,
+          email: vm.ssoUser.email,
           providerType: 'samplp',
-          provider: _.get(vm.auth0User, "identities[0].connection", ''),
-          userId: ssoUserId
+          provider: vm.ssoUser.ssoProvider,
+          userId: vm.ssoUser.ssoUserId
         }
       } else {
         userInfo.profile = {
@@ -179,6 +158,32 @@ import { getToken, decodeToken } from '../../../core/token.js'
         vm.isSocialRegistration = false
         $scope.$apply()
       })
+    }
+
+    vm.ssoRegister = function() {
+      vm.isSSORegistration = true
+    }
+
+    vm.ssoRegisterCancel = function() {
+      vm.isSSORegistration = false
+    }
+
+    vm.onSSORegister = function(ssoUser) {
+      vm.isSSORegistration = false
+      vm.ssoUser = ssoUser
+      
+      if (ssoUser && ssoUser.firstName) {
+        vm.firstname = ssoUser.firstName
+        vm.registerForm.firstname.$setDirty()
+      }
+      if (ssoUser && ssoUser.lastName) {
+        vm.lastname = ssoUser.lastName
+        vm.registerForm.lastname.$setDirty()
+      }
+      if (ssoUser && ssoUser.email) {
+        vm.email = ssoUser.email
+        vm.registerForm.email.$setDirty()
+      }
     }
   }
 })()

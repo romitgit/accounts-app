@@ -169,15 +169,6 @@ config = (
     controller : 'SSOCallbackController as vm'
     public: true
 
-  # State parameters
-  # app          : (required) application (member or connect) for which registration is to be done
-  # retUrl       : (required) URL to redirect after registration
-  states['SSO_REGISTRATION'] =
-    url: '/sso-registration/:org?app&retUrl'
-    template   : require('./views/sso/sso-registration')()
-    controller : 'SSORegistrationController as vm'
-    public: true
-
   states['UNAUTHORIZED'] =
     url: '/401',
     template   : require('./views/401')()
