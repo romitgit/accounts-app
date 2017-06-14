@@ -1,4 +1,4 @@
-main.layout-main.login-reg.flex.center.middle("role"="main")
+main.layout-main.login-reg.flex.center.middle("role"="main"  ng-show="!vm.isSSORegistration")
   login-reg-shell
     header.flex.center.middle
       img(src=require("../../images/logo_mobile.svg"))
@@ -45,7 +45,7 @@ main.layout-main.login-reg.flex.center.middle("role"="main")
 
               p Your username is public, please pick one that uses letters, numbers, and these special characters: (-_.{}[])
 
-          .password
+          .password(ng-if="!vm.ssoUser")
             input.widest(type="password" name="password" ng-model="vm.password" required=true placeholder="Password")
 
             .tooltip.elevated
@@ -68,6 +68,14 @@ main.layout-main.login-reg.flex.center.middle("role"="main")
           button.action.submit.tc-btn.tc-btn-large.disabled(type="submit" disabled="disabled" ng-show="!vm.isValidCountry") Register
           button.action.submit.tc-btn.tc-btn-large(type="submit" ng-show="vm.isValidCountry") Register
 
+          .register-options
+            hr
+
+            p Or use your enterprise account
+
+            a.button.sso-signon(ng-click="vm.ssoRegister()") Single Sign On
+
     footer
       p Already have an account? <a ui-sref="CONNECT_LOGIN">Log in</a>
 
+sso-registration(app="connect" ng-show="vm.isSSORegistration" on-register="vm.onSSORegister(ssoUser)" on-register-cancel="vm.ssoRegisterCancel()")

@@ -24,3 +24,7 @@ export const LOGOUT_FAILURE = 'LOGOUT_FAILURE'
 export const BUSY_PROGRESS_MESSAGE = 'Processing...'
 
 export const ALLOWED_ORIGINS = [DOMAIN, 'http://localhost:3000', 'local.topcoder-dev.com:3000']
+
+export const WIPRO_SSO_PROVIDER = 'wipro-adfs'
+
+export const SEGMENT_KEY = process.env.ACCOUNTS_SEGMENT_KEY
