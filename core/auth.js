@@ -523,3 +523,35 @@ export function validateSocialProfile(userId, provider) {
 
   return fetchJSON(url, config).then(success)
 }
+
+export function verifyPIN(pin) {
+  const url = API_URL + '/users/activate?code=' + pin
+  const config = {
+    method: 'PUT',
+    body: {
+      param: {
+        code: pin
+      }
+    }
+  }
+
+  return fetchJSON(url, config)
+}
+
+export function updatePrimaryEmail(userId, email) {
+  const url = API_URL + '/users/' + userId + '/email'
+  const v3jwt = getV3Jwt()
+  const config = {
+    method: 'PATCH',
+    headers: {
+      Authorization: 'Bearer ' + v3jwt
+    },
+    body: {
+      param: {
+        email
+      }
+    }
+  }
+
+  return fetchJSON(url, config)
+}

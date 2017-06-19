@@ -1,0 +1,34 @@
+main.layout-main.login-reg.flex.center.middle("role"="main")
+  login-reg-shell
+
+    header.flex.center.middle
+      img(src=require("../../images/logo_mobile.svg"))
+
+
+    main.light-bg.elevated-bottom
+      h1 Please enter PIN to verify your email
+
+      login
+        p.error.transition(ng-class="{ hide: !vm.error }") Currently we can't verify your security PIN
+
+        .thankyou(ng-if="vm.activated")
+          p Thank you for activating your account.
+
+        loader(ng-if="vm.loading")
+
+        form.flex.column.middle(ng-submit="vm.submit()" method="post")
+          .email-div
+            input.widest(type="text" ng-model="vm.email" required=true placeholder="email" autofocus=true ng-show="vm.emailEditMode")
+            span(ng-model="vm.email" ng-show="!vm.emailEditMode") {{vm.email}}
+            a(ng-show="!vm.emailEditMode" ng-click="vm.toggleEmailEdit()") Edit
+            a(ng-show="vm.emailEditMode" ng-click="vm.toggleEmailEdit()") Cancel
+
+          input.widest(type="password" ng-model="vm.pin" required=true placeholder="Security PIN" ng-show="!vm.emailEditMode")
+
+          .forgot(ng-show="vm.emailEditMode")
+            a(class="tc-btn tc-btn-primary tc-btn-l" href="javascript::"  ng-click="vm.updateEmailAndResendPIN()") Update Email and Resend PIN
+
+          button.action(type="submit" ng-show="!vm.emailEditMode") Verify
+
+    footer
+      p Don't have an account? <a href="{{vm.registrationUrl}}">Register Now</a>

@@ -1,6 +1,6 @@
 'use strict'
 
-{ registerUser, getFreshToken } = require '../../../core/auth.js'
+{ registerUser, getFreshToken, login } = require '../../../core/auth.js'
 { DOMAIN } = require '../../../core/constants.js'
 { npad } = require '../../../core/utils.js'
 _ = require 'lodash'
@@ -30,23 +30,24 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
     vm.error = false
     vm.loading = true
 
-    config =
-      param:
-        handle            : vm.username
-        firstName         : vm.firstName
-        lastName          : vm.lastName
-        email             : vm.email
-        utmSource         : 'connect'
-        country           :
-          code: npad(vm.country.code, 3)
-          isoAlpha3Code: vm.country.alpha3
-          isoAlpha2Code: vm.country.alpha2
-        credential        :
-          password        : vm.password
-      options:
-        afterActivationURL: afterActivationURL
+    # config =
+    #   param:
+    #     handle            : vm.username
+    #     firstName         : vm.firstName
+    #     lastName          : vm.lastName
+    #     email             : vm.email
+    #     utmSource         : 'connect'
+    #     country           :
+    #       code: npad(vm.country.code, 3)
+    #       isoAlpha3Code: vm.country.alpha3
+    #       isoAlpha2Code: vm.country.alpha2
+    #     credential        :
+    #       password        : vm.password
+    #   options:
+    #     afterActivationURL: afterActivationURL
 
-    registerUser(config).then(registerSuccess, registerError)
+    # registerUser(config).then(registerSuccess, registerError)
+    registerSuccess().then()
 
   registerError = (error) ->
     $scope.$apply ->
@@ -55,7 +56,18 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
       vm.errorMessage = error.message
 
   registerSuccess = ->
-    $state.go 'CONNECT_REGISTRATION_SUCCESS'
+    options =
+      username: vm.username
+      password: vm.password
+    
+    login(options).then(loginSuccess, registerError)
+
+  loginSuccess = ->
+    stateParams =
+      email: vm.email
+      username: vm.username
+      password: vm.password
+    $state.go 'CONNECT_PIN_VERIFICATION',stateParams
 
   vm
 
