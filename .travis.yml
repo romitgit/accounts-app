@@ -20,7 +20,7 @@ install:
 script:
 - npm run build
 - npm run build-connector
-sudo: false
+sudo: required
 deploy:
 - provider: s3
   cache_control: private, no-store, no-cache, must-revalidate, max-age=0
