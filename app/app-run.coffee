@@ -1,6 +1,7 @@
 { SEGMENT_KEY }   = require '../core/constants.js'
 run = ($log, $rootScope, $state, $urlRouter, $location) ->
   $log.debug('run')
+  window.analytics.load(SEGMENT_KEY);
   $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
     $rootScope.stateLoaded = false
   $rootScope.$on '$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) ->
