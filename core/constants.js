@@ -4,6 +4,7 @@ export const AUTH0_JWT = 'auth0Jwt'
 export const V2_JWT = 'tcjwt'
 export const V2_SSO = 'tcsso'
 export const ZENDESK_JWT = 'zendeskJwt'
+export const V3_TEMP_JWT = 'v3tempjwt'
 
 export const SCHEME = 'https'
 export const DOMAIN = process.env.DOMAIN

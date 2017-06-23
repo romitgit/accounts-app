@@ -9,10 +9,16 @@ main.layout-main.login-reg.flex.center.middle("role"="main")
       h1 Please enter PIN to verify your email
 
       login
-        p.error.transition(ng-class="{ hide: !vm.error }") Currently we can't verify your security PIN
+        p.error.transition(ng-class="{ hide: !vm.error }") {{ vm.message || "Currently we can't verify your security PIN" }}
 
         .thankyou(ng-if="vm.activated")
-          p Thank you for activating your account.
+          p Thank you for activating your account. Loggin you in...
+
+        .thankyou(ng-if="vm.loggedIn")
+          p Sucessfully logged you in. Redirecting to your project...
+
+        .thankyou(ng-if="vm.emailEditSuccess")
+          p Successfully updated email address. New PIN is sent to the new email address.
 
         loader(ng-if="vm.loading")
 
@@ -31,4 +37,4 @@ main.layout-main.login-reg.flex.center.middle("role"="main")
           button.action(type="submit" ng-show="!vm.emailEditMode") Verify
 
     footer
-      p Don't have an account? <a href="{{vm.registrationUrl}}">Register Now</a>
+      p Aready verified email? <a href="{{vm.loginUrl}}">Login Now</a>

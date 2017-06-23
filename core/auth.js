@@ -21,7 +21,8 @@ function fetchJSON(url, options) {
     }
   }, options)
 
-  if (config.body) config.body = JSON.stringify(config.body)
+  if (config.body && typeof config.body === 'object')
+    config.body = JSON.stringify(config.body)
 
   function handleResponse(response) {
     return response.json()
@@ -309,10 +310,13 @@ export function resetPassword(handle, resetToken, password) {
 }
 
 export function registerUser(body) {
+  function success(data) {
+    return get(data, 'result.content')
+  }
   return fetchJSON(API_URL + '/users', {
     method: 'POST',
     body
-  })
+  }).then(success)
 }
 
 export function socialRegistration(provider, state) {
@@ -524,6 +528,21 @@ export function validateSocialProfile(userId, provider) {
   return fetchJSON(url, config).then(success)
 }
 
+export function getOneTimeToken(userId, password) {
+  const url = API_URL + '/users/oneTimeToken'
+  const config = {
+    method: 'POST',
+    body: 'userId=' + userId + '&password=' + password,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  }
+  function success(data) {
+    return get(data, 'result.content')
+  }
+  return fetchJSON(url, config).then(success)
+}
+
 export function verifyPIN(pin) {
   const url = API_URL + '/users/activate?code=' + pin
   const config = {
@@ -534,24 +553,42 @@ export function verifyPIN(pin) {
       }
     }
   }
-
-  return fetchJSON(url, config)
+  function success(data) {
+    return get(data, 'result.content')
+  }
+  return fetchJSON(url, config).then(success)
 }
 
-export function updatePrimaryEmail(userId, email) {
-  const url = API_URL + '/users/' + userId + '/email'
-  const v3jwt = getV3Jwt()
+export function resendActivationCode(userId, afterActivationURL) {
+  const url = API_URL + '/users/' + userId + '/sendActivationCode'
   const config = {
-    method: 'PATCH',
-    headers: {
-      Authorization: 'Bearer ' + v3jwt
-    },
+    method: 'POST',
     body: {
-      param: {
-        email
+      param: {},
+      options: {
+        afterActivationURL : afterActivationURL
       }
     }
   }
 
   return fetchJSON(url, config)
+}
+
+export function updatePrimaryEmail(userId, email, tempToken) {
+  const url = API_URL + '/users/' + userId + '/email/' + email
+  const config = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + tempToken
+    },
+    body: {
+      param: {
+        email: email
+      }
+    }
+  }
+  function success(data) {
+    return get(data, 'result.content')
+  }
+  return fetchJSON(url, config).then(success)
 }

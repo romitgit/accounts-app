@@ -1,8 +1,8 @@
 'use strict'
 
-{ DOMAIN }   = require '../../../core/constants.js'
-{ getFreshToken, login, verifyPIN, getV3Jwt, updatePrimaryEmail }    = require '../../../core/auth.js'
-{ decodeToken } = require '../../../core/token.js'
+{ DOMAIN, V3_TEMP_JWT }   = require '../../../core/constants.js'
+{ getFreshToken, login, verifyPIN, getV3Jwt, getOneTimeToken, updatePrimaryEmail, resendActivationCode }    = require '../../../core/auth.js'
+{ decodeToken, setToken, getToken, isTokenExpired, removeToken } = require '../../../core/token.js'
 { getLoginConnection } = require '../../../core/utils.js'
 { generateReturnUrl, redirectTo } = require '../../../core/url.js'
 
@@ -21,67 +21,150 @@ ConnectPinVerificationController = (
   vm.$stateParams = $stateParams
   
   vm.baseUrl = "https://connect.#{DOMAIN}"
-  vm.registrationUrl   = $state.href('CONNECT_REGISTRATION', { activated: true }, { absolute: true })
-  vm.forgotPasswordUrl = $state.href('CONNECT_FORGOT_PASSWORD', { absolute: true })
-  vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl  
+  vm.loginUrl   = $state.href('CONNECT_LOGIN', { activated: true }, { absolute: true })
+  vm.retUrl = if $stateParams.afterActivationURL then decodeURIComponent($stateParams.afterActivationURL) else vm.baseUrl  
 
+  # Submits the form
   vm.submit = ->
-    activateUser(vm.email, vm.pin)
+    activateUser(vm.pin)
 
-  loginFailure = (error) ->
+  # Activates the user by verifying the PIN, also login the user if activated
+  activateUser = (pin) ->
+    vm.error   = false
+    vm.loading = true
+    vm.message = null
+    vm.emailEditSuccess = false
+
+    verifyPIN(pin).then(loginUser, verifyPINFailure)
+
+  # Handles the error in verifying/activating account
+  verifyPINFailure = (error) ->
     $scope.$apply ->
       vm.error   = true
       vm.loading = false
+      vm.message = 'Wrong PIN.'
 
+  # Login the user
+  loginUser = ->
+    $scope.$apply ->
+      vm.activated = true
+    # Removes the temp token from the cookies/local storage
+    removeToken(V3_TEMP_JWT)
+    # uses username/password from stateParams, passed from registration page
+    options =
+      username: vm.$stateParams.username
+      password: vm.$stateParams.password
+    # call login api
+    login(options).then(loginSuccess, loginFailure)
+
+  # Handles the login success, redirects user to the return URL
   loginSuccess = ->
     jwt = getV3Jwt()
-    console.log 'jwt=>' + jwt
 
     unless jwt
-      vm.error = true
+      $scope.$apply ->
+        vm.activated = false
+        vm.error = true
+        vm.message = 'Unable to log you in automatically. Please try login using login link.'
     else if vm.retUrl
+      $scope.$apply ->
+        vm.activated = false
+        vm.loggedIn = true
       redirectTo generateReturnUrl(vm.retUrl)
     else
+      $scope.$apply ->
+        vm.activated = false
+        vm.loggedIn = true
       $state.go 'home'
 
-  activateUser = (email, pin) ->
-    vm.error   = false
-    vm.loading = true
+  # Handles login failure 
+  loginFailure = ->
+    vm.error = true
+    vm.loading = false
+    vm.message = 'Unable to log you in automatically. Please try login using login link.'
 
-    
-    verifyPIN(pin).then(loginSuccess, loginFailure)
-
+  # Toggles the Email Edit form
   vm.toggleEmailEdit = () ->
-    console.log('Editing mode enabled..')
-    vm.emailEditMode = true
+    vm.error = false
+    vm.emailEditMode = !vm.emailEditMode
 
+  # Updates email and resends activation PIN
   vm.updateEmailAndResendPIN = () ->
     vm.emailEditMode = false
-    token = getV3Jwt()
-    console.log 'decodedTOken=> ' + JSON.stringify(decodeToken(token))
-    userId = decodeToken(token).userId
-    console.log 'Updating primary email for user ' + userId
-    updatePrimaryEmail(userId, vm.email).then(updateEmailSuccess, updateEmailFailure)
+    vm.loading = true
+    vm.message = null
+    vm.error = false
 
-  updateEmailSuccess = () ->
-    # make email field non editable again
-    console.log('updateEmailSuccess')
+    # authorize user to get temp token
+    # updates email
+    # resend activation pin
+    authorizeInactiveUser()
+      .then(updateEmail)
+      .then(resendPIN)
+      .then(
+        () ->
+          console.log 'Successfully updated email address and resent PIN'
+          $scope.$apply ->
+            vm.emailEditMode = false
+            vm.loading = false
+            vm.emailEditSuccess = true
+      )
+      .catch(updateEmailFailure)
 
-  updateEmailFailure = () ->
+  # Authorizes the inactive user and gets the temp token
+  authorizeInactiveUser = () ->
+    # retrieve token from cookie/local storage
+    tempToken = getToken(V3_TEMP_JWT)
+    if tempToken
+      console.log 'isTokenExpired: ' + isTokenExpired(tempToken)
+    else
+      console.log 'No temp token found'
+
+    # uses userId and password combo from state params, passed from registration page
+    options =
+      userId : vm.$stateParams.userId
+      password: vm.$stateParams.password
+    # api call
+    getOneTimeToken(options.userId, options.password)
+    .then((token) ->
+      # saves the temp token in cookie/local storage
+      setToken(V3_TEMP_JWT, token)
+      token
+    )
+    .catch((error) ->
+      # if we receive error saying token is already issued, use the token from cookies/local storage
+      if error.status == 400 && error.message.indexOf('been issued') != -1 && tempToken
+        # resolve promise with token from cookies/local storage
+        Promise.resolve(tempToken)
+    )
+
+  # Call API to update user's meail
+  updateEmail = (token) ->
+    console.log 'Updating primary email for user ' + vm.$stateParams.userId
+    updatePrimaryEmail(vm.$stateParams.userId, vm.email, token)
+
+  # Call API to resend Activation code
+  resendPIN = () ->
+    console.log 'resendPIN'
+    resendActivationCode(vm.$stateParams.userId, vm.retUrl)
+
+  # Handles error in updating email
+  updateEmailFailure = (error) ->
     # show error in the form
-    console.log('updateEmailFailure')
+    console.log 'updateEmailFailure'
+    $scope.$apply ->
+      vm.error = true
+      vm.message = 'Can\'t update email address'
+      if error.status == 400 && error.message.indexOf('has already been registered')  != -1
+        vm.message = 'Email is already in use, please use different email address'
+      if error.status == 400 && error.message.indexOf('has been activated')  != -1
+        vm.message = 'User is already activated. Please login.'
+      vm.loading = false
+      vm.emailEditMode = true
 
   init = ->
-    { handle, email, password } = $stateParams
-
-    getJwtSuccess = (jwt) ->
-      if jwt && vm.retUrl
-        redirectTo generateReturnUrl(vm.retUrl)
-      else if (handle || email) && password
-        callLogin(handle || email, password)
-
-    # getFreshToken().then(getJwtSuccess)
-
+    # TODO we can load temp JWT token from local storage, if there exists one
+    # once we have the token we can pre-fill the form, allowing user to directly access this page
     vm
 
   init()

@@ -1,6 +1,6 @@
 'use strict'
 
-{ registerUser, getFreshToken, login } = require '../../../core/auth.js'
+{ registerUser, getFreshToken, getOneTimeToken } = require '../../../core/auth.js'
 { DOMAIN } = require '../../../core/constants.js'
 { npad } = require '../../../core/utils.js'
 _ = require 'lodash'
@@ -16,6 +16,8 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
 
   vm.countries = ISO3166.getAllCountryObjects()
 
+  afterActivationURL = $stateParams.retUrl ? 'https://connect.' + DOMAIN
+
   vm.updateCountry = (angucompleteCountryObj) ->
     countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
 
@@ -24,30 +26,28 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
     vm.isValidCountry = isValidCountry
     if isValidCountry
       vm.country = angucompleteCountryObj.originalObject
-
-  afterActivationURL = $stateParams.returnUrl ? 'https://connect.' + DOMAIN
   vm.submit = ->
     vm.error = false
     vm.loading = true
 
-    # config =
-    #   param:
-    #     handle            : vm.username
-    #     firstName         : vm.firstName
-    #     lastName          : vm.lastName
-    #     email             : vm.email
-    #     utmSource         : 'connect'
-    #     country           :
-    #       code: npad(vm.country.code, 3)
-    #       isoAlpha3Code: vm.country.alpha3
-    #       isoAlpha2Code: vm.country.alpha2
-    #     credential        :
-    #       password        : vm.password
-    #   options:
-    #     afterActivationURL: afterActivationURL
+    config =
+      param:
+        handle            : vm.username
+        firstName         : vm.firstName
+        lastName          : vm.lastName
+        email             : vm.email
+        utmSource         : 'connect'
+        country           :
+          code: npad(vm.country.code, 3)
+          isoAlpha3Code: vm.country.alpha3
+          isoAlpha2Code: vm.country.alpha2
+        credential        :
+          password        : vm.password
+      options:
+        afterActivationURL: afterActivationURL
 
-    # registerUser(config).then(registerSuccess, registerError)
-    registerSuccess().then()
+    registerUser(config).then(registerSuccess, registerError)
+    # registerSuccess({ id: 40152526})
 
   registerError = (error) ->
     $scope.$apply ->
@@ -55,19 +55,30 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
       vm.loading      = false
       vm.errorMessage = error.message
 
-  registerSuccess = ->
-    options =
-      username: vm.username
-      password: vm.password
+  registerSuccess = (user) ->
+    # options =
+    #   username: vm.username
+    #   password: vm.password
     
-    login(options).then(loginSuccess, registerError)
-
-  loginSuccess = ->
+    # getOneTimeToken(options).then(tokenSuccess, registerError)
     stateParams =
-      email: vm.email
-      username: vm.username
-      password: vm.password
+      email              : vm.email
+      username           : vm.username
+      password           : vm.password
+      userId             : user.id
+      afterActivationURL : afterActivationURL
+
     $state.go 'CONNECT_PIN_VERIFICATION',stateParams
+
+  # following method could be used if we want to procure the temp token before
+  # landing user on pin verificaiton screen
+  # tokenSuccess = ({ token }) ->
+  #   stateParams =
+  #     email: vm.email
+  #     username: vm.username
+  #     password: vm.password
+  #     tempToken : token
+  #   $state.go 'CONNECT_PIN_VERIFICATION',stateParams
 
   vm
 
