@@ -153,17 +153,20 @@
     padding: 20px;
     position: absolute;
     text-align: left;
-    top: 0px;
+    top: 20px;
     left: 395px;
     background-color: #CFE6FF;
     box-shadow: 0 2px 9px 0 rgba(38, 38, 40, 0.06);
     border-radius: 6px;
     transition: all .1s ease-in-out;
     z-index: 1000;
+
+    /* remove side effect of appirio-styles */
+    margin-left: 5px;
   }
 
   .tooltip.tooltip-password {
-    top: -20px;
+    opacity: 1;
   }
 
   .tooltip .arrow {
