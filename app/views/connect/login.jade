@@ -1,36 +1,28 @@
-main.layout-main.login-reg.flex.center.middle("role"="main")
-  login-reg-shell
+.connect-register-container.tc-ui("role"="main")
+  .register-header
+      img(src=require("../../images/connect/connect.png"), alt='')
+      .login
+        span Don’t have an account? 
+        a.tc-btn.tc-btn-default.tc-btn-sm(href="{{vm.registrationUrl}}") Register for free
+    .register-content
+      h2 Welcome back!
+      p Crowdsourcing for your winning project
+      p.error(ng-if="vm.error") We can't find an account with the email / password you entered. Please try again.
+      loader(ng-if="vm.loading")
+      form.register-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
+        input.input.input-sm(type="text" ng-model="vm.username" required=true placeholder="username" autofocus=true)
 
-    header.flex.center.middle
-      img(src=require("../../images/logo_mobile.svg"))
+        input.input.input-sm(type="password" ng-model="vm.password" required=true placeholder="password")
 
+        .forgot.small-text
+          | Password problems. 
+          a(href="{{vm.forgotPasswordUrl}}") Reset your password here?
 
-    main.light-bg.elevated-bottom
-      h1 LOG IN TO TOPCODER
+        button.action.tc-btn.tc-btn-primary.tc-btn-sm(type="submit") Login
 
-      login
-        p.error.transition(ng-class="{ hide: !vm.error }") We can't find an account with the email / password you entered. Please try again.
-
-        .thankyou(ng-if="vm.activated")
-          p Thank you for activating your account. Please sign in below.
-
-        loader(ng-if="vm.loading")
-
-        form.flex.column.middle(ng-submit="vm.submit()" method="post")
-          input.widest(type="text" ng-model="vm.username" required=true placeholder="username" autofocus=true)
-
-          input.widest(type="password" ng-model="vm.password" required=true placeholder="password")
-
-          .forgot
-            a(href="{{vm.forgotPasswordUrl}}") Forgot Password?
-
-          button.action(type="submit") login
-
+        .login-options
           hr
 
           p Or use your enterprise account
 
-          a.button.sso-signon(ui-sref="SSO_LOGIN({retUrl:vm.$stateParams.retUrl})") Single Sign On
-
-    footer
-      p Don't have an account? <a href="{{vm.registrationUrl}}">Register Now</a>
+          a.tc-btn.tc-btn-secondary.sso-signon(ui-sref="SSO_LOGIN({retUrl:vm.$stateParams.retUrl})") Single Sign On

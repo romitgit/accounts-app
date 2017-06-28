@@ -46,6 +46,11 @@
     border: 1px solid #888894;
     border-radius: 4px;
     color: #5D5D66;
+
+    /* remove side effect of appirio-styles */
+    text-transform: none;
+    font-family: inherit;
+    font-weight: inherit;
   }
 
   .tc-btn.loading:enabled, .tc-btn:focus:not(:disabled) {
