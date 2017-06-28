@@ -1,122 +1,448 @@
-@import "work/work-includes";
+// @import "work/work-includes";
 @import "variables";
+// @import 'topcoder/tc-includes';
 
-registration {
-  display: block;
+.connect-register-container {
+  background: #FAFAFB;
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
 
-  p.error {
+  h2 {
+    margin: 0 20px 10px;
+    font-weight: 300;
+    font-size: 36px;
+    color: #262628;
+    line-height: 40px;
+    text-align: center;
+
+    /* remove side effect of appirio-styles */
+    text-transform: none;
+    font-family: inherit;
+  }
+
+  h2.title {
+    margin-top: -30px;
+    margin-bottom: 50px;
+  }
+
+  h2 + p {
+    font-size: 20px;
+    color: #888894;
+    line-height: 30px;
+    text-align: center;
+
+    /* remove side effect of appirio-styles */
+    font-weight: inherit;
+  }
+
+  h3 {
+    margin: 0 0 30px;
+    font-weight: 400;
+    font-size: 20px;
+    color: #47474F;
+    line-height: 30px;
+    text-align: center;
+  }
+
+  p.text {
+    margin: 0 0 20px;
+    font-size: 15px;
+    color: #47474F;
+    line-height: 25px;
+  }
+
+  a {
+    color: #0B71E6;
+    text-decoration: none;
+  }
+
+  .small-text {
+    margin: 30px 0 0;
+    font-size: 12px;
+    color: #888894;
+    line-height: 20px;
+  }
+  /* line 65, ../assets/sass/partials/_register.scss */
+  .new-email {
+    padding: 10px 10px 20px;
+    background: #FAFAFB;
+    border-radius: 4px;
+  }
+  /* line 69, ../assets/sass/partials/_register.scss */
+  .new-email .input {
     width: 100%;
-    margin-right: auto;
-    margin-left : auto;
-    padding-top: 0px;
-
-    @media (min-width: 768px) {
-      width       : 380px;
-    }
+    display: block;
+    background: #FFFFFF;
+    text-align: center;
   }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-
-    @media (min-width: 768px) {
-      input[name='first-name'],
-      input[name='last-name'] {
-        width: 185px;
-        padding-right: 45px;
-      }
-      input[name='username'],
-      input[name='email'] {
-        padding-right: 85px;
-      }
-    }
+  /* line 75, ../assets/sass/partials/_register.scss */
+  .new-email .btn {
+    margin-top: 20px;
   }
-
-  .first-last-names {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-
-    @media (min-width: 768px) {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      width: 380px;
-    }
-  }
-
-  .organization {
-    width: 100%;
-
-    @media (min-width: 768px) {
-      width: 380px;
-    }
-  }
-
-  hr {
-    margin: $vertical-smallest 0;
-  }
-
-  .username, .password {
+  /* line 79, ../assets/sass/partials/_register.scss */
+  .verify-email {
     position: relative;
+    padding: 20px 60px;
+    margin-bottom: 30px;
+    background: #FAFAFB;
+    border-radius: 4px;
+    font-size: 20px;
+    color: #47474F;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* line 91, ../assets/sass/partials/_register.scss */
+  .verify-email a {
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+  }
+
+  /* line 101, ../assets/sass/partials/_register.scss */
+  .register-header {
+    clear: both;
+    overflow: hidden;
+    text-align: right;
+    padding: 20px 20px 25px 24px;
+    font-size: 15px;
+    color: #888894;
+    line-height: 30px;
+  }
+  /* line 109, ../assets/sass/partials/_register.scss */
+  .register-header a {
+    float: left;
+  }
+  /* line 111, ../assets/sass/partials/_register.scss */
+  .register-header a img {
+    display: inline-block;
+  }
+  /* line 115, ../assets/sass/partials/_register.scss */
+  .register-header .btn {
+    margin-left: 10px;
+  }
+
+  /* line 119, ../assets/sass/partials/_register.scss */
+  .register-content {
+    max-width: 540px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 50px;
+    background: #FFFFFF;
+    box-shadow: 0 2px 9px 0 rgba(38, 38, 40, 0.06);
+    border-radius: 7px;
+  }
+  /* line 128, ../assets/sass/partials/_register.scss */
+  .register-content .terms-policy {
+    margin: 0 20px;
+    font-size: 12px;
+    color: #747480;
+    line-height: 20px;
+    text-align: center;
+  }
+  /* line 135, ../assets/sass/partials/_register.scss */
+  .register-content .tc-btn-primary {
+    display: block;
+    margin: 30px auto 0;
+  }
+  /* line 139, ../assets/sass/partials/_register.scss */
+  .register-content .security-pin .btn {
+    margin: 0;
+    min-width: 80px;
+  }
+
+  /* line 144, ../assets/sass/partials/_register.scss */
+  .register-form {
+    max-width: 390px;
+    width: 90%;
+    margin: 30px auto 0;
+  }
+  /* line 148, ../assets/sass/partials/_register.scss */
+  .register-form.register-form--mt50 {
+    margin-top: 50px;
+  }
+  /* line 151, ../assets/sass/partials/_register.scss */
+  .register-form .wrapper {
+    position: relative;
+    margin: 0 5px 15px;
+  }
+  /* line 154, ../assets/sass/partials/_register.scss */
+  .register-form .wrapper.wrapper-half {
+    display: inline-block;
+    width: calc(50% - 12px);
+  }
+  /* line 159, ../assets/sass/partials/_register.scss */
+  .register-form .wrapper.wrapper-tooltip .input:focus ~ .tooltip {
+    opacity: 1;
+  }
+
+  .register-form .wrapper .input {
+    display: block;
     width: 100%;
+  }
 
-    @media (min-width: 768px) {
-      width: 380px;
+  .register-form .wrapper label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #47474F;
+    line-height: 15px;
+
+    /* remove side effect of appirio-styles */
+    text-transform: none;
+    font-weight: inherit;
+  }
+
+  .register-form .small-text {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .register-form .wrapper toggle-password-with-tips label {
+    color: #A3A3AE;
+  }
+
+  .register-options {
+    margin-top: 4 * $base-unit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    hr {
+      width: 50%;
     }
 
-    .header {
-      font-weight: 500;
+    .sso-signon {
+      margin-top: 2 * $base-unit;
     }
+  }
 
-    p {
-      line-height: 24px;
-    }
+
+  /* COMMON STYLES - IDEALLY SHOULD BE COMING FROM UI-KIT */
+  //.size-xs,
+  .tc-btn.tc-btn-xs,
+  textarea.input-xs,
+  input.input.input-xs {
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+  }
+
+  /* line 6, ../assets/sass/partials/_components.scss */
+  //.size-sm,
+  .tc-btn,
+  .tc-btn.tc-btn-sm,
+  textarea,
+  input.input, textarea.input-sm,
+  input.input.input-sm {
+    height: 30px;
+    line-height: 30px;
+    font-size: 13px;
+  }
+
+  /* line 11, ../assets/sass/partials/_components.scss */
+  //.size-md,
+  .tc-btn.tc-btn-md,
+  textarea.input-md,
+  input.input.input-md {
+    height: 40px;
+    line-height: 40px;
+    font-size: 15px;
+  }
+
+  /* line 16, ../assets/sass/partials/_components.scss */
+  //.size-lg,
+  .tc-btn.tc-btn-lg,
+  textarea.input-lg,
+  input.input.input-lg {
+    height: 50px;
+    line-height: 50px;
+    font-size: 20px;
+  }
+
+  .tc-btn {
+    padding: 0 20px;
+    background: #FFFFFF;
+    border: 1px solid #888894;
+    border-radius: 4px;
+    color: #5D5D66;
+  }
+
+  .tc-btn.loading:enabled, .tc-btn:focus:not(:disabled) {
+    background: #FFFFFF;
+    border: 1px solid #59A7FF;
+    box-shadow: 0 0 2px 1px #CFE6FF;
+  }
+
+  .tc-btn-default:active:enabled, .tc-btn-default:hover:enabled {
+    background-image: linear-gradient(0deg, #f5f5f5 0%, #ffffff 49%, #ffffff 100%);
+    border: 1px solid #A3A3AD;
+    background-color: transparent;
+
+    /* remove side effect of appirio-styles */
+    color: inherit;
+  }
+
+  .tc-btn:active:not(:disabled) {
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .tc-btn:disabled {
+    opacity: 0.5;
+  }
+
+  .tc-btn-primary {
+    background: #1A85FF;
+    border-color: #1A85FF;
+    color: #FFFFFF;
+  }
+  /* line 62, ../assets/sass/partials/_components.scss */
+  .tc-btn-primary:hover:enabled {
+    background-image: linear-gradient(-180deg, #3996ff 0%, #127bf3 100%);
+  }
+  /* line 65, ../assets/sass/partials/_components.scss */
+  .tc-btn-primary:active:enabled {
+    background: #1A85FF;
+    box-shadow: inset 0 1px 3px 0 rgba(71, 71, 79, 0.5);
+  }
+  /* line 69, ../assets/sass/partials/_components.scss */
+  .tc-btn-primary.loading:enabled, .tc-btn-primary:focus:not(:disabled) {
+    background: #1A85FF;
+    border: 1px solid #0B71E6;
+    box-shadow: 0 0 2px 1px #59A7FF;
+  }
+
+  .tc-btn-red {
+    background: #FF5B52;
+    border-color: #FF5B52;
+    color: #FFFFFF;
+  }
+
+  .tc-btn-red:hover:enabled {
+    background-image: linear-gradient(-180deg, #ff5b52 0%, #f22f24 100%);
+  }
+
+  .tc-btn-red:active:enabled {
+    background: #F22F24;
+    box-shadow: inset 0 1px 3px 0 rgba(71, 71, 79, 0.38);
+  }
+
+  .tc-btn-red.loading:enabled, .tc-btn-red:focus:not(:disabled) {
+    background: #FF5B52;
+    border: 1px solid #F22F24;
+    box-shadow: 0 0 2px 1px #FFD4D1;
+  }
+
+  .tc-btn-secondary {
+    background: #A3A3AD;
+    border-color: #A3A3AD;
+    color: #FFFFFF;
+  }
+
+  .tc-btn.tc-btn-secondary:hover {
+    background-image: linear-gradient(-180deg, #a3a3ad 0%, #888894 100%);
+    border: 1px solid #888894;
+    background-color: transparent;
+  }
+
+  .tc-btn-secondary:active:enabled {
+    background: #888894;
+    box-shadow: inset 0 1px 3px 0 rgba(71, 71, 79, 0.38);
+  }
+
+  .tc-btn-secondary.loading:enabled, .tc-btn-secondary:focus:not(:disabled) {
+    background: #A3A3AD;
+    border: 1px solid #888894;
+    box-shadow: 0 0 2px 1px #59A7FF;
   }
 
   .tooltip {
-    display: none;
-
-    @media (max-width: 914px) {
-      position: relative;
-      left: 0px;
-      margin-left: 0px;
-      margin-bottom: 20px;
-      width: 100%;
-      box-shadow: none;
-      background-color: $gray-lighter;
-    }
-
-    .arrow {
-
-      @media (max-width: 914px) {
-        display: none;
-      }
-    }
+    opacity: 0;
+    width: 320px;
+    padding: 20px;
+    position: absolute;
+    text-align: left;
+    top: 0px;
+    left: 395px;
+    background-color: #CFE6FF;
+    box-shadow: 0 2px 9px 0 rgba(38, 38, 40, 0.06);
+    border-radius: 6px;
+    transition: all .1s ease-in-out;
+    z-index: 1000;
   }
 
-  ul.use {
-    list-style: circle;
-    margin-left: 20px;
-    margin-top: 15px;
+  .tooltip.tooltip-password {
+    top: -20px;
   }
 
-  input {
-    &:focus + .tooltip {
-      display: block;
-    }
+  .tooltip .arrow {
+    position: absolute;
+    height: 34px;
+    width: 24px;
+    left: -24px;
+    overflow: hidden;
   }
 
-  .action {
-    margin: 20px auto;
+  .tooltip .arrow:before {
+    box-shadow: none;
   }
 
-  .thanks {
-    text-align : center;
-    max-width  : 380px;
-    margin     : 0 auto;
+  .tooltip .arrow:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 10px;
+    height: 12px;
+    width: 12px;
+    left: 18px;
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    background-color: #CFE6FF;
+    box-shadow: 0 2px 9px 0 rgba(38, 38, 40, 0.06);
+  }
+  /* line 39, ../assets/sass/partials/_tooltip.scss */
+  .tooltip h4 {
+    margin: 0 0 10px;
+    font-weight: 500;
+    font-size: 13px;
+    text-align: left;
+    text-transform: uppercase;
+    color: #3A3C3E;
+    line-height: 20px;
+  }
+  /* line 48, ../assets/sass/partials/_tooltip.scss */
+  .tooltip p {
+    margin: 0;
+    font-size: 13px;
+    color: #3A3C3E;
+    line-height: 20px;
+  }
+  /* line 53, ../assets/sass/partials/_tooltip.scss */
+  .tooltip p span {
+    color: #0B71E6;
+    font-weight: 500;
+  }
+  /* line 57, ../assets/sass/partials/_tooltip.scss */
+  .tooltip p .check {
+    width: 12px;
+    height: 9px;
+    margin-right: 10px;
+  }
+  /* line 62, ../assets/sass/partials/_tooltip.scss */
+  .tooltip p.line:before {
+    content: "";
+    width: 10px;
+    height: 3px;
+    position: relative;
+    top: -3px;
+    display: inline-block;
+    margin-right: 12px;
+    background: #FFFFFF;
   }
 }

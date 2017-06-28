@@ -1,73 +1,83 @@
-main.layout-main.login-reg.flex.center.middle("role"="main")
-  login-reg-shell
-    header.flex.center.middle
-      img(src=require("../../images/logo_mobile.svg"))
+.connect-register-container
+  .register-header
+    a(href='#')
+      img(src=require("../../images/connect/connect.png"), alt='')
+    |         Already have an account? 
+    button.tc-btn.tc-btn-default.tc-btn-sm Log in
+  .register-content
+    h2 Create a new account
+    p Always free. No credit card required
+    p.error(ng-if="vm.error") {{ vm.errorMessage }}
+    loader(ng-if="vm.loading")
+    form.register-form(name="vm.registerForm" role="form" novalidate autocomplete="off" ng-submit="vm.submit()")
+      .wrapper.wrapper-half
+        label First Name
+        input.input.input-sm(type="text" name="first-name" ng-model="vm.firstName" required=true placeholder="First Name" maxlength="64" autofocus=true)
+      .wrapper.wrapper-half
+        label Last Name
+        input.input.input-sm(type="text" name="last-name" ng-model="vm.lastName" required=true placeholder="Last Name" maxlength="64")
+      .wrapper
+        label Country
+        .country-dropdown
+          angucomplete-alt(
+            input-name="country",
+            placeholder="Country",
+            pause="100",
+            selected-object="vm.updateCountry",
+            local-data="vm.countries",
+            initial-value="vm.countryObj",
+            search-fields="name",
+            title-field="name",
+            match-class="angucomplete-highlight",
+            input-class="input input-sm"
+            minlength="1"
+          )
 
-    main.light-bg.elevated-bottom
-      h1 Join Topcoder
+          .form-input-error(ng-show="vm.registerForm.country.$dirty && !vm.isValidCountry")
+            p.form-error(ng-show="!vm.isValidCountry") Please choose a country from the list
+      .wrapper.wrapper-tooltip
+        label Pick a nickname
+        input.input.input-sm(type="text" name="username" ng-model="vm.username" required=true placeholder="Username")
+        .tooltip
+          .arrow
+          h4 USERNAME TIPS:
+          p - Your username is public;
+          p - Must be between 2 and 15 characters long;
+          p
+            | - Contains letters, numbers and only these special characters 
+            span - _ . { } [ ]
+      .wrapper
+        label Your email
+        input.input.input-sm(type="email" name="email" ng-model="vm.email" required=true placeholder="Email")
+      .wrapper.wrapper-tooltip
+        label Pick a password
+        toggle-password-with-tips(ng-if="!vm.isSSORegistration", placeholder="Create Password")
 
-      registration
-        p.error(ng-class="{ hide: !vm.error }") {{ vm.errorMessage }}
+        .tooltip.tooltip-password(ng-show="vm.passwordFocus")
+          .arrow
+          h4 YOUR PASSWORD MYST HAVE:
+          p
+            img.check(src=require('../../images/ui-16px-1_check-bold-blue.svg'), alt='#')
+            | At least 8 characters
+          p
+            img.check(src=require('../../images/ui-16px-1_check-bold-blue.svg'), alt='#')
+            | At least 1 letter
+          p.line At least 1 number or symbol
+      p.terms-policy
+        | By clicking "Register" you agree to our 
+        a(href='#') Terms
+        |  and 
+        a(href='#') Privacy Policy
+      p.small-text
+        | We are never going to sell your data or send you spam messages. Your email is going to be used for communication purposes only.
+    button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="submit" disabled="disabled" ng-show="!vm.isValidCountry") Register
+    button.action.tc-btn.tc-btn-primary.tc-btn-large(type="submit" ng-show="vm.isValidCountry") Register
 
-        loader(ng-if="vm.loading")
+    .register-options
+      hr
 
-        form(name="vm.registerForm" role="form" novalidate autocomplete="off" ng-submit="vm.submit()")
-          .first-last-names
-            input.widest(type="text" name="first-name" ng-model="vm.firstName" required=true placeholder="First Name" maxlength="64" autofocus=true)
-            input.widest(type="text" name="last-name" ng-model="vm.lastName" required=true placeholder="Last Name" maxlength="64")
-          .country-dropdown
-            angucomplete-alt(
-              input-name="country",
-              placeholder="Country",
-              pause="100",
-              selected-object="vm.updateCountry",
-              local-data="vm.countries",
-              initial-value="vm.countryObj",
-              search-fields="name",
-              title-field="name",
-              match-class="angucomplete-highlight",
+      p Or use your enterprise account
 
-              minlength="1"
-            )
+      a.tc-btn.tc-btn-secondary.tc-btn-sm.sso-signon(ng-click="vm.ssoRegister()") Single Sign On
 
-            .form-input-error(ng-show="vm.registerForm.country.$dirty && !vm.isValidCountry")
-              p.form-error(ng-show="!vm.isValidCountry") Please choose a country from the list
-          //- .organization
-          //-   input.widest(type="text" name="organization" ng-model="vm.organization" required=true placeholder="Organization")
-
-          hr
-
-          .username
-            input.widest(type="text" name="username" ng-model="vm.username" required=true placeholder="Username")
-
-            .tooltip.elevated
-              .arrow
-
-              p Your username is public, please pick one that uses letters, numbers, and these special characters: (-_.{}[])
-
-          .password
-            input.widest(type="password" name="password" ng-model="vm.password" required=true placeholder="Password")
-
-            .tooltip.elevated
-              .arrow
-
-              p.header Your password must be:
-
-              ul.use
-                li
-                  p At least 8 characters long.
-
-                li
-                  p At least 1 letter (A-Z)
-
-                li
-                  p At least 1 number (0-9) or symbol (!?-_.,;)
-
-          input.widest(type="email" name="email" ng-model="vm.email" required=true placeholder="Email")
-
-          button.action.submit.tc-btn.tc-btn-large.disabled(type="submit" disabled="disabled" ng-show="!vm.isValidCountry") Register
-          button.action.submit.tc-btn.tc-btn-large(type="submit" ng-show="vm.isValidCountry") Register
-
-    footer
-      p Already have an account? <a ui-sref="CONNECT_LOGIN">Log in</a>
-
+sso-registration(app="connect" ng-show="vm.isSSORegistration" on-register="vm.onSSORegister(ssoUser)" on-register-cancel="vm.ssoRegisterCancel()")

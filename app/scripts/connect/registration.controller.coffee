@@ -68,7 +68,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
       userId             : user.id
       afterActivationURL : afterActivationURL
 
-    $state.go 'CONNECT_PIN_VERIFICATION',stateParams
+    $state.go 'CONNECT_PIN_VERIFICATION', stateParams
 
   # following method could be used if we want to procure the temp token before
   # landing user on pin verificaiton screen
