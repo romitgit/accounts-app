@@ -109,7 +109,8 @@
 
 
   .register-header {
-    clear: both;
+    display: flex;
+    justify-content: space-between;
     overflow: hidden;
     text-align: right;
     padding: 20px 20px 25px 24px;
@@ -119,14 +120,10 @@
   }
 
   .register-header a {
-    float: left;
-  }
-
-  .register-header a img {
     display: inline-block;
   }
 
-  .register-header .btn {
+  .register-header .tc-btn {
     margin-left: 10px;
   }
 
