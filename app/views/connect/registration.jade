@@ -1,4 +1,4 @@
-.connect-register-container(ng-show="!vm.isSSORegistration")
+.connect-register-container.tc-ui(ng-show="!vm.isSSORegistration")
   .register-header
     a(href='#')
       img(src=require("../../images/connect/connect.png"), alt='')
@@ -70,8 +70,8 @@
         a(href='#') Privacy Policy
       p.small-text
         | We are never going to sell your data or send you spam messages. Your email is going to be used for communication purposes only.
-    button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="submit" disabled="disabled" ng-show="!vm.isValidCountry") Register
-    button.action.tc-btn.tc-btn-primary.tc-btn-large(type="submit" ng-show="vm.isValidCountry") Register
+      button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="submit" disabled="disabled" ng-show="!vm.isValidCountry") Register
+      button.action.submit.tc-btn.tc-btn-primary.tc-btn-large(type="submit" ng-show="vm.isValidCountry") Register
 
     .register-options
       hr
