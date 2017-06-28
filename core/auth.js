@@ -3,7 +3,8 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
-import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK } from './constants.js'
+import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
+  AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -319,6 +320,43 @@ export function registerUser(body) {
   }).then(success)
 }
 
+export function ssoRegistration(provider, state) {
+  return new Promise(function(resolve, reject) {
+    // supported backends
+    var providers = [ WIPRO_SSO_PROVIDER ]
+    if (providers.indexOf(provider) > -1) {
+      auth0.signin({
+        popup: true,
+        connection: provider,
+        scope: 'openid profile offline_access',
+        state: state
+      },
+        function(error, profile, idToken, accessToken, state, refreshToken) {
+          if (error) {
+            console.warning('onSSORegistrationFailure ' + JSON.stringify(error))
+            reject(error)
+            return
+          }
+          var ssoUserData = extractSSOUserData(profile, accessToken)
+          var result = {
+            status: 'SUCCESS',
+            data: ssoUserData
+          }
+          console.debug('ssoRegistration Result: ' + JSON.stringify(result))
+          resolve(result)
+        }
+      )
+    } else {
+      console.error('Unsupported SSO login provider', provider)
+
+      reject({
+        status: 'FAILED',
+        'error': 'Unsupported SSO login provider \'' + provider + '\''
+      })
+    }
+  })
+}
+
 export function socialRegistration(provider, state) {
   return new Promise(function(resolve, reject) {
     // supported backends
@@ -331,21 +369,15 @@ export function socialRegistration(provider, state) {
         state: state
       },
         function(error, profile, idToken, accessToken, state, refreshToken) {
-          console.log('error ')
-          console.log(error)
           if (error) {
             console.warning('onSocialLoginFailure ' + JSON.stringify(error))
             reject(error)
             return
           }
-          console.log(profile)
-          console.log(accessToken)
           var socialData = extractSocialUserData(profile, accessToken)
-          console.log(socialData)
 
           validateSocialProfile(socialData.socialUserId, socialData.socialProvider)
             .then(function(resp) {
-              console.debug(JSON.stringify(resp))
               if (resp.valid) {
                 // success
                 var result = {
@@ -378,6 +410,31 @@ export function socialRegistration(provider, state) {
       })
     }
   })
+}
+
+function extractSSOUserData(profile, accessToken) {
+  var ssoProvider = profile.identities[0].connection
+  var firstName = '',
+    lastName = '',
+    name = '',
+    handle = '',
+    email = ''
+
+  var ssoUserId = profile.user_id.substring(profile.user_id.lastIndexOf('|') + 1)
+  if (ssoProvider === WIPRO_SSO_PROVIDER) {
+    firstName = profile.given_name
+    lastName  = profile.family_name
+    name      = profile.name
+    email     = profile.email
+  }
+  return {
+    ssoUserId: ssoUserId,
+    firstName: firstName,
+    lastName: lastName,
+    name: name,
+    email: email,
+    ssoProvider: ssoProvider
+  }
 }
 
 function extractSocialUserData(profile, accessToken) {

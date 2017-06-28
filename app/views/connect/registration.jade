@@ -1,4 +1,4 @@
-.connect-register-container
+.connect-register-container(ng-show="!vm.isSSORegistration")
   .register-header
     a(href='#')
       img(src=require("../../images/connect/connect.png"), alt='')
@@ -49,9 +49,9 @@
       .wrapper
         label Your email
         input.input.input-sm(type="email" name="email" ng-model="vm.email" required=true placeholder="Email")
-      .wrapper.wrapper-tooltip
+      .wrapper.wrapper-tooltip(ng-if="!vm.ssoUser")
         label Pick a password
-        toggle-password-with-tips(ng-if="!vm.isSSORegistration", placeholder="Create Password")
+        toggle-password-with-tips(placeholder="Create Password")
 
         .tooltip.tooltip-password(ng-show="vm.passwordFocus")
           .arrow

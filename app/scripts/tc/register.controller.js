@@ -1,8 +1,9 @@
 import angular from 'angular'
 import _ from 'lodash'
-import { BUSY_PROGRESS_MESSAGE, DOMAIN } from '../../../core/constants.js'
+import { BUSY_PROGRESS_MESSAGE, DOMAIN, V3_JWT } from '../../../core/constants.js'
 import { registerUser, socialRegistration } from '../../../core/auth.js'
 import { npad } from '../../../core/utils.js'
+import { getToken, decodeToken } from '../../../core/token.js'
 
 (function() {
   'use strict'
@@ -16,6 +17,8 @@ import { npad } from '../../../core/utils.js'
   function TCRegistrationController($log, $scope, $state, $stateParams, UserService, ISO3166) {
     var vm = this
     vm.registering = false
+    vm.isSSORegistration = false
+    vm.ssoUser = null
     // prepares utm params, if available
     var utm = {
       source : $stateParams && $stateParams.utm_source ? $stateParams.utm_source : '',
@@ -27,8 +30,9 @@ import { npad } from '../../../core/utils.js'
     vm.defaultPlaceholder = 'Create Password'
     vm.busyMessage = BUSY_PROGRESS_MESSAGE
     vm.retUrl = $stateParams && $stateParams.retUrl ? $stateParams.retUrl : null
-
     vm.countries = ISO3166.getAllCountryObjects()
+
+    vm.$stateParams = $stateParams
 
     vm.updateCountry = function (angucompleteCountryObj) {
       var countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
@@ -58,8 +62,16 @@ import { npad } from '../../../core/utils.js'
         utmCampaign: utm.campaign
       }
 
-      if (!vm.isSocialRegistration) {
+      if (!vm.isSocialRegistration && !vm.ssoUser) {// if not social or sso registration
         userInfo.credential = { password: vm.password }
+      } else if (vm.ssoUser) {//SSO user
+        userInfo.profile = {
+          name: vm.ssoUser.name,
+          email: vm.ssoUser.email,
+          providerType: 'samplp',
+          provider: vm.ssoUser.ssoProvider,
+          userId: vm.ssoUser.ssoUserId
+        }
       } else {
         userInfo.profile = {
           userId: vm.socialUserId,
@@ -148,6 +160,30 @@ import { npad } from '../../../core/utils.js'
       })
     }
 
-    vm.$stateParams = $stateParams
+    vm.ssoRegister = function() {
+      vm.isSSORegistration = true
+    }
+
+    vm.ssoRegisterCancel = function() {
+      vm.isSSORegistration = false
+    }
+
+    vm.onSSORegister = function(ssoUser) {
+      vm.isSSORegistration = false
+      vm.ssoUser = ssoUser
+      
+      if (ssoUser && ssoUser.firstName) {
+        vm.firstname = ssoUser.firstName
+        vm.registerForm.firstname.$setDirty()
+      }
+      if (ssoUser && ssoUser.lastName) {
+        vm.lastname = ssoUser.lastName
+        vm.registerForm.lastname.$setDirty()
+      }
+      if (ssoUser && ssoUser.email) {
+        vm.email = ssoUser.email
+        vm.registerForm.email.$setDirty()
+      }
+    }
   }
 })()
