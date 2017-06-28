@@ -10,9 +10,12 @@
       p.error(ng-if="vm.error") We can't find an account with the email / password you entered. Please try again.
       loader(ng-if="vm.loading")
       form.register-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
-        input.input.input-sm(type="text" ng-model="vm.username" required=true placeholder="username" autofocus=true)
-
-        input.input.input-sm(type="password" ng-model="vm.password" required=true placeholder="password")
+        .wrapper
+          label Enter username
+          input.input.input-sm(type="text" ng-model="vm.username" required=true placeholder="username" autofocus=true)
+        .wrapper
+          label Enter password
+          input.input.input-sm(type="password" ng-model="vm.password" required=true placeholder="password")
 
         .forgot.small-text
           | Password problems. 

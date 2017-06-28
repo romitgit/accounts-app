@@ -1,0 +1,82 @@
+@import "../variables";
+
+.connect-register-container {
+  .security-pin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .security-pin img {
+    margin-right: 10px;
+  }
+
+  .security-pin label {
+    margin-right: 10px;
+    font-size: 15px;
+    color: #47474F;
+    line-height: 40px;
+
+    /* remove side effect of appirio-styles */
+    font-weight: inherit;
+  }
+
+  .security-pin .input {
+    width: 175px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+  }
+
+  .register-content .security-pin .tc-btn {
+    margin: 0;
+    min-width: 80px;
+  }
+
+  .new-email {
+    padding: 10px 10px 20px;
+    background: #FAFAFB;
+    border-radius: 4px;
+  }
+
+  .new-email .input {
+    width: 100%;
+    display: block;
+    background: #FFFFFF;
+    text-align: center;
+  }
+
+  .new-email .tc-btn {
+    display: block;
+    margin: 20px auto 0;
+  }
+
+  .verify-email {
+    position: relative;
+    padding: 20px 60px;
+    margin-bottom: 30px;
+    background: #FAFAFB;
+    border-radius: 4px;
+    font-size: 20px;
+    color: #47474F;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .verify-email a {
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+  }
+
+  .info {
+    background: #CFEFB2;
+    color: #47474F;
+    padding: 10px;
+  }
+}

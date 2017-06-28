@@ -82,6 +82,12 @@
     color: #FFFFFF;
   }
 
+  /* remove side effect of appirio-styles */
+  .tc-btn-primary:disabled {
+    background: #1A85FF !important;
+    border-color: #1A85FF !important;
+  }
+
   .tc-btn-primary:hover:enabled {
     background-image: linear-gradient(-180deg, #3996ff 0%, #127bf3 100%);
   }
