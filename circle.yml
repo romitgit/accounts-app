@@ -1,0 +1,37 @@
+machine:
+  node:
+    version: 5.10.1
+  environment:
+    CXX: g++-4.8
+
+dependencies:
+  pre:
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test  -y
+    - sudo apt-get update -y
+    - sudo apt-get install g++-4.8  -y
+  override:
+    - npm install
+
+compile:
+  override:
+	  - npm run build
+    - npm run build-connector
+	
+deployment:
+  development:
+    branch: dev
+    owner: topcoder
+    commands:
+      - ./deploy.sh DEV
+
+  qa:
+    branch: qa
+    owner: topcoder
+    commands:
+      - ./deploy.sh QA
+	  
+  production:
+    branch: master
+    owner: topcoder
+    commands:
+      - ./deploy.sh PROD
