@@ -29,3 +29,5 @@ export const ALLOWED_ORIGINS = [DOMAIN, 'http://localhost:3000', 'local.topcoder
 export const WIPRO_SSO_PROVIDER = 'wipro-adfs'
 
 export const SEGMENT_KEY = process.env.ACCOUNTS_SEGMENT_KEY
+
+export const CONNECT_PROJECT_CALLBACK = 'new-project-callback'

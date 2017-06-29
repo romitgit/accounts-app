@@ -1,6 +1,6 @@
 'use strict'
 
-{ DOMAIN, V3_TEMP_JWT }   = require '../../../core/constants.js'
+{ DOMAIN, V3_TEMP_JWT, CONNECT_PROJECT_CALLBACK }   = require '../../../core/constants.js'
 { getFreshToken, login, verifyPIN, getV3Jwt, getOneTimeToken, updatePrimaryEmail, resendActivationCode }    = require '../../../core/auth.js'
 { decodeToken, setToken, getToken, isTokenExpired, removeToken } = require '../../../core/token.js'
 { getLoginConnection } = require '../../../core/utils.js'
@@ -23,6 +23,7 @@ ConnectPinVerificationController = (
   vm.baseUrl = "https://connect.#{DOMAIN}"
   vm.loginUrl   = $state.href('CONNECT_LOGIN', { activated: true }, { absolute: true })
   vm.retUrl = if $stateParams.afterActivationURL then decodeURIComponent($stateParams.afterActivationURL) else vm.baseUrl  
+  vm.isConnectProjectFlow = vm.retUrl && vm.retUrl.indexOf(CONNECT_PROJECT_CALLBACK) != -1
 
   # Submits the form
   vm.submit = ->

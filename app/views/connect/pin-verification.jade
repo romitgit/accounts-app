@@ -2,9 +2,10 @@
   .register-header
     a(href='#')
       img(src=require("../../images/connect/connect.png"), alt='')
-  h2.title Your project was saved successfully
+  h2.title(ng-if="vm.isConnectProjectFlow") Your project was saved successfully
   .register-content
-    h3 Last step - verify your email
+    h3(ng-if="vm.isConnectProjectFlow") Last step - verify your email
+    h3(ng-if="!vm.isConnectProjectFlow") Verify you email
     p.error.transition(ng-if="vm.error") {{ vm.message || "Currently we can't verify your security PIN" }}
 
     .info(ng-if="vm.activated")
