@@ -174,4 +174,15 @@
       margin-top: 2 * $base-unit;
     }
   }
+
+  .copyright {
+    margin-top: 30px;
+    font-size: 12px;
+    color: #656565;
+    text-align: center;
+    line-height: 15px;
+
+    /* remove side effect of appirio-styles */
+    font-weight: inherit;
+  }
 }

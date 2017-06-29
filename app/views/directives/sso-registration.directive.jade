@@ -1,4 +1,4 @@
-main.layout-main.login-reg.flex.center.middle.tc-ui("role"="main")
+.flex.center.middle.connect-register-container.tc-ui("role"="main")
   login-reg-shell
     header.flex.center.middle
       img(src=require("../../images/logo_mobile.svg"))
@@ -16,9 +16,10 @@ main.layout-main.login-reg.flex.center.middle.tc-ui("role"="main")
           form(ng-submit="vm.submit()")
             input.input.input-sm(type="text" ng-model="vm.emailOrHandle" required=true placeholder="Email or handle" autofocus=true)
 
-            button.action.tc-btn.tc-btn.primary(type="button" style="margin-bottom:11px" ng-click="vm.submit()") Continue
+            button.action.tc-btn.tc-btn-primary(type="button" style="margin-bottom:11px" ng-click="vm.submit()") Continue
+            p <a ng-click="vm.showRegistrationPage()">Back to Registration</a>
 
         p.success(ng-show="vm.success") Redirecting to {{ vm.org }} login...
 
     footer
-      p <a ng-click="vm.showRegistrationPage()">Back to Registration</a>
+      p.copyright © 2017 topcoder. All Rights Reserved
