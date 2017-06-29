@@ -65,9 +65,9 @@
           p.line At least 1 number or symbol
       p.terms-policy
         | By clicking "Register" you agree to our 
-        a(href='#') Terms
+        a(href="{{vm.termsUrl}}") Terms
         |  and 
-        a(href='#') Privacy Policy
+        a(href="{{ vm.privacyUrl }}") Privacy Policy
       p.small-text
         | We are never going to sell your data or send you spam messages. Your email is going to be used for communication purposes only.
       button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="submit" disabled="disabled" ng-show="!vm.isValidCountry") Register

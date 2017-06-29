@@ -8,6 +8,8 @@ _ = require 'lodash'
 
 RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm              = this
+  vm.termsUrl     = 'https://connect.' + DOMAIN + '/terms'
+  vm.privacyUrl   = 'https://www.' + DOMAIN + '/community/how-it-works/privacy-policy/'
   vm.username     = ''
   vm.password     = ''
   vm.error        = false
