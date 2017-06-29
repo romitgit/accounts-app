@@ -1,15 +1,15 @@
-.connect-register-container.tc-ui(ng-show="!vm.isSSORegistration")
-  .register-header
+.connect-accounts-container.tc-ui(ng-show="!vm.isSSORegistration")
+  .connect-accounts-header
     img(src=require("../../images/connect/connect.png"), alt='')
     .login
       span Already have an account? 
       a.tc-btn.tc-btn-default.tc-btn-sm(ui-sref="CONNECT_LOGIN") Log in
-  .register-content
+  .connect-accounts-content
     h2 Create a new account
     p Always free. No credit card required
     p.error(ng-if="vm.error") {{ vm.errorMessage }}
     loader(ng-if="vm.loading")
-    form.register-form(name="vm.registerForm" role="form" novalidate autocomplete="off" ng-submit="vm.submit()")
+    form.connect-accounts-form(name="vm.registerForm" role="form" novalidate autocomplete="off" ng-submit="vm.submit()")
       .wrapper.wrapper-half
         label First Name
         input.input.input-sm(type="text" name="first-name" ng-model="vm.firstName" required=true placeholder="First Name" maxlength="64" autofocus=true)

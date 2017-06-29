@@ -1,6 +1,6 @@
-@import "../variables";
+@import "../tc-ui-variables";
 
-.connect-register-container {
+.connect-accounts-container {
   .security-pin {
     display: flex;
     align-items: center;
@@ -28,7 +28,7 @@
     margin-bottom: 0px;
   }
 
-  .register-content .security-pin .tc-btn {
+  .connect-accounts-content .security-pin .tc-btn {
     margin: 0;
     min-width: 80px;
   }

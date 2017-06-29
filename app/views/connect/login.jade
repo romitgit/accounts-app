@@ -1,15 +1,15 @@
-.connect-register-container.tc-ui("role"="main")
-  .register-header
+.connect-accounts-container.tc-ui("role"="main")
+  .connect-accounts-header
       img(src=require("../../images/connect/connect.png"), alt='')
       .login
         span Don’t have an account? 
         a.tc-btn.tc-btn-default.tc-btn-sm(href="{{vm.registrationUrl}}") Register for free
-    .register-content
+    .connect-accounts-content
       h2 Welcome back!
       p Crowdsourcing for your winning project
       p.error(ng-if="vm.error") We can't find an account with the email / password you entered. Please try again.
       loader(ng-if="vm.loading")
-      form.register-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
+      form.connect-accounts-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
         .wrapper
           label Enter username
           input.input.input-sm(type="text" ng-model="vm.username" required=true placeholder="username" autofocus=true)

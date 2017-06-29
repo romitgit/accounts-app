@@ -1,13 +1,19 @@
-@import "variables";
+@import "tc-ui-variables";
 
 /* COMMON STYLES - IDEALLY SHOULD BE COMING FROM UI-KIT */
 .tc-ui {
+
+  input.input {
+    /* remove side effect of appirio-styles */
+    margin-bottom: 0px;
+  }
+
   //.size-xs,
   .tc-btn.tc-btn-xs,
   textarea.input-xs,
   input.input.input-xs {
-    height: 20px;
-    line-height: 20px;
+    height: (4 * $base-unit);
+    line-height: (4 * $base-unit);
     font-size: 12px;
   }
 
@@ -17,8 +23,8 @@
   textarea,
   input.input, textarea.input-sm,
   input.input.input-sm {
-    height: 30px;
-    line-height: 30px;
+    height: (6 * $base-unit);
+    line-height: (6 * $base-unit);
     font-size: 13px;
   }
 
@@ -26,8 +32,8 @@
   .tc-btn.tc-btn-md,
   textarea.input-md,
   input.input.input-md {
-    height: 40px;
-    line-height: 40px;
+    height: (8 * $base-unit);
+    line-height: (8 * $base-unit);
     font-size: 15px;
   }
 
@@ -35,17 +41,17 @@
   .tc-btn.tc-btn-lg,
   textarea.input-lg,
   input.input.input-lg {
-    height: 50px;
-    line-height: 50px;
-    font-size: 20px;
+    height: (10 * $base-unit);
+    line-height: (10 * $base-unit);
+    font-size: (4 * $base-unit);
   }
 
   .tc-btn {
-    padding: 0 20px;
-    background: #FFFFFF;
-    border: 1px solid #888894;
+    padding: 0 (4 * $base-unit);
+    background: $tc-white;
+    border: 1px solid $tc-gray-50;
     border-radius: 4px;
-    color: #5D5D66;
+    color: $tc-gray-70;
 
     /* remove side effect of appirio-styles */
     text-transform: none;
@@ -54,14 +60,14 @@
   }
 
   .tc-btn.loading:enabled, .tc-btn:focus:not(:disabled) {
-    background: #FFFFFF;
-    border: 1px solid #59A7FF;
-    box-shadow: 0 0 2px 1px #CFE6FF;
+    background: $tc-white;
+    border: 1px solid $tc-dark-blue-70;
+    box-shadow: 0 0 2px 1px $tc-dark-blue-30;
   }
 
   .tc-btn-default:active:enabled, .tc-btn-default:hover:enabled {
-    background-image: linear-gradient(0deg, #f5f5f5 0%, #ffffff 49%, #ffffff 100%);
-    border: 1px solid #A3A3AD;
+    background-image: linear-gradient(0deg, #f5f5f5 0%, $tc-white 49%, $tc-white 100%);
+    border: 1px solid $tc-gray-40 ;
     background-color: transparent;
 
     /* remove side effect of appirio-styles */
@@ -77,15 +83,15 @@
   }
 
   .tc-btn-primary {
-    background: #1A85FF;
-    border-color: #1A85FF;
-    color: #FFFFFF;
+    background: $tc-dark-blue-90;
+    border-color: $tc-dark-blue-90;
+    color: $tc-white;
   }
 
   /* remove side effect of appirio-styles */
   .tc-btn-primary:disabled {
-    background: #1A85FF !important;
-    border-color: #1A85FF !important;
+    background: $tc-dark-blue-90 !important;
+    border-color: $tc-dark-blue-90 !important;
   }
 
   .tc-btn-primary:hover:enabled {
@@ -93,69 +99,69 @@
   }
 
   .tc-btn-primary:active:enabled {
-    background: #1A85FF;
+    background: $tc-dark-blue-90;
     box-shadow: inset 0 1px 3px 0 rgba(71, 71, 79, 0.5);
   }
 
   .tc-btn-primary.loading:enabled, .tc-btn-primary:focus:not(:disabled) {
-    background: #1A85FF;
-    border: 1px solid #0B71E6;
-    box-shadow: 0 0 2px 1px #59A7FF;
+    background: $tc-dark-blue-90;
+    border: 1px solid $tc-dark-blue;
+    box-shadow: 0 0 2px 1px $tc-dark-blue-70;
   }
 
   .tc-btn-red {
-    background: #FF5B52;
-    border-color: #FF5B52;
-    color: #FFFFFF;
+    background: $tc-red-70;
+    border-color: $tc-red-70;
+    color: $tc-white;
   }
 
   .tc-btn-red:hover:enabled {
-    background-image: linear-gradient(-180deg, #ff5b52 0%, #f22f24 100%);
+    background-image: linear-gradient(-180deg, $tc-red-70 0%, $tc-red 100%);
   }
 
   .tc-btn-red:active:enabled {
-    background: #F22F24;
+    background: $tc-red;
     box-shadow: inset 0 1px 3px 0 rgba(71, 71, 79, 0.38);
   }
 
   .tc-btn-red.loading:enabled, .tc-btn-red:focus:not(:disabled) {
-    background: #FF5B52;
-    border: 1px solid #F22F24;
-    box-shadow: 0 0 2px 1px #FFD4D1;
+    background: $tc-red-70;
+    border: 1px solid $tc-red;
+    box-shadow: 0 0 2px 1px $tc-red-30;
   }
 
   .tc-btn-secondary {
-    background: #A3A3AD;
-    border-color: #A3A3AD;
-    color: #FFFFFF;
+    background: $tc-gray-40 ;
+    border-color: $tc-gray-40 ;
+    color: $tc-white;
   }
 
   .tc-btn.tc-btn-secondary:hover {
-    background-image: linear-gradient(-180deg, #a3a3ad 0%, #888894 100%);
-    border: 1px solid #888894;
+    background-image: linear-gradient(-180deg, $tc-gray-40  0%, $tc-gray-50 100%);
+    border: 1px solid $tc-gray-50;
     background-color: transparent;
   }
 
   .tc-btn-secondary:active:enabled {
-    background: #888894;
+    background: $tc-gray-50;
     box-shadow: inset 0 1px 3px 0 rgba(71, 71, 79, 0.38);
   }
 
   .tc-btn-secondary.loading:enabled, .tc-btn-secondary:focus:not(:disabled) {
-    background: #A3A3AD;
-    border: 1px solid #888894;
-    box-shadow: 0 0 2px 1px #59A7FF;
+    background: $tc-gray-40 ;
+    border: 1px solid $tc-gray-50;
+    box-shadow: 0 0 2px 1px $tc-dark-blue-70;
   }
 
   .tooltip {
     opacity: 0;
     width: 320px;
-    padding: 20px;
+    padding: (4 * $base-unit);
     position: absolute;
     text-align: left;
-    top: 20px;
+    top: (4 * $base-unit);
     left: 395px;
-    background-color: #CFE6FF;
+    background-color: $tc-dark-blue-30;
     box-shadow: 0 2px 9px 0 rgba(38, 38, 40, 0.06);
     border-radius: 6px;
     transition: all .1s ease-in-out;
@@ -185,7 +191,7 @@
     content: "";
     display: block;
     position: absolute;
-    top: 10px;
+    top: (2 * $base-unit);
     height: 12px;
     width: 12px;
     left: 18px;
@@ -193,46 +199,46 @@
     -ms-transform: rotate(45deg);
     -o-transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
-    background-color: #CFE6FF;
+    background-color: $tc-dark-blue-30;
     box-shadow: 0 2px 9px 0 rgba(38, 38, 40, 0.06);
   }
 
   .tooltip h4 {
-    margin: 0 0 10px;
+    margin: 0 0 (2 * $base-unit);
     font-weight: 500;
     font-size: 13px;
     text-align: left;
     text-transform: uppercase;
     color: #3A3C3E;
-    line-height: 20px;
+    line-height: (4 * $base-unit);
   }
 
   .tooltip p {
     margin: 0;
     font-size: 13px;
     color: #3A3C3E;
-    line-height: 20px;
+    line-height: (4 * $base-unit);
   }
 
   .tooltip p span {
-    color: #0B71E6;
+    color: $tc-dark-blue;
     font-weight: 500;
   }
 
   .tooltip p .check {
     width: 12px;
     height: 9px;
-    margin-right: 10px;
+    margin-right: (2 * $base-unit);
   }
 
   .tooltip p.line:before {
     content: "";
-    width: 10px;
+    width: (2 * $base-unit);
     height: 3px;
     position: relative;
     top: -3px;
     display: inline-block;
     margin-right: 12px;
-    background: #FFFFFF;
+    background: $tc-white;
   }
 }
