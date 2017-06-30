@@ -12,10 +12,10 @@
     form.connect-accounts-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
       .wrapper
         label Username or email
-        input.input.input-sm(type="text" ng-model="vm.username" required=true placeholder="username" autofocus=true)
+        input.input.input-sm(type="text" ng-model="vm.username" required=true autofocus=true)
       .wrapper
         label Password
-        toggle-password-with-tips(placeholder="password")
+        toggle-password-with-tips
 
       .forgot.small-text
         | Password problems. 

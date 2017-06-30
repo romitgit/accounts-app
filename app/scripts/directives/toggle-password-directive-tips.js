@@ -13,7 +13,7 @@ import angular from 'angular'
       link: function(scope, element, attrs, formController) {
         var vm = scope.vm
         vm.passwordField = formController.password
-        vm.defaultPlaceholder = attrs.placeholder || 'Create new password'
+        vm.defaultPlaceholder = attrs.placeholder || ''
         vm.placeholder = vm.defaultPlaceholder
         vm.password = ''
 

@@ -31,7 +31,7 @@
         a(ng-click="vm.toggleEmailEdit()") edit
       .security-pin
         label Security PIN:
-        input.input.input-md(type="password" ng-model="vm.pin" required=true placeholder="Security PIN")
+        input.input.input-md(type="password" ng-model="vm.pin" required=true)
         button.tc-btn.tc-btn-primary.tc-btn-md(ng-disabled="vm.pinForm.$invalid" type="submit") Verify
     p.small-text
       | Allow for some time before your email arrives. Check in your spam folder to make sure it was not blocked by your email server. If you didn't get a code or need further help, contact 

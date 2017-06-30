@@ -12,16 +12,15 @@
     form.connect-accounts-form(name="vm.registerForm" role="form" novalidate autocomplete="off" ng-submit="vm.submit()")
       .wrapper.wrapper-half
         label First Name
-        input.input.input-sm(type="text" name="first-name" ng-model="vm.firstName" required=true placeholder="First Name" maxlength="64" autofocus=true)
+        input.input.input-sm(type="text" name="first-name" ng-model="vm.firstName" required=true maxlength="64" autofocus=true)
       .wrapper.wrapper-half
         label Last Name
-        input.input.input-sm(type="text" name="last-name" ng-model="vm.lastName" required=true placeholder="Last Name" maxlength="64")
+        input.input.input-sm(type="text" name="last-name" ng-model="vm.lastName" required=true maxlength="64")
       .wrapper
         label Country
         .country-dropdown
           angucomplete-alt(
             input-name="country",
-            placeholder="Country",
             pause="100",
             selected-object="vm.updateCountry",
             local-data="vm.countries",
@@ -37,7 +36,7 @@
             p.form-error(ng-show="!vm.isValidCountry") Please choose a country from the list
       .wrapper.wrapper-tooltip
         label Pick a nickname
-        input.input.input-sm(type="text" name="username" ng-model="vm.username" required=true placeholder="Username")
+        input.input.input-sm(type="text" name="username" ng-model="vm.username" required=true)
         .tooltip
           .arrow
           h4 USERNAME TIPS:
@@ -47,7 +46,7 @@
             | It can contain numbers, letters, and only these special characters -_.{}[]
       .wrapper.wrapper-tooltip
         label Your email
-        input.input.input-sm(type="email" name="email" ng-model="vm.email" required=true placeholder="Email")
+        input.input.input-sm(type="email" name="email" ng-model="vm.email" required=true)
         .tooltip
           .arrow
           h3 Email Tips:
@@ -57,7 +56,7 @@
           p We'll send you messages related to your account and project activities.
       .wrapper.wrapper-tooltip(ng-if="!vm.ssoUser")
         label Pick a password
-        toggle-password-with-tips(placeholder="Create Password")
+        toggle-password-with-tips
 
         .tooltip.tooltip-password(ng-show="vm.passwordFocus")
           .arrow
