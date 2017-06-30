@@ -28,11 +28,12 @@
             search-fields="name",
             title-field="name",
             match-class="angucomplete-highlight",
-            input-class="input input-sm"
+            input-class="input input-sm {{ vm.isCountryDirty && !vm.isValidCountry ? 'error' : '' }}"
             minlength="1"
+            focus-out="vm.onCountryBlur()"
           )
 
-          .form-input-error(ng-show="vm.registerForm.country.$dirty && !vm.isValidCountry")
+          .form-input-error(ng-show="vm.isCountryDirty && !vm.isValidCountry")
             p.form-error(ng-show="!vm.isValidCountry") Please choose a country from the list
       .wrapper.wrapper-tooltip
         label Pick a nickname
@@ -73,8 +74,8 @@
         a(href="{{vm.termsUrl}}") Terms
         |  and 
         a(href="{{ vm.privacyUrl }}") Privacy Policy
-      button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="submit" disabled="disabled" ng-show="!vm.isValidCountry") Register
-      button.action.submit.tc-btn.tc-btn-primary.tc-btn-large(type="submit" ng-show="vm.isValidCountry") Register
+      button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="submit" disabled="disabled" ng-show="!vm.isCountryDirty || !vm.isValidCountry") Register
+      button.action.submit.tc-btn.tc-btn-primary.tc-btn-large(type="submit" ng-show="vm.isCountryDirty && vm.isValidCountry") Register
 
     .register-options
       hr

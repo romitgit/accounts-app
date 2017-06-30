@@ -16,6 +16,8 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm.errorMessage = 'Error Creating User'
   vm.submit       = null
   vm.loading      = false
+  vm.isValidCountry    = false
+  vm.isCountryDirty    = false
   vm.isSSORegistration = false
   vm.ssoUser
   vm.retUrl = $stateParams && $stateParams.retUrl ? null
@@ -32,6 +34,13 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
     vm.isValidCountry = isValidCountry
     if isValidCountry
       vm.country = angucompleteCountryObj.originalObject
+
+  vm.onCountryBlur = () ->
+    isValidCountry = !_.isUndefined(vm.country)
+    vm.registerForm.country.$setValidity('required', isValidCountry)
+    vm.isCountryDirty = true
+    vm.isValidCountry = isValidCountry
+
   vm.submit = ->
     vm.error = false
     vm.loading = true

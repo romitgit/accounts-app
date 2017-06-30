@@ -3,9 +3,38 @@
 /* COMMON STYLES - IDEALLY SHOULD BE COMING FROM UI-KIT */
 .tc-ui {
 
+  textarea,
   input.input {
+    padding: 0 10px;
+    background: $tc-white;
+    border: 1px solid $tc-gray-20;
+    border-radius: 4px;
+    font-size: 13px;
+    color: $tc-black;
+    outline: none;
+
     /* remove side effect of appirio-styles */
     margin-bottom: 0px;
+  }
+
+  textarea:hover:not(.error),
+  input.input:hover:not(.error) {
+    border-color: $tc-gray-50;
+  }
+
+  textarea:focus:not(.error),
+  input.input:focus:not(.error) {
+    border-color: $tc-dark-blue-70;
+    box-shadow: 0 0 2px 1px $tc-dark-blue-30;
+  }
+
+  textarea.error,
+  input.input.error {
+    border-color: $tc-red-70;
+  }
+
+  textarea {
+    height: 70px;
   }
 
   //.size-xs,
@@ -240,5 +269,31 @@
     display: inline-block;
     margin-right: 12px;
     background: $tc-white;
+  }
+
+  // Autocomplete
+  .angucomplete-dropdown {
+    // box-shadow: 0 1px 3px 1px rgba(0, 0, 0, .4);
+    border-color: $tc-gray-30;
+    color: $tc-black;
+    width: 100%;
+    text-align: left;
+    margin-top: 0px;
+  }
+
+  .angucomplete-selected-row {
+    background-color: $tc-gray-neutral-dark;
+    color: $tc-black;
+  }
+
+  /* Overrides form input error classes */
+  .form-input-error {
+    margin: 5px 0 0;
+    padding: 10px;
+    background: $tc-red-10;
+    border: 1px solid $tc-red-30;
+    font-style: italic;
+    font-size: 13px;
+    color: $tc-red;
   }
 }
