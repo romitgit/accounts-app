@@ -18,6 +18,10 @@ compile:
     - npm run build-connector
     - ls
 
+test:
+  override:
+    - npm test
+
 deployment:
   development:
     branch: dev
