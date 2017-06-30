@@ -14,7 +14,7 @@ dependencies:
 
 compile:
   override:
-	  - npm run build
+    - npm run build
     - npm run build-connector
 	
 deployment:
