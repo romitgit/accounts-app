@@ -16,6 +16,7 @@ compile:
   override:
     - npm run build
     - npm run build-connector
+    - ls
 
 deployment:
   development:
