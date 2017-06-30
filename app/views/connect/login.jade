@@ -1,32 +1,32 @@
 .connect-accounts-container.tc-ui("role"="main")
   .connect-accounts-header
-      img(src=require("../../images/connect/connect.png"), alt='')
-      .login
-        span Don’t have an account? 
-        a.tc-btn.tc-btn-default.tc-btn-sm(href="{{vm.registrationUrl}}") Register for free
-    .connect-accounts-content
-      h2 Welcome back!
-      p Crowdsourcing for your winning project
-      p.error(ng-if="vm.error") We can't find an account with the email / password you entered. Please try again.
-      loader(ng-if="vm.loading")
-      form.connect-accounts-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
-        .wrapper
-          label Username or email
-          input.input.input-sm(type="text" ng-model="vm.username" required=true placeholder="username" autofocus=true)
-        .wrapper
-          label Password
-          toggle-password-with-tips(placeholder="password")
+    img(src=require("../../images/connect/connect.png"), alt='')
+    .login
+      span Don’t have an account? 
+      a.tc-btn.tc-btn-default.tc-btn-sm(href="{{vm.registrationUrl}}") Register for free
+  .connect-accounts-content
+    h2 Welcome back!
+    p Crowdsourcing for your winning project
+    p.error(ng-if="vm.error") We can't find an account with the email / password you entered. Please try again.
+    loader(ng-if="vm.loading")
+    form.connect-accounts-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
+      .wrapper
+        label Username or email
+        input.input.input-sm(type="text" ng-model="vm.username" required=true placeholder="username" autofocus=true)
+      .wrapper
+        label Password
+        toggle-password-with-tips(placeholder="password")
 
-        .forgot.small-text
-          | Password problems. 
-          a(href="{{vm.forgotPasswordUrl}}") Reset your password here?
+      .forgot.small-text
+        | Password problems. 
+        a(href="{{vm.forgotPasswordUrl}}") Reset your password here?
 
-        button.action.tc-btn.tc-btn-primary.tc-btn-sm(type="submit") Login
+      button.action.tc-btn.tc-btn-primary.tc-btn-sm(type="submit") Login
 
-        .login-options
-          hr
+      .login-options
+        hr
 
-          p Or use your enterprise account
+        p Or use your enterprise account
 
-          a.tc-btn.tc-btn-secondary.sso-signon(ui-sref="SSO_LOGIN({retUrl:vm.$stateParams.retUrl})") Single Sign On
+        a.tc-btn.tc-btn-secondary.sso-signon(ui-sref="SSO_LOGIN({retUrl:vm.$stateParams.retUrl})") Single Sign On
   p.copyright © 2017 topcoder. All Rights Reserved

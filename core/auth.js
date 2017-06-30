@@ -1,7 +1,7 @@
 import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
-import { getLoginConnection } from './utils.js'
+import { getLoginConnection, isEmail } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER } from './constants.js'
@@ -288,8 +288,9 @@ export function socialLogin(options) {
     .then(handleAuthResult)
 }
 
-export function sendResetEmail(email, resetPasswordUrlPrefix) {
-  return fetchJSON(API_URL + '/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix) )
+export function sendResetEmail(emailOrHandle, resetPasswordUrlPrefix) {
+  const queryParam = isEmail(emailOrHandle) ? 'email=' : 'handle='
+  return fetchJSON(API_URL + '/users/resetToken?' + queryParam + encodeURIComponent(emailOrHandle) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix) )
 }
 
 export function resetPassword(handle, resetToken, password) {
