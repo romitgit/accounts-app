@@ -8,15 +8,21 @@
     h2 Welcome back!
     p Crowdsourcing for your winning project
     p.info(ng-if="vm.passwordReset") Your password has been updated. Please login.
-    p.error(ng-if="vm.error") We can't find an account with the email / password you entered. Please try again.
     loader(ng-if="vm.loading")
     form.connect-accounts-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
       .wrapper
         label Username or email
-        input.input.input-sm(type="text" ng-model="vm.username" required=true autofocus=true)
+        input.input.input-sm(type="text" ng-model="vm.username" required=true autofocus=true ng-class="{ error : vm.loginErrors.USERNAME_NONEXISTANT || vm.loginErrors.ACCOUNT_INACTIVE }")
+        .form-input-error(ng-if="vm.loginErrors.USERNAME_NONEXISTANT")
+          p.form-error We couldn't find a member with that {{vm.emailOrUsername || "username"}}. Please check that you entered it correctly.
+        .form-input-error(ng-if="vm.loginErrors.ACCOUNT_INACTIVE")
+          p.form-error Your account is inactive, please contact support for activating it.
+
       .wrapper
         label Password
         toggle-password-with-tips
+        .form-input-error(ng-if="vm.loginErrors.WRONG_PASSWORD")
+          p.form-error That password is incorrect. Please check that you entered the right one.
 
       .forgot.small-text
         | Password problems. 

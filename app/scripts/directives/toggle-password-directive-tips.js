@@ -12,11 +12,10 @@ import angular from 'angular'
       template: require('../../views/directives/toggle-password-with-tips.directive')(),
       link: function(scope, element, attrs, formController) {
         var vm = scope.vm
-        vm.passwordField = formController.password
         vm.defaultPlaceholder = attrs.placeholder || ''
-        vm.placeholder = vm.defaultPlaceholder
-        vm.password = ''
-        vm.toggleShowLabel = 'Show'
+        vm.placeholder        = vm.defaultPlaceholder
+        vm.password           = ''
+        vm.toggleShowLabel    = 'Show'
 
         var passwordInput = element.find('input')[0]
 
