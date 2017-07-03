@@ -5,7 +5,6 @@
 ResetPasswordController = ($stateParams, $state, $scope) ->
   vm          = this
   vm.password = ''
-  vm.success  = false
   vm.error    = ''
   vm.loading  = false
   token       = $stateParams.token
@@ -21,8 +20,7 @@ ResetPasswordController = ($stateParams, $state, $scope) ->
   success = ->
     $scope.$apply ->
       vm.loading  = false
-      vm.success  = true
-    # $state.go 'CONNECT_LOGIN', { passwordReset: true }
+    $state.go 'CONNECT_LOGIN', { passwordReset: true }
 
   failure = (error) ->
     $scope.$apply ->

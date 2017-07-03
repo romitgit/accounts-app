@@ -122,6 +122,7 @@ config = (
 
   states['CONNECT_LOGIN'] =
     url: '/connect?retUrl&handle&password'
+    params: {'passwordReset'}
     controller  : 'ConnectLoginController as vm'
     template: require('./views/connect/login')()
     public: true

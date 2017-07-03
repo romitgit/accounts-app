@@ -18,6 +18,7 @@ ConnectLoginController = (
   vm.loading   = false
   vm.init      = false
   vm.$stateParams = $stateParams
+  vm.passwordReset = vm.$stateParams.passwordReset == true
   
   vm.baseUrl = "https://connect.#{DOMAIN}"
   vm.registrationUrl   = $state.href('CONNECT_REGISTRATION', { activated: true }, { absolute: true })
