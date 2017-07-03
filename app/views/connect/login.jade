@@ -13,16 +13,14 @@
       .wrapper
         label Username or email
         input.input.input-sm(type="text" ng-model="vm.username" required=true autofocus=true ng-class="{ error : vm.loginErrors.USERNAME_NONEXISTANT || vm.loginErrors.ACCOUNT_INACTIVE }")
-        .form-input-error(ng-if="vm.loginErrors.USERNAME_NONEXISTANT")
+        .error-block(ng-if="vm.loginErrors.USERNAME_NONEXISTANT")
           p.form-error We couldn't find a member with that {{vm.emailOrUsername || "username"}}. Please check that you entered it correctly.
-        .form-input-error(ng-if="vm.loginErrors.ACCOUNT_INACTIVE")
-          p.form-error Your account is inactive, please contact support for activating it.
+        .error-block(ng-if="vm.loginErrors.ACCOUNT_INACTIVE") Your account is inactive, please contact support for activating it.
 
       .wrapper
         label Password
         toggle-password-with-tips
-        .form-input-error(ng-if="vm.loginErrors.WRONG_PASSWORD")
-          p.form-error That password is incorrect. Please check that you entered the right one.
+        .error-block(ng-if="vm.loginErrors.WRONG_PASSWORD") That password is incorrect. Please check that you entered the right one.
 
       .forgot.small-text
         | Password problems. 

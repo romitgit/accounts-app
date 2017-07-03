@@ -320,7 +320,8 @@
   }
 
   /* Overrides form input error classes */
-  .form-input-error {
+  .form-input-error,
+  .error-block {
     margin: 5px 0 0;
     padding: 10px;
     background: $tc-red-10;
