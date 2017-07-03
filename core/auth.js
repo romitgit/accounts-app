@@ -288,9 +288,8 @@ export function socialLogin(options) {
     .then(handleAuthResult)
 }
 
-export function sendResetEmail(emailOrHandle, resetPasswordUrlPrefix) {
-  const queryParam = isEmail(emailOrHandle) ? 'email=' : 'handle='
-  return fetchJSON(API_URL + '/users/resetToken?' + queryParam + encodeURIComponent(emailOrHandle) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix) )
+export function sendResetEmail(email, resetPasswordUrlPrefix) {
+  return fetchJSON(API_URL + '/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix) )
 }
 
 export function resetPassword(handle, resetToken, password) {
