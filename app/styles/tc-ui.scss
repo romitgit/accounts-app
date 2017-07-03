@@ -182,6 +182,33 @@
     box-shadow: 0 0 2px 1px $tc-dark-blue-70;
   }
 
+  .input-btn {
+    position: relative;
+  }
+
+  .input-btn .input {
+    padding-right: 80px;
+  }
+
+  .input-btn .input:focus ~ .tc-btn {
+    background: $tc-dark-blue-70;
+    color: $tc-white;
+  }
+
+  .input-btn .tc-btn,
+  .input-btn .tc-btn:hover,
+  .input-btn .tc-btn:focus,
+  .input-btn .tc-btn:active {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    background: $tc-gray-20;
+    border: 0;
+    height: 28px;
+    border-radius: 0 3px 3px 0;
+    box-shadow: none;
+  }
+
   .tooltip {
     opacity: 0;
     width: 320px;

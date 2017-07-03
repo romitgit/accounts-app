@@ -16,8 +16,9 @@ import angular from 'angular'
         vm.defaultPlaceholder = attrs.placeholder || ''
         vm.placeholder = vm.defaultPlaceholder
         vm.password = ''
+        vm.toggleShowLabel = 'Show'
 
-        var passwordInput = element.children()[0]
+        var passwordInput = element.find('input')[0]
 
         element.bind('click', function(event) {
           passwordInput.focus()
@@ -60,8 +61,10 @@ import angular from 'angular'
 
           if ($passwordInput.attr('type') === 'text') {
             $passwordInput.attr('type', 'password')
+            vm.toggleShowLabel = 'Show'
           } else {
             $passwordInput.attr('type', 'text')
+            vm.toggleShowLabel = 'Hide'
           }
         }
       }
