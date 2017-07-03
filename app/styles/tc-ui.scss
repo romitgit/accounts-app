@@ -3,6 +3,11 @@
 /* COMMON STYLES - IDEALLY SHOULD BE COMING FROM UI-KIT */
 .tc-ui {
 
+  label {
+    /* remove side effect of appirio-styles */
+    font-family: 'Roboto', sans-serif;
+  }
+
   textarea,
   input.input {
     padding: 0 10px;
@@ -15,6 +20,7 @@
 
     /* remove side effect of appirio-styles */
     margin-bottom: 0px;
+    font-family: 'Roboto', sans-serif;
   }
 
   textarea:hover:not(.error),
