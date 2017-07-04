@@ -40,7 +40,7 @@ import angular from 'angular'
           element.removeClass('focus')
 
           // If you are blurring from the password input and clicking the checkbox
-          if (relatedTarget.attr('type') === 'checkbox' && relatedTarget.attr('id') === 'passwordCheckbox') {
+          if (relatedTarget.attr('type') === 'checkbox' && relatedTarget.attr('id') === 'toggleInputTypeBtn') {
             vm.passwordFocus = true
             vm.placeholder = ''
             passwordInput.focus()
