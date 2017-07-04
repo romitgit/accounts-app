@@ -13,8 +13,7 @@
       .wrapper
         label Username or email
         input.input.input-sm(type="text" ng-model="vm.username" required=true autofocus=true ng-class="{ error : vm.loginErrors.USERNAME_NONEXISTANT || vm.loginErrors.ACCOUNT_INACTIVE }")
-        .error-block(ng-if="vm.loginErrors.USERNAME_NONEXISTANT")
-          p.form-error We couldn't find a member with that {{vm.emailOrUsername || "username"}}. Please check that you entered it correctly.
+        .error-block(ng-if="vm.loginErrors.USERNAME_NONEXISTANT") We couldn't find a member with that {{vm.emailOrUsername || "username"}}. Please check that you entered it correctly.
         .error-block(ng-if="vm.loginErrors.ACCOUNT_INACTIVE") Your account is inactive, please contact support for activating it.
 
       .wrapper

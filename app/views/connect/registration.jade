@@ -33,8 +33,7 @@
             focus-out="vm.onCountryBlur()"
           )
 
-          .form-input-error(ng-show="vm.isCountryDirty && !vm.isValidCountry")
-            p.form-error(ng-show="!vm.isValidCountry") Please choose a country from the list
+          .error-block(ng-show="vm.isCountryDirty && !vm.isValidCountry") Please choose a country from the list
       .wrapper.wrapper-tooltip
         label Pick a nickname
         input.input.input-sm(type="text" name="username" ng-model="vm.username" required=true)
