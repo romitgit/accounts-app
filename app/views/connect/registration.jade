@@ -61,13 +61,15 @@
         .tooltip.tooltip-password(ng-show="vm.passwordFocus")
           .arrow
           h4 YOUR PASSWORD MUST HAVE:
-          p
-            img.check(src=require('../../images/ui-16px-1_check-bold-blue.svg'), alt='#')
+          p(ng-class="{ line : vm.registerForm.password.$error.minlength || vm.registerForm.password.$error.maxlength || vm.registerForm.password.$error.required}")
+            img.check(src=require('../../images/ui-16px-1_check-bold-blue.svg'), ng-if="(vm.registerForm.password.$dirty && !vm.registerForm.password.$error.minlength && !vm.registerForm.password.$error.maxlength && !vm.registerForm.password.$error.required)")
             | At least 8 characters
-          p
-            img.check(src=require('../../images/ui-16px-1_check-bold-blue.svg'), alt='#')
+          p(ng-class="{ line : vm.registerForm.password.$error.hasLetter}")
+            img.check(src=require('../../images/ui-16px-1_check-bold-blue.svg'), ng-if="(vm.registerForm.password.$dirty && !vm.registerForm.password.$error.hasLetter)")
             | At least 1 letter
-          p.line At least 1 number or symbol
+          p(ng-class="{ line : vm.registerForm.password.$error.hasSymbolOrNumber}")
+            img.check(src=require('../../images/ui-16px-1_check-bold-blue.svg'), ng-if="(vm.registerForm.password.$dirty && !vm.registerForm.password.$error.hasSymbolOrNumber)")
+            | At least 1 number or symbol
       p.terms-policy
         | By clicking "Register" you agree to our 
         a(href="{{vm.termsUrl}}") Terms
