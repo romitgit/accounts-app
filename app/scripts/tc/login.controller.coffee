@@ -61,10 +61,10 @@ TCLoginController = (
           vm.loginErrors.USERNAME_NONEXISTANT = true
           vm.loading = false
         else
-          doLogin(vm.username, vm.currentPassword)
+          doLogin(vm.username, vm.password)
       .catch (err) ->
         vm.loginErrors.USERNAME_NONEXISTANT = false
-        doLogin(vm.username, vm.currentPassword)
+        doLogin(vm.username, vm.password)
   
   validateUsername = (username) ->
     validator = if isEmail(username) then UserService.validateEmail else UserService.validateHandle
