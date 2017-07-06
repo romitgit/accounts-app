@@ -2,7 +2,7 @@
 
 ENV=$1
 
-AWS_REGION=$(eval "echo \$${ENV}_AWS_REGION")
+#AWS_REGION=$(eval "echo \$${ENV}_AWS_REGION")
 AWS_ACCESS_KEY_ID=$(eval "echo \$${ENV}_AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY=$(eval "echo \$${ENV}_AWS_SECRET_ACCESS_KEY")
 AWS_S3_BUCKET=$(eval "echo \$${ENV}_S3_BUCKET")
@@ -11,7 +11,7 @@ configure_aws_cli() {
 	aws --version
 	aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
 	aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-	aws configure set default.region $AWS_REGION
+	#aws configure set default.region $AWS_REGION
 	aws configure set default.output json
 	echo "Configured AWS CLI."
 }
