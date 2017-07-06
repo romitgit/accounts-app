@@ -32,8 +32,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
     isValidCountry = !_.isUndefined(countryCode)
     vm.registerForm.country.$setValidity('required', isValidCountry)
     vm.isValidCountry = isValidCountry
-    if isValidCountry
-      vm.country = angucompleteCountryObj.originalObject
+    vm.country = _.get(angucompleteCountryObj, 'originalObject')
 
   vm.onCountryBlur = () ->
     isValidCountry = !_.isUndefined(vm.country)
