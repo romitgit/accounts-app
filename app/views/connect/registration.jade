@@ -36,7 +36,7 @@
           .error-block(ng-show="vm.isCountryDirty && !vm.isValidCountry") Please choose a country from the list
       .wrapper.wrapper-tooltip
         label Pick a nickname
-        input.input.input-sm(type="text" name="username" ng-model="vm.username" required=true)
+        input.input.input-sm(type="text" name="username" ng-model="vm.username" required=true username-is-free ng-minlength="2" ng-maxlength="15" ng-model-options="{ debounce: {'default': 500} }")
         .tooltip
           .arrow
           h4 USERNAME TIPS:
@@ -44,9 +44,16 @@
           p It must be 2-15 characters long
           p
             | It can contain numbers, letters, and only these special characters -_.{}[]
+        .error-block(ng-if="vm.registerForm.username.$dirty && vm.registerForm.username.$invalid", ng-messages="vm.registerForm.username.$error")
+          p(ng-message="required") Please enter a username.
+          p(ng-message="usernameIsFree") {{vm.usernameErrorMessage}}
+
+          p(ng-message="minlength") That username is not the correct length or format.
+
+          p(ng-message="maxlength") That username is not the correct length or format.
       .wrapper.wrapper-tooltip
         label Your email
-        input.input.input-sm(type="email" name="email" ng-model="vm.email" required=true)
+        input.input.input-sm(type="email" name="email" ng-model="vm.email" ng-model-options="{ debounce: {'default': 500} }" required=true valid-email email-is-available)
         .tooltip
           .arrow
           h3 Email Tips:
@@ -54,6 +61,12 @@
           p Your email address will be private and not shared with anyone.
 
           p We'll send you messages related to your account and project activities.
+        .error-block(ng-show="vm.registerForm.email.$dirty && vm.registerForm.email.$invalid", ng-messages="vm.registerForm.email.$error")
+          p(ng-message="emailIsAvailable") {{vm.emailErrorMessage}}
+
+          p(ng-message="validEmail") {{vm.emailErrorMessage}}
+
+          p(ng-message="required") Please enter an email address.
       .wrapper.wrapper-tooltip(ng-if="!vm.ssoUser")
         label Pick a password
         toggle-password-with-tips
@@ -75,8 +88,8 @@
         a(href="{{vm.termsUrl}}") Terms
         |  and 
         a(href="{{ vm.privacyUrl }}") Privacy Policy
-      button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="submit" disabled="disabled" ng-show="!vm.isCountryDirty || !vm.isValidCountry") Register
-      button.action.submit.tc-btn.tc-btn-primary.tc-btn-large(type="submit" ng-show="vm.isCountryDirty && vm.isValidCountry") Register
+      button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="submit" disabled="disabled" ng-show="!vm.isCountryDirty || !vm.isValidCountry || vm.registerForm.$invalid || vm.registerForm.$pending") Register
+      button.action.submit.tc-btn.tc-btn-primary.tc-btn-large(type="submit" ng-show="vm.isCountryDirty && vm.isValidCountry && vm.registerForm.$valid" tc-busy-button tc-busy-when="vm.loading" tc-busy-message="Registering") Register
 
     .register-options
       hr

@@ -37,7 +37,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm.onCountryBlur = () ->
     isValidCountry = !_.isUndefined(vm.country)
     vm.registerForm.country.$setValidity('required', isValidCountry)
-    vm.isCountryDirty = true
+    vm.isCountryDirty = vm.registerForm.country.$dirty
     vm.isValidCountry = isValidCountry
 
   vm.submit = ->
