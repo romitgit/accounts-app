@@ -143,18 +143,15 @@ ConnectPinVerificationController = (
 
   # Call API to update user's meail
   updateEmail = (token) ->
-    console.log 'Updating primary email for user ' + vm.$stateParams.userId
     updatePrimaryEmail(vm.$stateParams.userId, vm.email, token)
 
   # Call API to resend Activation code
   resendPIN = () ->
-    console.log 'resendPIN'
     resendActivationCode(vm.$stateParams.userId, vm.retUrl)
 
   # Handles error in updating email
   updateEmailFailure = (error) ->
     # show error in the form
-    console.log 'updateEmailFailure'
     $scope.$apply ->
       vm.error = true
       vm.message = 'Can\'t update email address'

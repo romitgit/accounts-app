@@ -152,7 +152,7 @@ config = (
     public: true
 
   states['CONNECT_RESET_PASSWORD'] =
-    url: '/connect/reset-password?token&handle'
+    url: '/connect/reset-password?token&handle&retUrl'
     controller  : 'ConnectResetPasswordController as vm'
     template   : require('./views/connect/reset-password.jade')()
     public: true
