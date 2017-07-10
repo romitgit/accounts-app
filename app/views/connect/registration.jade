@@ -45,12 +45,12 @@
           p
             | It can contain numbers, letters, and only these special characters -_.{}[]
         .error-block(ng-if="vm.registerForm.username.$dirty && vm.registerForm.username.$invalid", ng-messages="vm.registerForm.username.$error")
-          p(ng-message="required") Please enter a username.
-          p(ng-message="usernameIsFree") {{vm.usernameErrorMessage}}
+          span(ng-message="required") Please enter a username.
+          span(ng-message="usernameIsFree") {{vm.usernameErrorMessage}}
 
-          p(ng-message="minlength") That username is not the correct length or format.
+          span(ng-message="minlength") That username is not the correct length or format.
 
-          p(ng-message="maxlength") That username is not the correct length or format.
+          span(ng-message="maxlength") That username is not the correct length or format.
       .wrapper.wrapper-tooltip
         label Your email
         input.input.input-sm(type="email" name="email" ng-model="vm.email" ng-model-options="{ debounce: {'default': 500} }" required=true valid-email email-is-available)
@@ -62,11 +62,11 @@
 
           p We'll send you messages related to your account and project activities.
         .error-block(ng-show="vm.registerForm.email.$dirty && vm.registerForm.email.$invalid", ng-messages="vm.registerForm.email.$error")
-          p(ng-message="emailIsAvailable") {{vm.emailErrorMessage}}
+          span(ng-message="emailIsAvailable") {{vm.emailErrorMessage}}
 
-          p(ng-message="validEmail") {{vm.emailErrorMessage}}
+          span(ng-message="validEmail") {{vm.emailErrorMessage}}
 
-          p(ng-message="required") Please enter an email address.
+          span(ng-message="required") Please enter an email address.
       .wrapper.wrapper-tooltip(ng-if="!vm.ssoUser")
         label Pick a password
         toggle-password-with-tips
