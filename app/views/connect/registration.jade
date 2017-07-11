@@ -53,7 +53,7 @@
           span(ng-message="maxlength") That username is not the correct length or format.
       .wrapper.wrapper-tooltip
         label Your email
-        input.input.input-sm(type="email" name="email" ng-model="vm.email" ng-model-options="{ debounce: {'default': 500} }" required=true valid-email email-is-available)
+        input.input.input-sm(type="text" name="email" ng-model="vm.email" ng-model-options="{ debounce: {'default': 500} }" required=true valid-email email-is-available)
         .tooltip
           .arrow
           h3 Email Tips:
