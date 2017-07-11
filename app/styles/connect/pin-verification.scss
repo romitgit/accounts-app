@@ -73,4 +73,8 @@
     transform: translateY(-50%);
     font-size: 13px;
   }
+
+  .verify-email + .confirmation-block {
+    margin-bottom: 30px;
+  }
 }
