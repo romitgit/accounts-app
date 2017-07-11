@@ -35,6 +35,7 @@ ConnectLoginController = (
     vm.loginErrors.WRONG_PASSWORD
 
   vm.submit = ->
+    vm.loading = true
     # clear error flags
     vm.loginErrors.USERNAME_NONEXISTANT = false
     vm.loginErrors.WRONG_PASSWORD = false
