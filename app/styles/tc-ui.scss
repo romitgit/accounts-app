@@ -330,4 +330,20 @@
     font-size: 13px;
     color: $tc-red;
   }
+
+  .confirmation-block {
+    margin: 5px 0 0;
+    padding: 10px;
+    background: $tc-green-10;
+    border: 1px solid $tc-green-30;
+    font-style: italic;
+    font-size: 13px;
+    color: $tc-green;
+    text-align: center;
+  }
+
+  .confirmation-block.confirmation-block-md {
+    font-size: 15px;
+    line-height: 20px;
+  }
 }

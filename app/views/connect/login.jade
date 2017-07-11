@@ -7,7 +7,7 @@
   .connect-accounts-content
     h2 Welcome back!
     p Crowdsourcing for your winning project
-    p.info(ng-if="vm.passwordReset") Your password has been updated. Please login.
+    .confirmation-block.confirmation-block-md(ng-if="vm.passwordReset") Your password has been updated. Please login.
     loader(ng-if="vm.loading")
     form.connect-accounts-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
       .wrapper
