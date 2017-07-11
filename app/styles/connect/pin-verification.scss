@@ -74,6 +74,10 @@
     font-size: 13px;
   }
 
+  .verify-email + .error-block {
+    margin-bottom: 30px;
+  }
+
   .verify-email + .confirmation-block {
     margin-bottom: 30px;
   }

@@ -18,6 +18,8 @@ ConnectPinVerificationController = (
   vm.loading   = false
   vm.init      = false
   vm.emailEditMode = false
+  vm.emailError = false
+  vm.pinError   = false
   vm.$stateParams = $stateParams
   
   vm.baseUrl = "https://connect.#{DOMAIN}"
@@ -31,9 +33,11 @@ ConnectPinVerificationController = (
 
   # Activates the user by verifying the PIN, also login the user if activated
   activateUser = (pin) ->
-    vm.error   = false
-    vm.loading = true
-    vm.message = null
+    vm.error      = false
+    vm.pinError   = false
+    vm.emailError = false
+    vm.loading    = true
+    vm.message    = null
     vm.emailEditSuccess = false
 
     verifyPIN(pin).then(loginUser, verifyPINFailure)
@@ -41,9 +45,10 @@ ConnectPinVerificationController = (
   # Handles the error in verifying/activating account
   verifyPINFailure = (error) ->
     $scope.$apply ->
-      vm.error   = true
-      vm.loading = false
-      vm.message = 'Wrong PIN.'
+      vm.error    = true
+      vm.pinError = true
+      vm.loading  = false
+      vm.message  = 'Error - this code doesn\'t match the one we send you.'
       if error.status == 400 && error.message.indexOf('has been activated')  != -1
         vm.message = 'User is already activated. Please login.'
 
@@ -97,6 +102,8 @@ ConnectPinVerificationController = (
     vm.loading = true
     vm.message = null
     vm.error = false
+    vm.emailError = false
+    vm.pinError   = false
 
     # authorize user to get temp token
     # updates email
@@ -154,7 +161,8 @@ ConnectPinVerificationController = (
     # show error in the form
     $scope.$apply ->
       vm.error = true
-      vm.message = 'Can\'t update email address'
+      vm.emailError = true
+      vm.message = 'Currently we can\'t update your email'
       if error.status == 400 && error.message.indexOf('has already been registered')  != -1
         vm.message = 'Email is already in use, please use different email address'
       if error.status == 400 && error.message.indexOf('has been activated')  != -1

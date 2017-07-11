@@ -6,13 +6,14 @@
   .connect-accounts-content
     h3(ng-if="vm.isConnectProjectFlow") Last step - verify your email
     h3(ng-if="!vm.isConnectProjectFlow") Verify you email
-    p.error.transition(ng-if="vm.error") {{ vm.message || "Currently we can't verify your security PIN" }}
+    .error-block.error-block-md(ng-if="vm.error && !vm.pinError && !vm.emailError") {{ vm.message || "Currently we can't verify your security PIN" }}
 
     form(name="vm.emailForm" ng-submit="vm.updateEmailAndResendPIN()" method="post" ng-if="vm.emailEditMode" )
       p.text
         | Please enter the new email:
       .new-email(ng-if="vm.emailEditMode")
         input.input.input-md(type='email', ng-model="vm.email" required=true)
+        .error-block.error-block-md(ng-if="vm.error && !vm.pinError && vm.emailError") {{ vm.message || "Currently we can't update your email" }}
         button.tc-btn.tc-btn-primary.tc-btn-md(type="submit" ng-disabled="vm.emailForm.$invalid" ) Update email and send a new PIN
         button.tc-btn.tc-btn-secondary.tc-btn-sm(ng-click="vm.toggleEmailEdit()") Cancel
     form(name="vm.pinForm" ng-submit="vm.submit()" method="post" ng-if="!vm.emailEditMode")
@@ -27,6 +28,7 @@
         label Security PIN:
         input.input.input-md(type="text" ng-model="vm.pin" required=true)
         button.tc-btn.tc-btn-primary.tc-btn-md(ng-disabled="vm.pinForm.$invalid" type="submit") Verify
+      .error-block.error-block-md(ng-if="vm.error && vm.pinError && !vm.emailError") {{ vm.message || "Currently we can't verify your security PIN" }}
       .confirmation-block.confirmation-block-md(ng-if="vm.activated")
         span Thank you for verifying your account. Loggin you in...
 
