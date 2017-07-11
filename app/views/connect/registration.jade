@@ -3,7 +3,7 @@
     img(src=require("../../images/connect/connect.png"), alt='')
     .login
       span Already have an account? 
-      a.tc-btn.tc-btn-default.tc-btn-sm(ui-sref="CONNECT_LOGIN") Log in
+      a.tc-btn.tc-btn-default.tc-btn-sm(ui-sref="CONNECT_LOGIN({retUrl:vm.retUrl})") Log in
   .connect-accounts-content
     h2 Create a new account
     p Always free. No credit card required
