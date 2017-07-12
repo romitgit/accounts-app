@@ -8,6 +8,7 @@ __webpack_public_path__ = publicPath
 
 require 'angular'
 require 'angular-ui-router'
+require 'angular-ui-router/lib/legacy/stateEvents'
 require 'angular-messages'
 require 'auth0-angular'
 require 'auth0-js'
