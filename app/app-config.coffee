@@ -93,7 +93,13 @@ config = (
 
   states['MEMBER_REGISTRATION_SUCCESS'] =
     url: '/member/registration-success'
+    params: { 'ssoUser' }
     template: require('./views/tc/registered-successfully.jade')()
+    controller: ($stateParams) ->
+      vm = this
+      vm.ssoUser = $stateParams && $stateParams.ssoUser == true
+      vm
+    controllerAs: 'vm'
     public: true
 
   states['MEMBER_FORGOT_PASSWORD'] =
@@ -134,7 +140,13 @@ config = (
 
   states['CONNECT_REGISTRATION_SUCCESS'] =
     url: '/connect/registration-success'
+    params: { 'ssoUser' }
     template: require('./views/connect/registration-success.jade')()
+    controller: ($stateParams) ->
+      vm = this
+      vm.ssoUser = $stateParams && $stateParams.ssoUser == true
+      vm
+    controllerAs: 'vm'
     public: true
 
   states['CONNECT_FORGOT_PASSWORD'] =

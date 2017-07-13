@@ -101,7 +101,7 @@ import { getToken, decodeToken } from '../../../core/token.js'
         $log.debug('Registered successfully')
 
         // In the future, go to dashboard
-        $state.go('MEMBER_REGISTRATION_SUCCESS')
+        $state.go('MEMBER_REGISTRATION_SUCCESS', { ssoUser : true })
       })
       .catch(function(err) {
         vm.registering = false
