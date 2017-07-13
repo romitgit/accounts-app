@@ -65,10 +65,11 @@ import { getToken, decodeToken } from '../../../core/token.js'
       if (!vm.isSocialRegistration && !vm.ssoUser) {// if not social or sso registration
         userInfo.credential = { password: vm.password }
       } else if (vm.ssoUser) {//SSO user
+        userInfo.active = true, // activate in registration
         userInfo.profile = {
           name: vm.ssoUser.name,
           email: vm.ssoUser.email,
-          providerType: 'samplp',
+          providerType: 'samlp',
           provider: vm.ssoUser.ssoProvider,
           userId: vm.ssoUser.ssoUserId
         }
