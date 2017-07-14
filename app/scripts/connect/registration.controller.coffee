@@ -71,7 +71,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
       vm.errorMessage = error.message
 
   registerSuccess = ->
-    $state.go 'CONNECT_REGISTRATION_SUCCESS'
+    $state.go 'CONNECT_REGISTRATION_SUCCESS', { ssoUser : true }
 
   vm.ssoRegister = ->
     vm.isSSORegistration = true
