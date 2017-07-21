@@ -25,16 +25,16 @@ test:
 deployment:
   development:
     branch: [dev, dev-circleci]
-    owner: topcoder
+    owner: appirio-tech
     commands:
       - ./deploy.sh DEV
   qa:
     branch: qa
-    owner: topcoder
+    owner: appirio-tech
     commands:
       - ./deploy.sh QA
   production:
     branch: master
-    owner: topcoder
+    owner: appirio-tech
     commands:
       - ./deploy.sh PROD
