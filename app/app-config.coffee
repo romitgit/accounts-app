@@ -170,6 +170,14 @@ config = (
     public: true
 
   # State parameters
+  # see SOCIAL_CALLBACK
+  states['SSO_REGISTER'] =
+    url: '/sso-registration/:org?app&retUrl'
+    template   : require('./views/directives/sso-registration.directive')()
+    controller : 'TCRegistrationController as vm'
+    public: true
+
+  # State parameters
   # retUrl       : (required) URL to redirect after SSO
   # userJWTToken : (optional) v3 JWT Token
   # auth0Jwt     : (optional) Auth0(v2) JWT Token
