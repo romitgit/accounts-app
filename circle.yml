@@ -24,7 +24,7 @@ test:
 
 deployment:
   development:
-    branch: dev
+    branch: [dev, dev-circleci]
     owner: topcoder
     commands:
       - ./deploy.sh DEV
