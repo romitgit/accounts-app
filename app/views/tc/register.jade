@@ -103,9 +103,9 @@
     button.tc-btn.tc-btn-large(type="submit", tc-busy-button, tc-busy-when="vm.registering", ng-disabled="vm.registerForm.$invalid", ng-show="vm.isValidCountry") Join
     button.tc-btn.tc-btn-large.disabled(type="submit", ng-show="!vm.isValidCountry", disabled="disabled") Join
 
-  section.login-options(ng-show="!vm.ssoUser")
+  section.login-options
     p.tc-separator
-      span Or Register With 2
+      span Or Register With
 
     ul.networks
       li.network.github
