@@ -4,6 +4,8 @@ import { BUSY_PROGRESS_MESSAGE, DOMAIN, V3_JWT } from '../../../core/constants.j
 import { registerUser, socialRegistration } from '../../../core/auth.js'
 import { npad } from '../../../core/utils.js'
 import { getToken, decodeToken } from '../../../core/token.js'
+import { ssoRegistration as registerWithSSO } from '../../../core/auth.js'
+import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
 
 (function() {
   'use strict'
@@ -101,7 +103,7 @@ import { getToken, decodeToken } from '../../../core/token.js'
         $log.debug('Registered successfully')
 
         // In the future, go to dashboard
-        $state.go('MEMBER_REGISTRATION_SUCCESS')
+        $state.go('MEMBER_REGISTRATION_SUCCESS', { ssoUser : true })
       })
       .catch(function(err) {
         vm.registering = false
@@ -186,5 +188,38 @@ import { getToken, decodeToken } from '../../../core/token.js'
         vm.registerForm.email.$setDirty()
       }
     }
+
+    vm.showRegistrationPage = function(){
+      $state.go('MEMBER_REGISTRATION', $stateParams)
+    }
+
+    function go() {
+      vm.error = null
+      vm.loading = true
+      registerWithSSO(vm.org, null)
+      .then(function(resp) {
+        vm.loading = false
+        if (resp.status === 'SUCCESS') {
+          var socialData = resp.data
+          vm.socialUserId = socialData.socialUserId
+          $scope.onRegister({ssoUser : socialData})
+        } else {
+          vm.error = 'Whoops! Something went wrong. Please try again later.'
+        }
+        $scope.$apply()
+      })
+      .catch(function(err) {
+        vm.loading = false
+        vm.error = 'Whoops! Something went wrong. Please try again later.'
+        $log.error('Error registering user with social account', err)
+        $scope.$apply()
+      })
+    }
+
+    vm.submit = function() {
+      vm.org = WIPRO_SSO_PROVIDER
+      go()
+    }
+
   }
 })()
