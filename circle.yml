@@ -18,7 +18,6 @@ compile:
     - npm run build-connector
     - ls
     - python --version
-    - s3cmd --version
 
 test:
   override:
