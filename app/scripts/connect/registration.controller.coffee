@@ -94,10 +94,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
       userId             : user.id
       afterActivationURL : afterActivationURL
 
-    if !vm.ssoUser
-      $state.go 'CONNECT_PIN_VERIFICATION', stateParams
-    else # it has to automatically login sso user and redirect to project call back
-      $state.go 'CONNECT_REGISTRATION_SUCCESS', { ssoUser : true }
+    $state.go 'CONNECT_PIN_VERIFICATION', stateParams
 
   # following method could be used if we want to procure the temp token before
   # landing user on pin verificaiton screen
