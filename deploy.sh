@@ -19,7 +19,7 @@ configure_aws_cli() {
 deploy_s3bucket() {
 	result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0`
 	if [ $? -eq 0 ]; then
-		echo $result
+		#echo $result
 		echo "Deployed!"
 	else
 		echo "Deployment Failed  - $result"
