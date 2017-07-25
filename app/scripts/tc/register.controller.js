@@ -107,7 +107,8 @@ import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
       })
       .catch(function(err) {
         vm.registering = false
-
+        vm.errMsg = err && err.message ? err.message : 'Error in registering new user'
+        $scope.$apply()
         $log.error('Error in registering new user', err)
       })
     }
