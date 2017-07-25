@@ -1,6 +1,8 @@
 import angular from 'angular'
 import { ssoRegistration as registerWithSSO } from '../../../core/auth.js'
-import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
+import { WIPRO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS,
+  SSO_PROVIDER_DOMAIN_WIPRO, SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER
+} from '../../../core/constants.js'
 
 (function() {
   'use strict'
@@ -35,9 +37,40 @@ import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
             }
           }
 
+          function identifySSOProvider(emailOrHandle) {
+            var EMAIL_DOMAIN_REGEX = new RegExp('^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\\.)?[a-zA-Z]+\\.)?(' + SSO_PROVIDER_DOMAINS + ')\\.[a-zA-Z]{2,15}$')
+            var match = EMAIL_DOMAIN_REGEX.exec(emailOrHandle)
+            var domain, provider = null
+            if (match && match.length > 1) {
+              domain = match[1]
+            }
+            // identify SSO provider by looking at domain of the email or handle
+            // if handle does not follow email pattern, this won't work
+            switch(domain) {
+            case SSO_PROVIDER_DOMAIN_WIPRO:
+              provider = WIPRO_SSO_PROVIDER
+              break
+            case SSO_PROVIDER_DOMAIN_APPIRIO:
+              provider = APPIRIO_SSO_PROVIDER
+              break
+            case SSO_PROVIDER_DOMAIN_TOPCODER:
+              provider = TOPCODER_SSO_PROVIDER
+              break
+            default:
+              break
+            }
+            return provider
+          }
+
           vm.submit = function() {
-            vm.org = WIPRO_SSO_PROVIDER
-            go()
+            // reset the org
+            vm.org = identifySSOProvider(vm.emailOrHandle)
+
+            if (vm.org) {
+              go()
+            } else {
+              vm.error = 'Sorry!! Your SSO provider is not yet supported.'
+            }
           }
 
           vm.showRegistrationPage = function() {
