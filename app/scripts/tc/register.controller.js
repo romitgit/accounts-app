@@ -19,7 +19,7 @@ import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
   function TCRegistrationController($log, $scope, $state, $stateParams, UserService, ISO3166) {
     var vm = this
     vm.registering = false
-    vm.isSSORegistration = false
+    vm.isSSORegistration = $stateParams && $stateParams.sso ? true : false
     vm.ssoUser = null
     // prepares utm params, if available
     var utm = {
@@ -191,34 +191,6 @@ import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
 
     vm.showRegistrationPage = function(){
       $state.go('MEMBER_REGISTRATION', $stateParams)
-    }
-
-    function go() {
-      vm.error = null
-      vm.loading = true
-      registerWithSSO(vm.org, null)
-      .then(function(resp) {
-        vm.loading = false
-        if (resp.status === 'SUCCESS') {
-          var socialData = resp.data
-          vm.socialUserId = socialData.socialUserId
-          $scope.onRegister({ssoUser : socialData})
-        } else {
-          vm.error = 'Whoops! Something went wrong. Please try again later.'
-        }
-        $scope.$apply()
-      })
-      .catch(function(err) {
-        vm.loading = false
-        vm.error = 'Whoops! Something went wrong. Please try again later.'
-        $log.error('Error registering user with social account', err)
-        $scope.$apply()
-      })
-    }
-
-    vm.submit = function() {
-      vm.org = WIPRO_SSO_PROVIDER
-      go()
     }
 
   }
