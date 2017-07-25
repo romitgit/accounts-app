@@ -103,7 +103,7 @@ import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
         $log.debug('Registered successfully')
 
         // In the future, go to dashboard
-        $state.go('MEMBER_REGISTRATION_SUCCESS', { ssoUser : true })
+        $state.go('MEMBER_REGISTRATION_SUCCESS', { ssoUser : !!vm.ssoUser })
       })
       .catch(function(err) {
         vm.registering = false
