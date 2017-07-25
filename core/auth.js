@@ -4,7 +4,8 @@ import merge from 'lodash/merge'
 import { getLoginConnection } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
-  AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER } from './constants.js'
+  AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK,
+  WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -319,7 +320,7 @@ export function registerUser(body) {
 export function ssoRegistration(provider, state) {
   return new Promise(function(resolve, reject) {
     // supported backends
-    var providers = [ WIPRO_SSO_PROVIDER ]
+    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER ]
     if (providers.indexOf(provider) > -1) {
       auth0.signin({
         popup: true,
@@ -417,11 +418,21 @@ function extractSSOUserData(profile, accessToken) {
     email = ''
 
   var ssoUserId = profile.user_id.substring(profile.user_id.lastIndexOf('|') + 1)
-  if (ssoProvider === WIPRO_SSO_PROVIDER) {
+  if (ssoProvider === WIPRO_SSO_PROVIDER || ssoProvider === APPIRIO_SSO_PROVIDER
+    || ssoProvider === TOPCODER_SSO_PROVIDER) {
     firstName = profile.given_name
     lastName  = profile.family_name
     name      = profile.name
     email     = profile.email
+  }
+  if (!firstName && !lastName && name) {
+    var names = name.split(/\s/)
+    if (names.length > 0) {
+      firstName = names[0]
+    }
+    if (names.length > 1) {
+      lastName = names[1]
+    }
   }
   return {
     ssoUserId: ssoUserId,

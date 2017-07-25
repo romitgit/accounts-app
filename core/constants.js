@@ -26,5 +26,14 @@ export const BUSY_PROGRESS_MESSAGE = 'Processing...'
 export const ALLOWED_ORIGINS = [DOMAIN, 'http://localhost:3000', 'local.topcoder-dev.com:3000']
 
 export const WIPRO_SSO_PROVIDER = 'wipro-adfs'
+export const APPIRIO_SSO_PROVIDER = 'sfdc-aspdev'
+export const TOPCODER_SSO_PROVIDER = 'sfdc-aspdev'//TODO update provider for topcoder sfdc org
 
 export const SEGMENT_KEY = process.env.ACCOUNTS_SEGMENT_KEY
+
+// this string should be regex aware i.e. it should backquote any regex reserve characters
+export const SSO_PROVIDER_DOMAINS = 'wipro|asp\\.appirio\\.com|topcoder'
+// individual domains should not backquote anything because it is matched without regex
+export const SSO_PROVIDER_DOMAIN_WIPRO = 'wipro'
+export const SSO_PROVIDER_DOMAIN_APPIRIO = 'asp.appirio.com'
+export const SSO_PROVIDER_DOMAIN_TOPCODER = 'topcoder'
