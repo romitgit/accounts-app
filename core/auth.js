@@ -330,7 +330,7 @@ export function ssoRegistration(provider, state) {
       },
         function(error, profile, idToken, accessToken, state, refreshToken) {
           if (error) {
-            console.warning('onSSORegistrationFailure ' + JSON.stringify(error))
+            console.warn('onSSORegistrationFailure ' + JSON.stringify(error))
             reject(error)
             return
           }
@@ -367,7 +367,7 @@ export function socialRegistration(provider, state) {
       },
         function(error, profile, idToken, accessToken, state, refreshToken) {
           if (error) {
-            console.warning('onSocialLoginFailure ' + JSON.stringify(error))
+            console.warn('onSocialLoginFailure ' + JSON.stringify(error))
             reject(error)
             return
           }
