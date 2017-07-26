@@ -6,7 +6,7 @@ import angular from 'angular'
 
   angular.module('accounts').controller('TCRegistrationSuccessController', TCRegistrationSuccessController)
 
-  TCRegistrationSuccessController.$inject = ['$log' '$stateParams']
+  TCRegistrationSuccessController.$inject = ['$log', '$stateParams']
 
   function TCRegistrationSuccessController($log, $stateParams) {
     var vm = this
