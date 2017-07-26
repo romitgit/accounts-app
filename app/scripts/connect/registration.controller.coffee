@@ -1,7 +1,7 @@
 'use strict'
 
 { registerUser, getFreshToken, getOneTimeToken } = require '../../../core/auth.js'
-{ DOMAIN } = require '../../../core/constants.js'
+{ DOMAIN, CONNECT_PROJECT_CALLBACK } = require '../../../core/constants.js'
 { npad } = require '../../../core/utils.js'
 { decodeToken } = require '../../../core/token.js'
 _ = require 'lodash'
@@ -25,6 +25,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm.countries = ISO3166.getAllCountryObjects()
 
   afterActivationURL = $stateParams.retUrl ? 'https://connect.' + DOMAIN
+  vm.isConnectProjectFlow = afterActivationURL && afterActivationURL.indexOf(CONNECT_PROJECT_CALLBACK) != -1
 
   vm.updateCountry = (angucompleteCountryObj) ->
     countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
