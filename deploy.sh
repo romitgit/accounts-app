@@ -27,12 +27,12 @@ deploy_s3bucket() {
 	fi
 }
 
-sudo sed -i 's/^application\/x-font-woff.*/application\/font-woff\t\t\t\twoff/' /etc/mime.types
-sudo echo -e "application/font-woff\t\t\t\twoff2" >> /etc/mime.types
-sudo echo -e "application/font-sfnt\t\t\t\tttf" >> /etc/mime.types
-sudo echo -e "application/json\t\t\t\tmap" >> /etc/mime.types
-sudo sed -i 's/^image\/vnd.microsoft.icon.*/image\/vnd.microsoft.icon/' /etc/mime.types
-sudo sed -i 's/^image\/x-icon.*/image\/x-icon\t\t\t\tico/' /etc/mime.types
+sed -i 's/^application\/x-font-woff.*/application\/font-woff\t\t\t\twoff/' /etc/mime.types
+echo -e "application/font-woff\t\t\t\twoff2" >> /etc/mime.types
+echo -e "application/font-sfnt\t\t\t\tttf" >> /etc/mime.types
+echo -e "application/json\t\t\t\tmap" >> /etc/mime.types
+sed -i 's/^image\/vnd.microsoft.icon.*/image\/vnd.microsoft.icon/' /etc/mime.types
+sed -i 's/^image\/x-icon.*/image\/x-icon\t\t\t\tico/' /etc/mime.types
 
 configure_aws_cli
 deploy_s3bucket
