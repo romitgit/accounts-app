@@ -33,7 +33,7 @@
         span Thank you for verifying your account. Loggin you in...
 
       .confirmation-block.confirmation-block-md(ng-if="vm.loggedIn")
-        span Sucessfully logged you in. Redirecting to your project...
+        span Sucessfully logged you in. #[span(ng-if="vm.isConnectProjectFlow") Redirecting to your project...] #[span(ng-if="!vm.isConnectProjectFlow") Redirecting...]
     p.small-text
       | Allow for some time before your email arrives. Check in your spam folder to make sure it was not blocked by your email server. If you didn't get a code or need further help, contact 
       a(href='mailto:support@connect.com') support@connect.com

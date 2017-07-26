@@ -48,7 +48,7 @@ ConnectPinVerificationController = (
       vm.error    = true
       vm.pinError = true
       vm.loading  = false
-      vm.message  = 'Error - this code doesn\'t match the one we send you.'
+      vm.message  = 'That PIN is incorrect. Please check that you entered the one you received.'
       if error.status == 400 && error.message.indexOf('has been activated')  != -1
         vm.message = 'User is already activated. Please login.'
 
