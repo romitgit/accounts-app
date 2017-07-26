@@ -33,6 +33,10 @@ echo -e "application/font-sfnt\t\t\t\tttf" >> /etc/mime.types
 echo -e "application/json\t\t\t\tmap" >> /etc/mime.types
 sed -i 's/^image\/vnd.microsoft.icon.*/image\/vnd.microsoft.icon/' /etc/mime.types
 sed -i 's/^image\/x-icon.*/image\/x-icon\t\t\t\tico/' /etc/mime.types
+cat /etc/mime.types  | grep -i woff
+cat /etc/mime.types  | grep -i ico
+cat /etc/mime.types  | grep -i map
+cat /etc/mime.types  | grep -i ttf
 
 configure_aws_cli
 deploy_s3bucket
