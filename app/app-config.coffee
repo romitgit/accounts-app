@@ -92,7 +92,7 @@ config = (
     public: true
 
   states['MEMBER_REGISTRATION_SUCCESS'] =
-    url: '/member/registration-success'
+    url: '/member/registration-success?retUrl'
     params: { 'ssoUser' }
     template: require('./views/tc/registered-successfully.jade')()
     controller: 'TCRegistrationSuccessController as vm'

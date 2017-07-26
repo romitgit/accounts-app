@@ -11,6 +11,8 @@ import angular from 'angular'
   function TCRegistrationSuccessController($log, $stateParams) {
     var vm = this
     vm.ssoUser = $stateParams && $stateParams.ssoUser == true
+    vm.retUrl  = $stateParams && $stateParams.retUrl
     $log.debug('Registration success, ssoUser = ' + vm.ssoUser)
+    $log.debug('Registration success, retUrl = ' + vm.retUrl)
   }
 })()
