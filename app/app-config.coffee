@@ -87,6 +87,7 @@ config = (
   # message      : (optional) A message handed by Identity Service when some error occurs
   states['MEMBER_REGISTRATION'] =
     url: '/member/registration?retUrl&utm_source&utm_medium&utm_campaign&userJWTToken&auth0Jwt&auth0Refresh&message'
+    params: { 'ssoUser', 'auth0Data' }
     controller  : 'TCRegistrationController as vm'
     template: require('./views/tc/register.jade')()
     public: true

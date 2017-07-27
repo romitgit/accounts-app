@@ -4,8 +4,9 @@ import merge from 'lodash/merge'
 import { getLoginConnection } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
-  AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK,
-  WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER } from './constants.js'
+  AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
+  TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
+  SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -195,7 +196,7 @@ function setAuth0Tokens({id_token, refresh_token}) {
   setToken(AUTH0_REFRESH, refresh_token)
 }
 
-function getNewJWT() {
+export function getNewJWT() {
   const externalToken = getToken(AUTH0_JWT)
   const refreshToken = getToken(AUTH0_REFRESH)
 
@@ -314,6 +315,49 @@ export function registerUser(body) {
   return fetchJSON(API_URL + '/users', {
     method: 'POST',
     body
+  })
+}
+
+export function ssoLogin(provider, state) {
+  return new Promise(function(resolve, reject) {
+    // supported backends
+    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER ]
+    if (providers.indexOf(provider) > -1) {
+      auth0.signin({
+        popup: true,
+        connection: provider,
+        scope: 'openid profile offline_access',
+        state: state
+      },
+        function(error, profile, idToken, accessToken, state, refreshToken) {
+          if (error) {
+            console.warn('onSSORegistrationFailure ' + JSON.stringify(error))
+            reject(error)
+            return
+          }
+          var ssoUserData = extractSSOUserData(profile, accessToken)
+          var result = {
+            status: 'SUCCESS',
+            data: {
+              profile: profile,
+              idToken: idToken,
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+              ssoUserData : ssoUserData
+            }
+          }
+          console.debug('ssoLogin Result: ' + JSON.stringify(result))
+          resolve(result)
+        }
+      )
+    } else {
+      console.error('Unsupported SSO login provider', provider)
+
+      reject({
+        status: 'FAILED',
+        'error': 'Unsupported SSO login provider \'' + provider + '\''
+      })
+    }
   })
 }
 
@@ -590,4 +634,29 @@ export function validateSocialProfile(userId, provider) {
   }
 
   return fetchJSON(url, config).then(success)
+}
+
+export function identifySSOProvider(emailOrHandle) {
+  var EMAIL_DOMAIN_REGEX = new RegExp('^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\\.)?[a-zA-Z]+\\.)?(' + SSO_PROVIDER_DOMAINS + ')\\.[a-zA-Z]{2,15}$')
+  var match = EMAIL_DOMAIN_REGEX.exec(emailOrHandle)
+  var domain, provider = null
+  if (match && match.length > 1) {
+    domain = match[1]
+  }
+  // identify SSO provider by looking at domain of the email or handle
+  // if handle does not follow email pattern, this won't work
+  switch(domain) {
+  case SSO_PROVIDER_DOMAIN_WIPRO:
+    provider = WIPRO_SSO_PROVIDER
+    break
+  case SSO_PROVIDER_DOMAIN_APPIRIO:
+    provider = APPIRIO_SSO_PROVIDER
+    break
+  case SSO_PROVIDER_DOMAIN_TOPCODER:
+    provider = TOPCODER_SSO_PROVIDER
+    break
+  default:
+    break
+  }
+  return provider
 }

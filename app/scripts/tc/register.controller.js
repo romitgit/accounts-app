@@ -1,11 +1,11 @@
 import angular from 'angular'
 import _ from 'lodash'
-import { BUSY_PROGRESS_MESSAGE, DOMAIN, V3_JWT } from '../../../core/constants.js'
+import { BUSY_PROGRESS_MESSAGE, DOMAIN, WIPRO_SSO_PROVIDER, V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT } from '../../../core/constants.js'
 import { registerUser, socialRegistration } from '../../../core/auth.js'
 import { npad } from '../../../core/utils.js'
-import { getToken, decodeToken } from '../../../core/token.js'
-import { ssoRegistration as registerWithSSO } from '../../../core/auth.js'
-import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
+import { generateReturnUrl, redirectTo } from '../../../core/url.js'
+import { getToken, decodeToken, setToken } from '../../../core/token.js'
+import { ssoRegistration as registerWithSSO, getNewJWT } from '../../../core/auth.js'
 
 (function() {
   'use strict'
@@ -20,7 +20,8 @@ import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
     var vm = this
     vm.registering = false
     vm.isSSORegistration = $stateParams && $stateParams.sso ? true : false
-    vm.ssoUser = null
+    vm.ssoUser = $stateParams.ssoUser
+    vm.auth0Data = $stateParams.auth0Data
     // prepares utm params, if available
     var utm = {
       source : $stateParams && $stateParams.utm_source ? $stateParams.utm_source : '',
@@ -36,6 +37,12 @@ import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
 
     vm.$stateParams = $stateParams
 
+    $scope.$watch("registerForm", function(registerForm) {
+      if (vm.ssoUser) {
+        vm.onSSORegister(vm.ssoUser)
+      }
+    })
+
     vm.updateCountry = function (angucompleteCountryObj) {
       var countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
 
@@ -44,6 +51,20 @@ import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
       vm.isValidCountry = isValidCountry
       if (isValidCountry) {
         vm.country = angucompleteCountryObj.originalObject
+      }
+    }
+
+    function setV3Tokens({token, zendeskJwt}) {
+      console.log('received v3 tokens')
+      setToken(V3_JWT, token || '')
+      setToken(ZENDESK_JWT, zendeskJwt || '')
+      $scope.$apply(function() {
+        vm.loading = false
+        vm.success = true
+      })
+      var error = redirectTo(generateReturnUrl(vm.retUrl))
+      if (error) {
+        vm.error = 'Invalid URL is assigned to the return-URL.'
       }
     }
 
@@ -102,11 +123,26 @@ import { WIPRO_SSO_PROVIDER } from '../../../core/constants.js'
         vm.registering = false
         $log.debug('Registered successfully')
 
-        // In the future, go to dashboard
-        $state.go('MEMBER_REGISTRATION_SUCCESS', {
-          ssoUser : !!vm.ssoUser,
-          retUrl  : redirectURL
-        })
+        if (vm.ssoUser && vm.auth0Data) {
+          // LOG IN user
+          setToken(AUTH0_JWT, vm.auth0Data.idToken)
+          setToken(AUTH0_REFRESH, vm.auth0Data.refreshToken)
+          console.log('getting v3jwt')
+          getNewJWT()
+            .then(setV3Tokens)
+            .catch(function(err) {
+              vm.registering = false
+              vm.errMsg = err && err.message ? err.message : 'Error in logging in new user'
+              $scope.$apply()
+              $log.error('Error in logging in new user', err)
+            })
+        } else {
+          // In the future, go to dashboard
+          $state.go('MEMBER_REGISTRATION_SUCCESS', {
+            ssoUser : !!vm.ssoUser,
+            retUrl  : redirectURL
+          })
+        }
       })
       .catch(function(err) {
         vm.registering = false
