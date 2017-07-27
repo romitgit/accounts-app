@@ -11,10 +11,10 @@
     loader(ng-if="vm.loading")
     form.connect-accounts-form(name="vm.registerForm" role="form" novalidate autocomplete="off" ng-submit="vm.submit()")
       .wrapper.wrapper-half
-        label First Name
+        label First name
         input.input.input-sm(type="text" name="first-name" ng-model="vm.firstName" required=true maxlength="64" autofocus=true)
       .wrapper.wrapper-half
-        label Last Name
+        label Last name
         input.input.input-sm(type="text" name="last-name" ng-model="vm.lastName" required=true maxlength="64")
       .wrapper
         label Country
