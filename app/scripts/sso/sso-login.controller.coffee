@@ -3,7 +3,7 @@
 { setToken } = require '../../../core/token.js'
 { generateReturnUrl, redirectTo } = require '../../../core/url.js'
 { getSSOProvider, ssoLogin, identifySSOProvider, getNewJWT, getFreshToken } = require '../../../core/auth.js'
-{ V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT } = require '../../../core/constants.js'
+{ V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, DOMAIN } = require '../../../core/constants.js'
 
 SSOLoginController = (
   $log
@@ -18,14 +18,16 @@ SSOLoginController = (
   vm.success       = false
   vm.error         = ''
   vm.emailOrHandle = ''
+  vm.baseUrl       = "https://www.#{DOMAIN}"
   vm.org           = $stateParams.org
-  vm.retUrl        = $stateParams.retUrl
+  vm.retUrl        = if $stateParams.retUrl then $stateParams.retUrl else vm.baseUrl
   vm.app           = $stateParams.app
 
   activate = ->
     getJwtSuccess = (jwt) ->
       $scope.$apply () ->
         vm.loading = false
+        vm.success = true
       console.debug 'already logged in...redirecting...'
       if jwt && vm.retUrl
         redirectTo generateReturnUrl(vm.retUrl)
@@ -41,12 +43,13 @@ SSOLoginController = (
     console.debug 'received v3 tokens'
     setToken(V3_JWT, token || '')
     setToken(ZENDESK_JWT, zendeskJwt || '')
+    error = redirectTo generateReturnUrl(vm.retUrl)
     $scope.$apply () ->
       vm.loading = false
-      vm.success = true
-    error = redirectTo generateReturnUrl(vm.retUrl)
-    if error
-      vm.error = 'Invalid URL is assigned to the return-URL.'
+      if error
+        vm.error = 'Invalid URL is assigned to the return-URL.'
+      else
+        vm.success = true
 
   vm.submit = ->
     vm.loading = true
@@ -67,7 +70,7 @@ SSOLoginController = (
     register = () ->
       console.debug 'SSO user not found in TC database...redirecting to registration page'
       # TODO Connect registration needed to updated for the new SSO login flow
-      registrationState = if vm.app == 'member' then 'MEMBER_REGISTRATION' else 'CONNECT_REGISTRATION'
+      registrationState = if vm.app == 'connect' then 'CONNECT_REGISTRATION' else 'MEMBER_REGISTRATION'
       $state.go registrationState, {
         auth0Data: vm.auth0Data,
         retUrl : vm.retUrl
@@ -92,13 +95,16 @@ SSOLoginController = (
       ssoLogin(vm.org)
         .then(success)
         .catch(failure)
+    else
+      vm.error = 'Sorry!! Your SSO provider is not yet supported.'
+      vm.loading = false
 
   vm.showLoginPage = ->
     $log.info 'showLoginPage!'
-    if vm.app == 'member'
-      $state.go 'MEMBER_LOGIN', $stateParams
-    else
+    if vm.app == 'connect'
       $state.go 'CONNECT_LOGIN', $stateParams
+    else
+      $state.go 'MEMBER_LOGIN', $stateParams
   
   activate()
 
