@@ -2,7 +2,7 @@
 
 { setToken } = require '../../../core/token.js'
 { generateReturnUrl, redirectTo } = require '../../../core/url.js'
-{ getSSOProvider, generateSSOUrl, ssoLogin, identifySSOProvider, getNewJWT } = require '../../../core/auth.js'
+{ getSSOProvider, ssoLogin, identifySSOProvider, getNewJWT, getFreshToken } = require '../../../core/auth.js'
 { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT } = require '../../../core/constants.js'
 
 SSOLoginController = (
@@ -23,11 +23,22 @@ SSOLoginController = (
   vm.app           = $stateParams.app
 
   activate = ->
-    if vm.org
-      go()
+    getJwtSuccess = (jwt) ->
+      $scope.$apply () ->
+        vm.loading = false
+      console.debug 'already logged in...redirecting...'
+      if jwt && vm.retUrl
+        redirectTo generateReturnUrl(vm.retUrl)
+    vm.loading = true
+    getFreshToken()
+      .then(getJwtSuccess)
+      .catch(() ->
+        $scope.$apply () ->
+          vm.loading = false
+      )
 
   setV3Tokens = ({token, zendeskJwt}) ->
-    console.log 'received v3 tokens'
+    console.debug 'received v3 tokens'
     setToken(V3_JWT, token || '')
     setToken(ZENDESK_JWT, zendeskJwt || '')
     $scope.$apply () ->
@@ -41,28 +52,31 @@ SSOLoginController = (
     vm.loading = true
 
     login = (org) ->
-      console.log 'found SSO user in tc database for provider ' + org
-      if org # should we validate org against provider
+      console.debug 'found SSO user in tc database for provider ' + org
+      if org && org == vm.org
         setToken(AUTH0_JWT, vm.auth0Data.idToken)
         setToken(AUTH0_REFRESH, vm.auth0Data.refreshToken)
-        console.log 'getting v3jwt'
+        console.debug 'getting v3 tokens'
         getNewJWT()
           .then(setV3Tokens)
           .catch(failure)
+      else # will this ever land here?
+        vm.loading = false
+        vm.error = 'SSO provider details does not match'
 
     register = () ->
-      console.log 'SSO user not found in TC database...redirecting to registration page'
-      $state.go 'MEMBER_REGISTRATION', {
-        ssoUser : vm.auth0Data.ssoUserData,
+      console.debug 'SSO user not found in TC database...redirecting to registration page'
+      # TODO Connect registration needed to updated for the new SSO login flow
+      registrationState = if vm.app == 'member' then 'MEMBER_REGISTRATION' else 'CONNECT_REGISTRATION'
+      $state.go registrationState, {
         auth0Data: vm.auth0Data,
         retUrl : vm.retUrl
       }
 
     success = (result) ->
-      console.log 'login successful using auth0'
-      console.log result
+      console.debug 'login successful using auth0'
       vm.auth0Data = result.data
-      console.log 'checking if we have user in TC database'
+      console.debug 'validating if we have user in TC database...'
       getSSOProvider(vm.emailOrHandle)
         .then(login)
         .catch(register)

@@ -20,8 +20,10 @@ import { ssoRegistration as registerWithSSO, getNewJWT } from '../../../core/aut
     var vm = this
     vm.registering = false
     vm.isSSORegistration = $stateParams && $stateParams.sso ? true : false
-    vm.ssoUser = $stateParams.ssoUser
+    // auth0 login data, passed from another states as state param
     vm.auth0Data = $stateParams.auth0Data
+    // SSO user data extracted from auth0 login data
+    vm.ssoUser = vm.auth0Data && vm.auth0Data.ssoUserData ? vm.auth0Data.ssoUserData : null
     // prepares utm params, if available
     var utm = {
       source : $stateParams && $stateParams.utm_source ? $stateParams.utm_source : '',
@@ -55,17 +57,17 @@ import { ssoRegistration as registerWithSSO, getNewJWT } from '../../../core/aut
     }
 
     function setV3Tokens({token, zendeskJwt}) {
-      console.log('received v3 tokens')
+      $log.debug('Received v3 tokens')
       setToken(V3_JWT, token || '')
       setToken(ZENDESK_JWT, zendeskJwt || '')
-      $scope.$apply(function() {
-        vm.loading = false
-        vm.success = true
-      })
+      $log.debug('Redirecting to ' + vm.retUrl)
       var error = redirectTo(generateReturnUrl(vm.retUrl))
-      if (error) {
-        vm.error = 'Invalid URL is assigned to the return-URL.'
-      }
+      $scope.$apply(function() {
+        vm.registering = false
+        if (error) {
+          vm.error = 'Invalid URL is assigned to the return-URL.'
+        }
+      })
     }
 
     vm.register = function() {
@@ -127,7 +129,7 @@ import { ssoRegistration as registerWithSSO, getNewJWT } from '../../../core/aut
           // LOG IN user
           setToken(AUTH0_JWT, vm.auth0Data.idToken)
           setToken(AUTH0_REFRESH, vm.auth0Data.refreshToken)
-          console.log('getting v3jwt')
+          $log.debug('Getting v3jwt')
           getNewJWT()
             .then(setV3Tokens)
             .catch(function(err) {
