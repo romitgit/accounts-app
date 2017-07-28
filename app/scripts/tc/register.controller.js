@@ -5,7 +5,7 @@ import { registerUser, socialRegistration } from '../../../core/auth.js'
 import { npad } from '../../../core/utils.js'
 import { generateReturnUrl, redirectTo } from '../../../core/url.js'
 import { getToken, decodeToken, setToken } from '../../../core/token.js'
-import { ssoRegistration as registerWithSSO, getNewJWT } from '../../../core/auth.js'
+import { getNewJWT } from '../../../core/auth.js'
 
 (function() {
   'use strict'
@@ -19,7 +19,6 @@ import { ssoRegistration as registerWithSSO, getNewJWT } from '../../../core/aut
   function TCRegistrationController($log, $scope, $state, $stateParams, UserService, ISO3166) {
     var vm = this
     vm.registering = false
-    vm.isSSORegistration = $stateParams && $stateParams.sso ? true : false
     // auth0 login data, passed from another states as state param
     vm.auth0Data = $stateParams.auth0Data
     // SSO user data extracted from auth0 login data
@@ -205,16 +204,7 @@ import { ssoRegistration as registerWithSSO, getNewJWT } from '../../../core/aut
       })
     }
 
-    vm.ssoRegister = function() {
-      vm.isSSORegistration = true
-    }
-
-    vm.ssoRegisterCancel = function() {
-      vm.isSSORegistration = false
-    }
-
-    vm.onSSORegister = function(ssoUser) {
-      vm.isSSORegistration = false
+    function loadSSOUser(ssoUser) {
       vm.ssoUser = ssoUser
       
       if (ssoUser && ssoUser.firstName) {

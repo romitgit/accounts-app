@@ -1,4 +1,4 @@
-main.layout-main.login-reg.flex.center.middle("role"="main"  ng-show="!vm.isSSORegistration")
+main.layout-main.login-reg.flex.center.middle("role"="main")
   login-reg-shell
     header.flex.center.middle
       img(src=require("../../images/logo_mobile.svg"))
@@ -77,5 +77,3 @@ main.layout-main.login-reg.flex.center.middle("role"="main"  ng-show="!vm.isSSOR
 
     footer
       p Already have an account? <a ui-sref="CONNECT_LOGIN">Log in</a>
-
-sso-registration(app="connect" ng-show="vm.isSSORegistration" on-register="vm.onSSORegister(ssoUser)" on-register-cancel="vm.ssoRegisterCancel()")

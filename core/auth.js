@@ -361,43 +361,6 @@ export function ssoLogin(provider, state) {
   })
 }
 
-export function ssoRegistration(provider, state) {
-  return new Promise(function(resolve, reject) {
-    // supported backends
-    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER ]
-    if (providers.indexOf(provider) > -1) {
-      auth0.signin({
-        popup: true,
-        connection: provider,
-        scope: 'openid profile offline_access',
-        state: state
-      },
-        function(error, profile, idToken, accessToken, state, refreshToken) {
-          if (error) {
-            console.warn('onSSORegistrationFailure ' + JSON.stringify(error))
-            reject(error)
-            return
-          }
-          var ssoUserData = extractSSOUserData(profile, accessToken)
-          var result = {
-            status: 'SUCCESS',
-            data: ssoUserData
-          }
-          console.debug('ssoRegistration Result: ' + JSON.stringify(result))
-          resolve(result)
-        }
-      )
-    } else {
-      console.error('Unsupported SSO login provider', provider)
-
-      reject({
-        status: 'FAILED',
-        'error': 'Unsupported SSO login provider \'' + provider + '\''
-      })
-    }
-  })
-}
-
 export function socialRegistration(provider, state) {
   return new Promise(function(resolve, reject) {
     // supported backends
