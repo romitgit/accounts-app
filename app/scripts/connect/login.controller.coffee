@@ -40,18 +40,21 @@ ConnectLoginController = (
     vm.loginErrors.USERNAME_NONEXISTANT = false
     vm.loginErrors.WRONG_PASSWORD = false
     vm.loginErrors.ACCOUNT_INACTIVE = false
-
-    validateUsername(vm.username)
-      .then (result) ->
-        # if username/email is available for registration, it means it is a non existant user
-        if result
-          vm.loginErrors.USERNAME_NONEXISTANT = true
-          vm.loading = false
-        else
+    if vm.username == ''
+      vm.loginErrors.USERNAME_NONEXISTANT = true
+      vm.loading = false
+    else
+      validateUsername(vm.username)
+        .then (result) ->
+          # if username/email is available for registration, it means it is a non existant user
+          if result
+            vm.loginErrors.USERNAME_NONEXISTANT = true
+            vm.loading = false
+          else
+            callLogin(vm.username, vm.password)
+        .catch (err) ->
+          vm.loginErrors.USERNAME_NONEXISTANT = false
           callLogin(vm.username, vm.password)
-      .catch (err) ->
-        vm.loginErrors.USERNAME_NONEXISTANT = false
-        callLogin(vm.username, vm.password)
 
   loginFailure = (error) ->
     if error?.message?.toLowerCase() == 'account inactive'
