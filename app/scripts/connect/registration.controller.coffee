@@ -28,7 +28,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm.isConnectProjectFlow = afterActivationURL && afterActivationURL.indexOf(CONNECT_PROJECT_CALLBACK) != -1
 
   vm.searchCountry = (query) ->
-    matches = Array.protorype.filter.call(vm.countries, (country) -> country.indexOf(query) == 0)
+    vm.countries.filter (country) -> country.name.toLowerCase.indexOf(query.toLowerCase) == 0
   
   vm.updateCountry = (angucompleteCountryObj) ->
     countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
