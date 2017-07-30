@@ -4,6 +4,10 @@
   background: $tc-gray-neutral-light;
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
+  
+  loader {
+    z-index: 1000;
+  }
 
   h2 {
     margin: 0 (4 * $base-unit) (2 * $base-unit);
