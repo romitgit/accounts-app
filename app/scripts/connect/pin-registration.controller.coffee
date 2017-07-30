@@ -98,7 +98,6 @@ ConnectPinVerificationController = (
 
   # Updates email and resends activation PIN
   vm.updateEmailAndResendPIN = () ->
-    vm.emailEditMode = false
     vm.loading = true
     vm.message = null
     vm.error = false
