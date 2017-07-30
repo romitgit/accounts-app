@@ -13,6 +13,7 @@ ConnectPinVerificationController = (
 ) ->
   vm           = this
   vm.email  = $stateParams.email
+  vm.emailBackup = vm.email
   vm.pin  = ''
   vm.error     = false
   vm.loading   = false
@@ -94,6 +95,10 @@ ConnectPinVerificationController = (
   # Toggles the Email Edit form
   vm.toggleEmailEdit = () ->
     vm.error = false
+    if vm.emailEditMode
+      vm.email = vm.emailBackup
+    else
+      vm.emailBackup = vm.email
     vm.emailEditMode = !vm.emailEditMode
 
   # Updates email and resends activation PIN
