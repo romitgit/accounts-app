@@ -80,7 +80,10 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
     $scope.$apply ->
       vm.error        = true
       vm.loading      = false
-      vm.errorMessage = error.message
+      if error.message.indexOf('JSON') != -1
+        vm.errorMessage = 'Server error, please try again'
+      else
+        vm.errorMessage = error.message
 
   registerSuccess = (user) ->
     # options =
