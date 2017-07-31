@@ -5,6 +5,10 @@
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
 
+  .angucomplete-dropdown {
+    overflow-y: auto;
+    max-height: 10 * 6 * $base-unit;
+    
   input::-ms-clear{
     display: none !important;
   }
