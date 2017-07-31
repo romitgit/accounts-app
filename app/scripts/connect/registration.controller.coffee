@@ -27,6 +27,9 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   afterActivationURL = $stateParams.retUrl ? 'https://connect.' + DOMAIN
   vm.isConnectProjectFlow = afterActivationURL && afterActivationURL.indexOf(CONNECT_PROJECT_CALLBACK) != -1
 
+  vm.searchCountry = (query) ->
+    vm.countries.filter (country) -> country.name.toLowerCase().indexOf(query.toLowerCase()) == 0
+  
   vm.updateCountry = (angucompleteCountryObj) ->
     countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
 
@@ -80,7 +83,10 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
     $scope.$apply ->
       vm.error        = true
       vm.loading      = false
-      vm.errorMessage = error.message
+      if error.message.indexOf('JSON') != -1
+        vm.errorMessage = 'Server error, please try again'
+      else
+        vm.errorMessage = error.message
 
   registerSuccess = (user) ->
     # options =
