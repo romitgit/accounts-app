@@ -5,6 +5,10 @@
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
 
+  input::-ms-clear{
+    display: none !important;
+  }
+  
   h2 {
     margin: 0 (4 * $base-unit) (2 * $base-unit);
     font-weight: 300;
