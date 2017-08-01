@@ -4,17 +4,17 @@
     .login
       span Already have an account? 
       a.tc-btn.tc-btn-default.tc-btn-sm(ui-sref="CONNECT_LOGIN({retUrl:vm.retUrl})") Log in
+  h2.title(ng-if="vm.isConnectProjectFlow") Your project has been saved. Now please create an account or login to submit it for review.
   .connect-accounts-content
-    h2 Create a new account
-    p Always free. No credit card required
+    h3 Register for Topcoder
     p.error(ng-if="vm.error") {{ vm.errorMessage }}
     loader(ng-if="vm.loading")
     form.connect-accounts-form(name="vm.registerForm" role="form" novalidate autocomplete="off" ng-submit="vm.submit()")
       .wrapper.wrapper-half
-        label First Name
+        label First name
         input.input.input-sm(type="text" name="first-name" ng-model="vm.firstName" required=true maxlength="64" autofocus=true)
       .wrapper.wrapper-half
-        label Last Name
+        label Last name
         input.input.input-sm(type="text" name="last-name" ng-model="vm.lastName" required=true maxlength="64")
       .wrapper
         label Country
@@ -24,6 +24,7 @@
             pause="100",
             selected-object="vm.updateCountry",
             local-data="vm.countries",
+            local-search="vm.searchCountry",
             initial-value="vm.countryObj",
             search-fields="name",
             title-field="name",
@@ -35,13 +36,13 @@
 
           .error-block(ng-show="vm.isCountryDirty && !vm.isValidCountry") Please choose a country from the list
       .wrapper.wrapper-tooltip
-        label Pick a nickname
+        label Username
         input.input.input-sm(type="text" name="username" ng-model="vm.username" required=true username-is-free ng-minlength="2" ng-maxlength="15" ng-model-options="{ debounce: {'default': 500} }")
         .tooltip
           .arrow
           h4 USERNAME TIPS:
           p Your username will be public
-          p It must be 2-15 characters long
+          p It must be 3-15 characters long
           p
             | It can contain numbers, letters, and only these special characters -_.{}[]
         .error-block(ng-if="vm.registerForm.username.$dirty && vm.registerForm.username.$invalid", ng-messages="vm.registerForm.username.$error")
@@ -52,7 +53,7 @@
 
           span(ng-message="maxlength") That username is not the correct length or format.
       .wrapper.wrapper-tooltip
-        label Your email
+        label Email address
         input.input.input-sm(type="text" name="email" ng-model="vm.email" ng-model-options="{ debounce: {'default': 500} }" required=true valid-email email-is-available)
         .tooltip
           .arrow
@@ -68,7 +69,7 @@
 
           span(ng-message="required") Please enter an email address.
       .wrapper.wrapper-tooltip(ng-if="!vm.ssoUser")
-        label Pick a password
+        label Create password
         toggle-password-with-tips
 
         .tooltip.tooltip-password(ng-show="vm.passwordFocus")
@@ -97,6 +98,6 @@
       p Or use your enterprise account
 
       a.tc-btn.tc-btn-secondary.tc-btn-sm.sso-signon(ng-click="vm.ssoRegister()") Single Sign On
-  p.copyright © 2017 topcoder. All Rights Reserved
+  p.copyright © Topcoder 2017
 
 sso-registration(app="connect" ng-show="vm.isSSORegistration" on-register="vm.onSSORegister(ssoUser)" on-register-cancel="vm.ssoRegisterCancel()")

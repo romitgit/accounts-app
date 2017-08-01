@@ -13,6 +13,7 @@ ConnectPinVerificationController = (
 ) ->
   vm           = this
   vm.email  = $stateParams.email
+  vm.emailBackup = vm.email
   vm.pin  = ''
   vm.error     = false
   vm.loading   = false
@@ -48,7 +49,7 @@ ConnectPinVerificationController = (
       vm.error    = true
       vm.pinError = true
       vm.loading  = false
-      vm.message  = 'Error - this code doesn\'t match the one we send you.'
+      vm.message  = 'That PIN is incorrect. Please check that you entered the one you received.'
       if error.status == 400 && error.message.indexOf('has been activated')  != -1
         vm.message = 'User is already activated. Please login.'
 
@@ -94,11 +95,14 @@ ConnectPinVerificationController = (
   # Toggles the Email Edit form
   vm.toggleEmailEdit = () ->
     vm.error = false
+    if vm.emailEditMode
+      vm.email = vm.emailBackup
+    else
+      vm.emailBackup = vm.email
     vm.emailEditMode = !vm.emailEditMode
 
   # Updates email and resends activation PIN
   vm.updateEmailAndResendPIN = () ->
-    vm.emailEditMode = false
     vm.loading = true
     vm.message = null
     vm.error = false

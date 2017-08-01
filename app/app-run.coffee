@@ -4,10 +4,11 @@ run = ($log, $rootScope, $state, $urlRouter, $location) ->
   window.analytics.load(SEGMENT_KEY);
   $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
     $rootScope.stateLoaded = false
+    # hide common footer and banner for connect pages to allow new styled footer for connect
+    $rootScope.hideCommonFooter = toState.url && toState.url.indexOf('/connect') != -1
+    $rootScope.hideBanner = toState.url && toState.url.indexOf('/connect') != -1
   $rootScope.$on '$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) ->
     $rootScope.stateLoaded = true
-    # hide common footer for connect pages to allow new styled footer for connect
-    $rootScope.hideCommonFooter = toState.url && toState.url.indexOf('/connect') != -1
     path = $location.path()
     queryString = ''
     referrer = ''

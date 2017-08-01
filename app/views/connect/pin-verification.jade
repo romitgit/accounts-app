@@ -2,28 +2,27 @@
   .connect-accounts-header
     a(href='#')
       img(src=require("../../images/connect/connect.png"), alt='')
-  h2.title(ng-if="vm.isConnectProjectFlow") Your project was saved successfully
+  h2.title Your account has been created. Last step: double-check your email address to help keep your account secure.
   .connect-accounts-content
-    h3(ng-if="vm.isConnectProjectFlow") Last step - verify your email
-    h3(ng-if="!vm.isConnectProjectFlow") Verify you email
+    h3 Verify your email address
     .error-block.error-block-md(ng-if="vm.error && !vm.pinError && !vm.emailError") {{ vm.message || "Currently we can't verify your security PIN" }}
 
     form(name="vm.emailForm" ng-submit="vm.updateEmailAndResendPIN()" method="post" ng-if="vm.emailEditMode" )
       p.text
         | Please enter the new email:
       .new-email(ng-if="vm.emailEditMode")
-        input.input.input-md(type='email', ng-model="vm.email" required=true)
+        input.input.input-md(type='email', ng-model="vm.email" required=true valid-email)
         .error-block.error-block-md(ng-if="vm.error && !vm.pinError && vm.emailError") {{ vm.message || "Currently we can't update your email" }}
         button.tc-btn.tc-btn-primary.tc-btn-md(type="submit" ng-disabled="vm.emailForm.$invalid" ) Update email and send a new PIN
         button.tc-btn.tc-btn-secondary.tc-btn-sm(ng-click="vm.toggleEmailEdit()") Cancel
     form(name="vm.pinForm" ng-submit="vm.submit()" method="post" ng-if="!vm.emailEditMode")
       p.text
-        | In order to protect your data, we need to verify your email address. Please enter the one-time PIN we sent to your email:
+        | In order to protect your data, we need to verify your email address. We’ve just sent a one-time PIN to your email. Please enter it below::
       .verify-email
         | {{ vm.email }}
         a(ng-click="vm.toggleEmailEdit()") edit
       .confirmation-block.confirmation-block-md(ng-if="vm.emailEditSuccess")
-        span Your email was changed and we sent you a new PIN code. Please check and enter your new code bellow.
+        span Your email was updated, and we’ve sent you a new PIN. Please enter it below.
       .security-pin
         label Security PIN:
         input.input.input-md(type="text" ng-model="vm.pin" required=true)
@@ -33,8 +32,8 @@
         span Thank you for verifying your account. Loggin you in...
 
       .confirmation-block.confirmation-block-md(ng-if="vm.loggedIn")
-        span Sucessfully logged you in. Redirecting to your project...
+        span Sucessfully logged you in. #[span(ng-if="vm.isConnectProjectFlow") Redirecting to your project...] #[span(ng-if="!vm.isConnectProjectFlow") Redirecting...]
     p.small-text
-      | Allow for some time before your email arrives. Check in your spam folder to make sure it was not blocked by your email server. If you didn't get a code or need further help, contact 
-      a(href='mailto:support@connect.com') support@connect.com
-  p.copyright © 2017 topcoder. All Rights Reserved
+      | If you don’t see an email from us right away, wait for a few minutes or check your spam folder. If you don’t receive a message or need help with your account, please contact
+      a(href='mailto:support@connect.com').
+  p.copyright © Topcoder 2017

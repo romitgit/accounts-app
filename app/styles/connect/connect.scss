@@ -4,7 +4,20 @@
   background: $tc-gray-neutral-light;
   min-height: 100vh;
   font-family: 'Roboto', sans-serif;
+  
+  loader {
+    z-index: 1000;
+  }
 
+  .angucomplete-dropdown {
+    overflow-y: auto;
+    max-height: 10 * 6 * $base-unit;
+  }
+ 
+  input::-ms-clear{
+    display: none !important;
+  }
+  
   h2 {
     margin: 0 (4 * $base-unit) (2 * $base-unit);
     font-weight: 300;

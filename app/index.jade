@@ -12,7 +12,7 @@ html(ng-app='accounts')
       }
 
   body.tc
-    .building(ng-hide="stateLoaded")
+    .building(ng-hide="hideBanner || stateLoaded")
       .img
     ui-view.view-container
 
