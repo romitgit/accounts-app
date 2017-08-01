@@ -18,7 +18,9 @@ configure_aws_cli() {
 
 deploy_s3bucket() {
         #chmod -R 775 ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist
-	result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --exclude "*.txt" --exclude "*.js"`	
+	cat dist/app.2e9868372e0e2992d5d2.css 
+	#result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --exclude "*.txt" --exclude "*.js"`	
+	aws s3 sync --dryrun ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --exclude "*.txt" --exclude "*.js" --exclude "*.map" --exclude "*.html"
 	result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --exclude "*.txt" --exclude "*.js" --exclude "*.map" --exclude "*.html"`	
 	if [ $? -eq 0 ]; then
 		#echo $result
@@ -28,10 +30,11 @@ deploy_s3bucket() {
 		exit 1
 	fi
 	#result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0`
+	aws s3 sync --dryrun ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --include "*.txt" --include "*.js" --include "*.map" --include "*.html" --exclude "*"  --content-encoding gzip
 	result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --include "*.txt" --include "*.js" --include "*.map" --include "*.html" --exclude "*"  --content-encoding gzip`	
 	if [ $? -eq 0 ]; then
 		#echo $result
-		echo "All image and media files are Deployed!"
+		echo "All text files are Deployed!"
 	else
 		echo "Deployment Failed  - $result"
 		exit 1
