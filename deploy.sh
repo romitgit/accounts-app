@@ -21,21 +21,21 @@ deploy_s3bucket() {
 	cat dist/app.2e9868372e0e2992d5d2.css 
 	#aws s3 sync --dryrun ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0
 	#result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0`	
-	aws s3 sync --dryrun ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --exclude "*.txt" --exclude "*.js" --exclude "*.map" --exclude "*.html"
-	result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --exclude "*.txt" --exclude "*.js" --exclude "*.map" --exclude "*.html"`	
+	aws s3 sync --dryrun ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --exclude "*.txt" --exclude "*.js" --exclude "*.map"
+	result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --exclude "*.txt" --exclude "*.js" --exclude "*.map"`	
 	if [ $? -eq 0 ]; then
 		#echo $result
-		echo "All font, image and media files are Deployed!"
+		echo "All html, font, image and media files are Deployed without gzip encoding!"
 	else
 		echo "Deployment Failed  - $result"
 		exit 1
 	fi
 	#result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0`
-	aws s3 sync --dryrun ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --exclude "*" --include "*.txt" --include "*.js" --include "*.map" --include "*.html" --content-encoding gzip
-	result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0  --exclude "*" --include "*.txt" --include "*.js" --include "*.map" --include "*.html" --content-encoding gzip`	
+	aws s3 sync --dryrun ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0 --exclude "*" --include "*.txt" --include "*.js" --include "*.map" --content-encoding gzip
+	result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0  --exclude "*" --include "*.txt" --include "*.js" --include "*.map" --content-encoding gzip`	
 	if [ $? -eq 0 ]; then
 		#echo $result
-		echo "All text files are Deployed!"
+		echo "All css, js, and map files are Deployed! with gzip"
 	else
 		echo "Deployment Failed  - $result"
 		exit 1
