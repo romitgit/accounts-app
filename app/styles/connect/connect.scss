@@ -53,6 +53,10 @@
     color: $tc-gray-80;
     line-height: (6 * $base-unit);
     text-align: center;
+    
+    /* remove side effect of appirio-styles */
+    text-transform: none;
+    font-family: inherit;
   }
 
   p.text {
