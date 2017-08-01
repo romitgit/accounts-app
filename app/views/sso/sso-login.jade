@@ -19,7 +19,7 @@ main.layout-main.login-reg.flex.center.middle("role"="main")
 
             button.action(type="submit" style="margin-bottom:11px") Continue
 
-        p.success(ng-show="vm.success") Redirecting to {{ vm.org }} login...
+        p.success(ng-show="vm.success") Redirecting to {{ vm.retUrl }} ...
 
     footer
       p <a ng-click="vm.showLoginPage()">Back to Login</a>
