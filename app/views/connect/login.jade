@@ -5,8 +5,7 @@
       span Don’t have an account? 
       a.tc-btn.tc-btn-default.tc-btn-sm(href="{{vm.registrationUrl}}") Register for free
   .connect-accounts-content
-    h2 Welcome back!
-    p Crowdsourcing for your winning project
+    h2 Log in to Topcoder
     .confirmation-block.confirmation-block-md(ng-if="vm.passwordReset") Your password has been updated. Please login.
     loader(ng-if="vm.loading")
     form.connect-accounts-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
@@ -22,10 +21,9 @@
         .error-block(ng-if="vm.loginErrors.WRONG_PASSWORD") That password is incorrect. Please check that you entered the right one.
 
       .forgot.small-text
-        | Password problems. 
-        a(href="{{vm.forgotPasswordUrl}}") Reset your password here?
+        a(href="{{vm.forgotPasswordUrl}}") Forgot your password?
 
-      button.action.tc-btn.tc-btn-primary.tc-btn-sm(type="submit") Login
+      button.action.tc-btn.tc-btn-primary.tc-btn-sm(type="submit") Log in
 
       //- hiding until we have refined sso flow working
       .login-options(ng-hide="true")
