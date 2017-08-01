@@ -87,19 +87,16 @@ config = (
   # message      : (optional) A message handed by Identity Service when some error occurs
   states['MEMBER_REGISTRATION'] =
     url: '/member/registration?retUrl&utm_source&utm_medium&utm_campaign&userJWTToken&auth0Jwt&auth0Refresh&message'
+    params: { 'auth0Data' }
     controller  : 'TCRegistrationController as vm'
     template: require('./views/tc/register.jade')()
     public: true
 
   states['MEMBER_REGISTRATION_SUCCESS'] =
-    url: '/member/registration-success'
+    url: '/member/registration-success?retUrl'
     params: { 'ssoUser' }
     template: require('./views/tc/registered-successfully.jade')()
-    controller: ($stateParams) ->
-      vm = this
-      vm.ssoUser = $stateParams && $stateParams.ssoUser == true
-      vm
-    controllerAs: 'vm'
+    controller: 'TCRegistrationSuccessController as vm'
     public: true
 
   states['MEMBER_FORGOT_PASSWORD'] =
@@ -143,11 +140,7 @@ config = (
     url: '/connect/registration-success'
     params: { 'ssoUser' }
     template: require('./views/connect/registration-success.jade')()
-    controller: ($stateParams) ->
-      vm = this
-      vm.ssoUser = $stateParams && $stateParams.ssoUser == true
-      vm
-    controllerAs: 'vm'
+    controller: 'TCRegistrationSuccessController as vm'
     public: true
 
   states['CONNECT_PIN_VERIFICATION'] =
@@ -175,14 +168,6 @@ config = (
     url: '/sso-login/:org?app&retUrl'
     template   : require('./views/sso/sso-login')()
     controller : 'SSOLoginController as vm'
-    public: true
-
-  # State parameters
-  # see SOCIAL_CALLBACK
-  states['SSO_REGISTER'] =
-    url: '/sso-registration/:org?app&retUrl'
-    template   : require('./views/directives/sso-registration.directive')()
-    controller : 'TCRegistrationController as vm'
     public: true
 
   # State parameters

@@ -18,7 +18,6 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm.loading      = false
   vm.isValidCountry    = false
   vm.isCountryDirty    = false
-  vm.isSSORegistration = false
   vm.ssoUser
   vm.retUrl = $stateParams && $stateParams.retUrl ? null
 
