@@ -40,7 +40,7 @@ import { getNewJWT } from '../../../core/auth.js'
 
     $scope.$watch("registerForm", function(registerForm) {
       if (vm.ssoUser) {
-        vm.onSSORegister(vm.ssoUser)
+        loadSSOUser(vm.ssoUser)
       }
     })
 
