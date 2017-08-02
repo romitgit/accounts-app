@@ -29,7 +29,7 @@ test:
 
 deployment:
   development:
-    branch: [dev, dev-circleci]
+    branch: [dev, feature/updated-connect-reg-flow]
     owner: appirio-tech
     commands:
       - ./deploy.sh DEV
