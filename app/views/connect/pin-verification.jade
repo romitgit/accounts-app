@@ -11,7 +11,13 @@
       p.text
         | Please enter the new email:
       .new-email(ng-if="vm.emailEditMode")
-        input.input.input-md(type='email', ng-model="vm.email" required=true valid-email)
+        input.input.input-md(type='text' name="email" ng-model="vm.email" required=true valid-email email-is-available)
+        .error-block.error-block-md(ng-show="vm.emailForm.email.$dirty && vm.emailForm.email.$invalid", ng-messages="vm.emailForm.email.$error")
+          span(ng-message="emailIsAvailable") {{vm.emailErrorMessage}}
+
+          span(ng-message="validEmail") {{vm.emailErrorMessage}}
+
+          span(ng-message="required") Please enter an email address.
         .error-block.error-block-md(ng-if="vm.error && !vm.pinError && vm.emailError") {{ vm.message || "Currently we can't update your email" }}
         button.tc-btn.tc-btn-primary.tc-btn-md(type="submit" ng-disabled="vm.emailForm.$invalid" ) Update email and send a new PIN
         button.tc-btn.tc-btn-secondary.tc-btn-sm(ng-click="vm.toggleEmailEdit()") Cancel
