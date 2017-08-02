@@ -7,7 +7,7 @@
   h2.title(ng-if="vm.isConnectProjectFlow") Your project has been saved. Now please create an account or login to submit it for review.
   .connect-accounts-content
     h3 Register for Topcoder
-    p.error(ng-if="vm.error") {{ vm.errorMessage }}
+    p.error-block(ng-if="vm.error") {{ vm.errorMessage }}
     loader(ng-if="vm.loading")
     form.connect-accounts-form(name="vm.registerForm" role="form" novalidate autocomplete="off" ng-submit="vm.submit()")
       .wrapper.wrapper-half
