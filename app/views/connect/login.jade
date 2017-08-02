@@ -6,7 +6,7 @@
       a.tc-btn.tc-btn-default.tc-btn-sm(href="{{vm.registrationUrl}}") Register for free
   .connect-accounts-content
     h2 Log in to Topcoder
-    .confirmation-block.confirmation-block-md(ng-if="vm.passwordReset") Your password has been updated. Please login.
+    .confirmation-block.confirmation-block-md(ng-if="vm.passwordReset") Your password has been updated. Please log in.
     loader(ng-if="vm.loading")
     form.connect-accounts-form(role="form" novalidate autocomplete="off" ng-submit="vm.submit()" method="post")
       .wrapper

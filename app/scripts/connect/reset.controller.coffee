@@ -43,7 +43,7 @@ ResetPasswordController = ($stateParams, $state, $scope) ->
       $scope.$apply ->
         vm.passwordResetDone = false
         vm.error = true
-        vm.message = 'Unable to log you in automatically. Please try login using login link.'
+        vm.message = 'Unable to log you in automatically. Please try logging in using \'Log in\' link.'
     else if vm.retUrl
       $scope.$apply ->
         vm.passwordResetDone = false
