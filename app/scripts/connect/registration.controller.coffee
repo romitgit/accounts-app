@@ -83,7 +83,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
       vm.error        = true
       vm.loading      = false
       if error.message.indexOf('JSON') != -1
-        vm.errorMessage = 'We weren't able to register you because of a system error. Please try again or contact suppor@topcoder.com.'
+        vm.errorMessage = "We weren't able to register you because of a system error. Please try again or contact suppor@topcoder.com."
       else
         vm.errorMessage = error.message
 
