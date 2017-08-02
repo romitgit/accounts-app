@@ -57,10 +57,8 @@
         input.input.input-sm(type="text" name="email" ng-model="vm.email" ng-model-options="{ debounce: {'default': 500} }" required=true valid-email email-is-available)
         .tooltip
           .arrow
-          h3 Email Tips:
-
-          p Your email address will be private and not shared with anyone.
-
+          h4 EMAIL TIPS:
+          p.text-mb Your email address will be private and not shared with anyone.
           p We'll send you messages related to your account and project activities.
         .error-block(ng-show="vm.registerForm.email.$dirty && vm.registerForm.email.$invalid", ng-messages="vm.registerForm.email.$error")
           span(ng-message="emailIsAvailable") {{vm.emailErrorMessage}}

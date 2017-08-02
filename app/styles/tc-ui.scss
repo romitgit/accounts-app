@@ -281,6 +281,10 @@
     color: #3A3C3E;
     line-height: (4 * $base-unit);
   }
+  
+  .tooltip p.text-mb {
+    margin-bottom: 10px;
+  }
 
   .tooltip p span {
     color: $tc-dark-blue;
