@@ -19,7 +19,7 @@
 
           span(ng-message="required") Please enter an email address.
         .error-block.error-block-md(ng-if="vm.error && !vm.pinError && vm.emailError") {{ vm.message || "Currently we can't update your email" }}
-        button.tc-btn.tc-btn-primary.tc-btn-md(type="submit" ng-disabled="vm.emailForm.$invalid" ) Update email and send a new PIN
+        button.tc-btn.tc-btn-primary.tc-btn-md(type="submit" ng-disabled="vm.emailForm.$invalid || vm.emailForm.$pending" ) Update email and send a new PIN
         button.tc-btn.tc-btn-secondary.tc-btn-sm(ng-click="vm.toggleEmailEdit()") Cancel
     form(name="vm.pinForm" ng-submit="vm.submit()" method="post" ng-if="!vm.emailEditMode")
       p.text
@@ -40,6 +40,6 @@
       .confirmation-block.confirmation-block-md(ng-if="vm.loggedIn")
         span Sucessfully logged you in. #[span(ng-if="vm.isConnectProjectFlow") Redirecting to your project...] #[span(ng-if="!vm.isConnectProjectFlow") Redirecting...]
     p.small-text
-      | If you don’t see an email from us right away, wait for a few minutes or check your spam folder. If you don’t receive a message or need help with your account, please contact
+      | If you don’t see an email from us right away, wait for a few minutes or check your spam folder. If you don’t receive a message or need help with your account, please contact <a href="mailto:support@topcoder.com">support@topcoder.com</a>.
       a(href='mailto:support@connect.com').
   p.copyright © Topcoder 2017

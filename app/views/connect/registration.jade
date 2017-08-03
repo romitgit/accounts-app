@@ -87,7 +87,7 @@
         a(href="{{vm.termsUrl}}") Terms
         |  and 
         a(href="{{ vm.privacyUrl }}") Privacy Policy
-      button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="submit" disabled="disabled" ng-show="!vm.isValidCountry || vm.registerForm.$invalid || vm.registerForm.$pending") Register
+      button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="submit" disabled="disabled" ng-show="!vm.isValidCountry || vm.registerForm.$invalid || vm.registerForm.$pending") Registers
       button.action.submit.tc-btn.tc-btn-primary.tc-btn-large(type="submit" ng-show="vm.isValidCountry && vm.registerForm.$valid" tc-busy-button tc-busy-when="vm.loading" tc-busy-message="Registering") Register
 
     //- hiding until we have refined sso working
