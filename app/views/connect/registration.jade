@@ -1,4 +1,4 @@
-.connect-accounts-container.tc-ui(ng-show="!vm.isSSORegistration")
+.connect-accounts-container.tc-ui
   .connect-accounts-header
     img(src=require("../../images/connect/connect.png"), alt='')
     .login
@@ -98,5 +98,3 @@
 
       a.tc-btn.tc-btn-secondary.tc-btn-sm.sso-signon(ng-click="vm.ssoRegister()") Single Sign On
   p.copyright © Topcoder 2017
-
-sso-registration(app="connect" ng-show="vm.isSSORegistration" on-register="vm.onSSORegister(ssoUser)" on-register-cancel="vm.ssoRegisterCancel()")
