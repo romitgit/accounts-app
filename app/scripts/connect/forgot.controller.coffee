@@ -14,7 +14,7 @@ ForgotPasswordController = ($scope, $state) ->
     vm.error   = false
     email      = vm.email
     if email == '' || email == undefined
-      vm.error = 'Error email is required'
+      vm.error = 'Email is required'
       vm.loading = false
     else
       resetPasswordUrlPrefix = $state.href('CONNECT_RESET_PASSWORD', {}, { absolute: true })
