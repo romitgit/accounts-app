@@ -23,7 +23,7 @@
         button.tc-btn.tc-btn-secondary.tc-btn-sm(ng-click="vm.toggleEmailEdit()") Cancel
     form(name="vm.pinForm" ng-submit="vm.submit()" method="post" ng-if="!vm.emailEditMode")
       p.text
-        | In order to protect your data, we need to verify your email address. We’ve just sent a one-time PIN to your email. Please enter it below::
+        | In order to protect your data, we need to verify your email address. We’ve just sent a one-time PIN to your email. Please enter it below:
       .verify-email
         | {{ vm.email }}
         a(ng-click="vm.toggleEmailEdit()") edit
