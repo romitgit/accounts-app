@@ -65,7 +65,6 @@ ConnectLoginController = (
     $scope.$apply ->
       vm.error   = true
       vm.loading = false
-      vm.password = ''
 
   loginSuccess = ->
     jwt = getV3Jwt()
