@@ -14,7 +14,6 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm.errorMessage = 'Error Creating User'
   vm.submit       = null
   vm.loading      = false
-  vm.isSSORegistration = false
   vm.ssoUser
   vm.retUrl = $stateParams && $stateParams.retUrl ? null
 
@@ -72,28 +71,6 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
 
   registerSuccess = ->
     $state.go 'CONNECT_REGISTRATION_SUCCESS'
-
-  vm.ssoRegister = ->
-    vm.isSSORegistration = true
-
-  vm.ssoRegisterCancel = ->
-    vm.isSSORegistration = false
-
-  vm.onSSORegister = (ssoUser) ->
-    vm.isSSORegistration = false
-    vm.ssoUser = ssoUser
-    
-    if ssoUser && ssoUser.firstName
-      vm.firstName = ssoUser.firstName
-      vm.registerForm['first-name'].$setDirty()
-
-    if ssoUser && ssoUser.lastName
-      vm.lastName = ssoUser.lastName
-      vm.registerForm['last-name'].$setDirty()
-
-    if ssoUser && ssoUser.email
-      vm.email = ssoUser.email
-      vm.registerForm.email.$setDirty()
 
   vm
 

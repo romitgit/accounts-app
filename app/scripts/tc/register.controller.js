@@ -1,9 +1,11 @@
 import angular from 'angular'
 import _ from 'lodash'
-import { BUSY_PROGRESS_MESSAGE, DOMAIN, V3_JWT } from '../../../core/constants.js'
+import { BUSY_PROGRESS_MESSAGE, DOMAIN, WIPRO_SSO_PROVIDER, V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT } from '../../../core/constants.js'
 import { registerUser, socialRegistration } from '../../../core/auth.js'
 import { npad } from '../../../core/utils.js'
-import { getToken, decodeToken } from '../../../core/token.js'
+import { generateReturnUrl, redirectTo } from '../../../core/url.js'
+import { getToken, decodeToken, setToken } from '../../../core/token.js'
+import { getNewJWT } from '../../../core/auth.js'
 
 (function() {
   'use strict'
@@ -17,8 +19,10 @@ import { getToken, decodeToken } from '../../../core/token.js'
   function TCRegistrationController($log, $scope, $state, $stateParams, UserService, ISO3166) {
     var vm = this
     vm.registering = false
-    vm.isSSORegistration = false
-    vm.ssoUser = null
+    // auth0 login data, passed from another states as state param
+    vm.auth0Data = $stateParams.auth0Data
+    // SSO user data extracted from auth0 login data
+    vm.ssoUser = vm.auth0Data && vm.auth0Data.ssoUserData ? vm.auth0Data.ssoUserData : null
     // prepares utm params, if available
     var utm = {
       source : $stateParams && $stateParams.utm_source ? $stateParams.utm_source : '',
@@ -34,6 +38,12 @@ import { getToken, decodeToken } from '../../../core/token.js'
 
     vm.$stateParams = $stateParams
 
+    $scope.$watch("registerForm", function(registerForm) {
+      if (vm.ssoUser) {
+        loadSSOUser(vm.ssoUser)
+      }
+    })
+
     vm.updateCountry = function (angucompleteCountryObj) {
       var countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
 
@@ -43,6 +53,20 @@ import { getToken, decodeToken } from '../../../core/token.js'
       if (isValidCountry) {
         vm.country = angucompleteCountryObj.originalObject
       }
+    }
+
+    function setV3Tokens({token, zendeskJwt}) {
+      $log.debug('Received v3 tokens')
+      setToken(V3_JWT, token || '')
+      setToken(ZENDESK_JWT, zendeskJwt || '')
+      $log.debug('Redirecting to ' + vm.retUrl)
+      var error = redirectTo(generateReturnUrl(vm.retUrl))
+      $scope.$apply(function() {
+        vm.registering = false
+        if (error) {
+          vm.error = 'Invalid URL is assigned to the return-URL.'
+        }
+      })
     }
 
     vm.register = function() {
@@ -100,12 +124,31 @@ import { getToken, decodeToken } from '../../../core/token.js'
         vm.registering = false
         $log.debug('Registered successfully')
 
-        // In the future, go to dashboard
-        $state.go('MEMBER_REGISTRATION_SUCCESS')
+        if (vm.ssoUser && vm.auth0Data) {
+          // LOG IN user
+          setToken(AUTH0_JWT, vm.auth0Data.idToken)
+          setToken(AUTH0_REFRESH, vm.auth0Data.refreshToken)
+          $log.debug('Getting v3jwt')
+          getNewJWT()
+            .then(setV3Tokens)
+            .catch(function(err) {
+              vm.registering = false
+              vm.errMsg = err && err.message ? err.message : 'Error in logging in new user'
+              $scope.$apply()
+              $log.error('Error in logging in new user', err)
+            })
+        } else {
+          // In the future, go to dashboard
+          $state.go('MEMBER_REGISTRATION_SUCCESS', {
+            ssoUser : !!vm.ssoUser,
+            retUrl  : redirectURL
+          })
+        }
       })
       .catch(function(err) {
         vm.registering = false
-
+        vm.errMsg = err && err.message ? err.message : 'Error in registering new user'
+        $scope.$apply()
         $log.error('Error in registering new user', err)
       })
     }
@@ -161,16 +204,7 @@ import { getToken, decodeToken } from '../../../core/token.js'
       })
     }
 
-    vm.ssoRegister = function() {
-      vm.isSSORegistration = true
-    }
-
-    vm.ssoRegisterCancel = function() {
-      vm.isSSORegistration = false
-    }
-
-    vm.onSSORegister = function(ssoUser) {
-      vm.isSSORegistration = false
+    function loadSSOUser(ssoUser) {
       vm.ssoUser = ssoUser
       
       if (ssoUser && ssoUser.firstName) {
@@ -186,5 +220,10 @@ import { getToken, decodeToken } from '../../../core/token.js'
         vm.registerForm.email.$setDirty()
       }
     }
+
+    vm.showRegistrationPage = function(){
+      $state.go('MEMBER_REGISTRATION', $stateParams)
+    }
+
   }
 })()

@@ -1,4 +1,4 @@
-main.layout-main.login-reg.flex.center.middle("role"="main"  ng-show="!vm.isSSORegistration")
+main.layout-main.login-reg.flex.center.middle("role"="main")
   login-reg-shell
     header.flex.center.middle
       img(src=require("../../images/logo_mobile.svg"))
@@ -63,7 +63,7 @@ main.layout-main.login-reg.flex.center.middle("role"="main"  ng-show="!vm.isSSOR
                 li
                   p At least 1 number (0-9) or symbol (!?-_.,;)
 
-          input.widest(type="email" name="email" ng-model="vm.email" required=true placeholder="Email")
+          input.widest(type="email" name="email" ng-model="vm.email" required=true placeholder="Email" ng-disabled="!!vm.ssoUser")
 
           button.action.submit.tc-btn.tc-btn-large.disabled(type="submit" disabled="disabled" ng-show="!vm.isValidCountry") Register
           button.action.submit.tc-btn.tc-btn-large(type="submit" ng-show="vm.isValidCountry") Register
@@ -77,5 +77,3 @@ main.layout-main.login-reg.flex.center.middle("role"="main"  ng-show="!vm.isSSOR
 
     footer
       p Already have an account? <a ui-sref="CONNECT_LOGIN">Log in</a>
-
-sso-registration(app="connect" ng-show="vm.isSSORegistration" on-register="vm.onSSORegister(ssoUser)" on-register-cancel="vm.ssoRegisterCancel()")

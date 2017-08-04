@@ -1,4 +1,4 @@
-.register-container(ng-show="!vm.isSSORegistration")
+.register-container
   header
     a.logo-link(href="/")
       img(src=require("../../images/logo_mobile.svg"), alt="Topcoder Logo")
@@ -65,7 +65,7 @@
 
     .validation-bar(ng-class="{ 'error-bar': (vm.registerForm.email.$dirty && vm.registerForm.email.$invalid) }")
       input-sticky-placeholder.email(sticky-placeholder="Email", ng-model="vm.email")
-        input(ng-model="vm.email", ng-model-options="{ debounce: {'default': 500} }", ng-focus="vm.emailTips = true", ng-blur="vm.emailTips = false", name="email", placeholder="Enter Your Email", type="email", valid-email, email-is-available, required)
+        input(ng-model="vm.email", ng-model-options="{ debounce: {'default': 500} }", ng-focus="vm.emailTips = true", ng-blur="vm.emailTips = false", name="email", placeholder="Enter Your Email", type="email", valid-email, email-is-available, required,  ng-disabled="!!vm.ssoUser")
 
       .tips.email-tips(ng-show="vm.emailTips")
         .arrow
@@ -103,7 +103,7 @@
     button.tc-btn.tc-btn-large(type="submit", tc-busy-button, tc-busy-when="vm.registering", ng-disabled="vm.registerForm.$invalid", ng-show="vm.isValidCountry") Join
     button.tc-btn.tc-btn-large.disabled(type="submit", ng-show="!vm.isValidCountry", disabled="disabled") Join
 
-  section.login-options
+  section.login-options(ng-if="!vm.ssoUser")
     p.tc-separator
       span Or Register With
 
@@ -117,11 +117,6 @@
       li.network.facebook
         a.ico(ng-click="vm.socialRegister('facebook')")
         span Facebook
-      li.network.sso
-        a.ico(ng-click="vm.ssoRegister()")
-        span Single Sign On
-
-sso-registration(app="member" ng-show="vm.isSSORegistration" on-register="vm.onSSORegister(ssoUser)" on-register-cancel="vm.ssoRegisterCancel()")
 
 .join-topcoder
   span Have an account? &nbsp;

@@ -87,13 +87,16 @@ config = (
   # message      : (optional) A message handed by Identity Service when some error occurs
   states['MEMBER_REGISTRATION'] =
     url: '/member/registration?retUrl&utm_source&utm_medium&utm_campaign&userJWTToken&auth0Jwt&auth0Refresh&message'
+    params: { 'auth0Data' }
     controller  : 'TCRegistrationController as vm'
     template: require('./views/tc/register.jade')()
     public: true
 
   states['MEMBER_REGISTRATION_SUCCESS'] =
-    url: '/member/registration-success'
+    url: '/member/registration-success?retUrl'
+    params: { 'ssoUser' }
     template: require('./views/tc/registered-successfully.jade')()
+    controller: 'TCRegistrationSuccessController as vm'
     public: true
 
   states['MEMBER_FORGOT_PASSWORD'] =
@@ -134,7 +137,9 @@ config = (
 
   states['CONNECT_REGISTRATION_SUCCESS'] =
     url: '/connect/registration-success'
+    params: { 'ssoUser' }
     template: require('./views/connect/registration-success.jade')()
+    controller: 'TCRegistrationSuccessController as vm'
     public: true
 
   states['CONNECT_FORGOT_PASSWORD'] =
