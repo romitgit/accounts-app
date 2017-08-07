@@ -1,6 +1,6 @@
 'use strict'
 
-{ DOMAIN, V3_TEMP_JWT, CONNECT_PROJECT_CALLBACK }   = require '../../../core/constants.js'
+{ DOMAIN, V3_TEMP_JWT, CONNECT_PROJECT_CALLBACK, UTM_SOURCE_CONNECT }   = require '../../../core/constants.js'
 { getFreshToken, login, verifyPIN, getV3Jwt, getOneTimeToken, updatePrimaryEmail, resendActivationCode }    = require '../../../core/auth.js'
 { decodeToken, setToken, getToken, isTokenExpired, removeToken } = require '../../../core/token.js'
 { getLoginConnection } = require '../../../core/utils.js'
@@ -41,7 +41,7 @@ ConnectPinVerificationController = (
     vm.message    = null
     vm.emailEditSuccess = false
 
-    verifyPIN(pin).then(loginUser, verifyPINFailure)
+    verifyPIN(pin, UTM_SOURCE_CONNECT).then(loginUser, verifyPINFailure)
 
   # Handles the error in verifying/activating account
   verifyPINFailure = (error) ->

@@ -1,7 +1,7 @@
 'use strict'
 
 { registerUser, getFreshToken, getOneTimeToken } = require '../../../core/auth.js'
-{ DOMAIN, CONNECT_PROJECT_CALLBACK } = require '../../../core/constants.js'
+{ DOMAIN, CONNECT_PROJECT_CALLBACK, UTM_SOURCE_CONNECT } = require '../../../core/constants.js'
 { npad } = require '../../../core/utils.js'
 { decodeToken } = require '../../../core/token.js'
 _ = require 'lodash'
@@ -59,7 +59,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
         firstName         : vm.firstName
         lastName          : vm.lastName
         email             : vm.email
-        utmSource         : 'connect'
+        utmSource         : UTM_SOURCE_CONNECT
         country           :
           code: npad(vm.country.code, 3)
           isoAlpha3Code: vm.country.alpha3

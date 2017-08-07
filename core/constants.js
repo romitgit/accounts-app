@@ -39,3 +39,5 @@ export const SSO_PROVIDER_DOMAINS = 'wipro|asp\\.appirio\\.com|topcoder'
 export const SSO_PROVIDER_DOMAIN_WIPRO = 'wipro'
 export const SSO_PROVIDER_DOMAIN_APPIRIO = 'asp.appirio.com'
 export const SSO_PROVIDER_DOMAIN_TOPCODER = 'topcoder'
+
+export const UTM_SOURCE_CONNECT = 'connect'

@@ -618,8 +618,11 @@ export function getOneTimeToken(userId, password) {
   return fetchJSON(url, config).then(success)
 }
 
-export function verifyPIN(pin) {
-  const url = API_URL + '/users/activate?code=' + pin
+export function verifyPIN(pin, source) {
+  let url = API_URL + '/users/activate?code=' + pin
+  if (source) {
+    url += '&source=' + source
+  }
   const config = {
     method: 'PUT',
     body: {
