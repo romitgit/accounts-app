@@ -4,9 +4,9 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 
-if (process.env.TRAVIS_BRANCH === 'master') process.env.ENV = 'PROD'
-if (process.env.TRAVIS_BRANCH === 'dev') process.env.ENV = 'DEV'
-if (process.env.TRAVIS_BRANCH === 'qa') process.env.ENV = 'QA'
+if (process.env.CIRCLE_BRANCH === 'master') process.env.ENV = 'PROD'
+if (process.env.CIRCLE_BRANCH === 'dev') process.env.ENV = 'DEV'
+if (process.env.CIRCLE_BRANCH === 'qa') process.env.ENV = 'QA'
 
 require('coffee-script/register')
 
