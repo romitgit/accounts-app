@@ -107,3 +107,9 @@ login-reg-shell {
     }
   }
 }
+
+/* To resolve conflicts between tc-ui and appirio-styles*/
+.connect-accounts-container login-reg-shell .connect-accounts-content {
+  max-width: inherit;
+  width: 100%;
+}

@@ -15,8 +15,9 @@ import angular from 'angular'
         scope.currentPasswordDefaultPlaceholder = attrs.placeholder || 'Password'
         scope.currentPasswordPlaceholder = scope.currentPasswordDefaultPlaceholder
         vm.currentPassword = ''
+        vm.toggleShowLabel    = 'Show'
 
-        var currentPasswordInput = element.children()[0]
+        var currentPasswordInput = element.find('input')[0]
 
         element.bind('click', function(event) {
           currentPasswordInput.focus()
@@ -38,7 +39,7 @@ import angular from 'angular'
           element.removeClass('focus')
 
           // If you are blurring from the password input and clicking the checkbox
-          if (relatedTarget.attr('type') === 'checkbox' && relatedTarget.attr('id') === 'currentPasswordCheckbox') {
+          if (relatedTarget.attr('type') === 'checkbox' && relatedTarget.attr('id') === 'toggleInputTypeBtn') {
             scope.currentPasswordPlaceholder = ''
             currentPasswordInput.focus()
           } else {
@@ -54,8 +55,10 @@ import angular from 'angular'
 
           if ($currentPasswordInput.attr('type') === 'text') {
             $currentPasswordInput.attr('type', 'password')
+            vm.toggleShowLabel = 'Show'
           } else {
             $currentPasswordInput.attr('type', 'text')
+            vm.toggleShowLabel = 'Hide'
           }
         }
       }

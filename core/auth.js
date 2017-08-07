@@ -1,7 +1,7 @@
 import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
-import { getLoginConnection } from './utils.js'
+import { getLoginConnection, isEmail } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
@@ -24,7 +24,8 @@ function fetchJSON(url, options) {
     }
   }, options)
 
-  if (config.body) config.body = JSON.stringify(config.body)
+  if (config.body && typeof config.body === 'object')
+    config.body = JSON.stringify(config.body)
 
   function handleResponse(response) {
     return response.json()
@@ -312,10 +313,13 @@ export function resetPassword(handle, resetToken, password) {
 }
 
 export function registerUser(body) {
+  function success(data) {
+    return get(data, 'result.content')
+  }
   return fetchJSON(API_URL + '/users', {
     method: 'POST',
     body
-  })
+  }).then(success)
 }
 
 export function ssoLogin(provider, state) {
@@ -596,6 +600,76 @@ export function validateSocialProfile(userId, provider) {
     }
   }
 
+  return fetchJSON(url, config).then(success)
+}
+
+export function getOneTimeToken(userId, password) {
+  const url = API_URL + '/users/oneTimeToken'
+  const config = {
+    method: 'POST',
+    body: 'userId=' + userId + '&password=' + password,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  }
+  function success(data) {
+    return get(data, 'result.content')
+  }
+  return fetchJSON(url, config).then(success)
+}
+
+export function verifyPIN(pin, source) {
+  let url = API_URL + '/users/activate?code=' + pin
+  // adds source param, if available. Can be used to identify the calling app.
+  // one implemented use case is to supress welcome email for connect users.
+  if (source) {
+    url += '&source=' + source
+  }
+  const config = {
+    method: 'PUT',
+    body: {
+      param: {
+        code: pin
+      }
+    }
+  }
+  function success(data) {
+    return get(data, 'result.content')
+  }
+  return fetchJSON(url, config).then(success)
+}
+
+export function resendActivationCode(userId, afterActivationURL) {
+  const url = API_URL + '/users/' + userId + '/sendActivationCode'
+  const config = {
+    method: 'POST',
+    body: {
+      param: {},
+      options: {
+        afterActivationURL : afterActivationURL
+      }
+    }
+  }
+
+  return fetchJSON(url, config)
+}
+
+export function updatePrimaryEmail(userId, email, tempToken) {
+  const url = API_URL + '/users/' + userId + '/email/' + email
+  const config = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + tempToken
+    },
+    body: {
+      param: {
+        email: email
+      }
+    }
+  }
+  function success(data) {
+    return get(data, 'result.content')
+  }
   return fetchJSON(url, config).then(success)
 }
 

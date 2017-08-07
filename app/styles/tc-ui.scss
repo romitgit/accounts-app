@@ -1,0 +1,358 @@
+@import "tc-ui-variables";
+
+/* COMMON STYLES - IDEALLY SHOULD BE COMING FROM UI-KIT */
+.tc-ui {
+
+  label {
+    /* remove side effect of appirio-styles */
+    font-family: 'Roboto', sans-serif;
+  }
+
+  textarea,
+  input.input {
+    padding: 0 10px;
+    background: $tc-white;
+    border: 1px solid $tc-gray-20;
+    border-radius: 4px;
+    font-size: 13px;
+    color: $tc-black;
+    outline: none;
+
+    /* remove side effect of appirio-styles */
+    margin-bottom: 0px;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  textarea:hover:not(.error),
+  input.input:hover:not(.error) {
+    border-color: $tc-gray-50;
+  }
+
+  textarea:focus:not(.error),
+  input.input:focus:not(.error) {
+    border-color: $tc-dark-blue-70;
+    box-shadow: 0 0 2px 1px $tc-dark-blue-30;
+  }
+
+  textarea.error,
+  input.input.error {
+    border-color: $tc-red-70;
+  }
+
+  textarea {
+    height: 70px;
+  }
+
+  //.size-xs,
+  .tc-btn.tc-btn-xs,
+  textarea.input-xs,
+  input.input.input-xs {
+    height: (4 * $base-unit);
+    line-height: (4 * $base-unit);
+    font-size: 12px;
+  }
+
+  //.size-sm,
+  .tc-btn,
+  .tc-btn.tc-btn-sm,
+  textarea,
+  input.input, textarea.input-sm,
+  input.input.input-sm {
+    height: (6 * $base-unit);
+    line-height: (6 * $base-unit);
+    font-size: 13px;
+  }
+
+  //.size-md,
+  .tc-btn.tc-btn-md,
+  textarea.input-md,
+  input.input.input-md {
+    height: (8 * $base-unit);
+    line-height: (8 * $base-unit);
+    font-size: 15px;
+  }
+
+  //.size-lg,
+  .tc-btn.tc-btn-lg,
+  textarea.input-lg,
+  input.input.input-lg {
+    height: (10 * $base-unit);
+    line-height: (10 * $base-unit);
+    font-size: (4 * $base-unit);
+  }
+
+  .tc-btn {
+    padding: 0 (4 * $base-unit);
+    background: $tc-white;
+    border: 1px solid $tc-gray-50;
+    border-radius: 4px;
+    color: $tc-gray-70;
+
+    /* remove side effect of appirio-styles */
+    text-transform: none;
+    font-family: inherit;
+    font-weight: inherit;
+  }
+
+  .tc-btn.loading:enabled, .tc-btn:focus:not(:disabled) {
+    background: $tc-white;
+    border: 1px solid $tc-dark-blue-70;
+    box-shadow: 0 0 2px 1px $tc-dark-blue-30;
+  }
+
+  .tc-btn-default:active:enabled, .tc-btn-default:hover:enabled {
+    background-image: linear-gradient(0deg, #f5f5f5 0%, $tc-white 49%, $tc-white 100%);
+    border: 1px solid $tc-gray-40 ;
+    background-color: transparent;
+
+    /* remove side effect of appirio-styles */
+    color: inherit;
+  }
+
+  .tc-btn:active:not(:disabled) {
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .tc-btn:disabled {
+    opacity: 0.5;
+  }
+
+  .tc-btn-primary {
+    background: $tc-dark-blue-90;
+    border-color: $tc-dark-blue-90;
+    color: $tc-white;
+  }
+
+  /* remove side effect of appirio-styles */
+  .tc-btn-primary:disabled {
+    background: $tc-dark-blue-90 !important;
+    border-color: $tc-dark-blue-90 !important;
+  }
+
+  .tc-btn-primary:hover:enabled {
+    background-image: linear-gradient(-180deg, #3996ff 0%, #127bf3 100%);
+  }
+
+  .tc-btn-primary:active:enabled {
+    background: $tc-dark-blue-90;
+    box-shadow: inset 0 1px 3px 0 rgba(71, 71, 79, 0.5);
+  }
+
+  .tc-btn-primary.loading:enabled, .tc-btn-primary:focus:not(:disabled) {
+    background: $tc-dark-blue-90;
+    border: 1px solid $tc-dark-blue;
+    box-shadow: 0 0 2px 1px $tc-dark-blue-70;
+  }
+
+  .tc-btn-red {
+    background: $tc-red-70;
+    border-color: $tc-red-70;
+    color: $tc-white;
+  }
+
+  .tc-btn-red:hover:enabled {
+    background-image: linear-gradient(-180deg, $tc-red-70 0%, $tc-red 100%);
+  }
+
+  .tc-btn-red:active:enabled {
+    background: $tc-red;
+    box-shadow: inset 0 1px 3px 0 rgba(71, 71, 79, 0.38);
+  }
+
+  .tc-btn-red.loading:enabled, .tc-btn-red:focus:not(:disabled) {
+    background: $tc-red-70;
+    border: 1px solid $tc-red;
+    box-shadow: 0 0 2px 1px $tc-red-30;
+  }
+
+  .tc-btn-secondary {
+    background: $tc-gray-40 ;
+    border-color: $tc-gray-40 ;
+    color: $tc-white;
+  }
+
+  .tc-btn.tc-btn-secondary:hover {
+    background-image: linear-gradient(-180deg, $tc-gray-40  0%, $tc-gray-50 100%);
+    border: 1px solid $tc-gray-50;
+    background-color: transparent;
+  }
+
+  .tc-btn-secondary:active:enabled {
+    background: $tc-gray-50;
+    box-shadow: inset 0 1px 3px 0 rgba(71, 71, 79, 0.38);
+  }
+
+  .tc-btn-secondary.loading:enabled, .tc-btn-secondary:focus:not(:disabled) {
+    background: $tc-gray-40 ;
+    border: 1px solid $tc-gray-50;
+    box-shadow: 0 0 2px 1px $tc-dark-blue-70;
+  }
+
+  .input-btn {
+    position: relative;
+  }
+
+  .input-btn .input {
+    padding-right: 80px;
+  }
+
+  .input-btn .input:focus ~ .tc-btn {
+    background: $tc-dark-blue-70;
+    color: $tc-white;
+  }
+
+  .input-btn .tc-btn,
+  .input-btn .tc-btn:hover,
+  .input-btn .tc-btn:focus,
+  .input-btn .tc-btn:active {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    background: $tc-gray-20;
+    border: 0;
+    height: 28px;
+    border-radius: 0 3px 3px 0;
+    box-shadow: none;
+  }
+
+  .tooltip {
+    opacity: 0;
+    width: 320px;
+    padding: (4 * $base-unit);
+    position: absolute;
+    text-align: left;
+    top: (4 * $base-unit);
+    left: 395px;
+    background-color: $tc-dark-blue-30;
+    box-shadow: 0 2px 9px 0 rgba(38, 38, 40, 0.06);
+    border-radius: 6px;
+    transition: all .1s ease-in-out;
+    z-index: 1000;
+
+    /* remove side effect of appirio-styles */
+    margin-left: 5px;
+  }
+
+  .tooltip.tooltip-password {
+    opacity: 1;
+  }
+
+  .tooltip .arrow {
+    position: absolute;
+    height: 34px;
+    width: 24px;
+    left: -24px;
+    overflow: hidden;
+  }
+
+  .tooltip .arrow:before {
+    box-shadow: none;
+  }
+
+  .tooltip .arrow:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: (2 * $base-unit);
+    height: 12px;
+    width: 12px;
+    left: 18px;
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    background-color: $tc-dark-blue-30;
+    box-shadow: 0 2px 9px 0 rgba(38, 38, 40, 0.06);
+  }
+
+  .tooltip h4 {
+    margin: 0 0 (2 * $base-unit);
+    font-weight: 500;
+    font-size: 13px;
+    text-align: left;
+    text-transform: uppercase;
+    color: #3A3C3E;
+    line-height: (4 * $base-unit);
+  }
+
+  .tooltip p {
+    margin: 0;
+    font-size: 13px;
+    color: #3A3C3E;
+    line-height: (4 * $base-unit);
+  }
+  
+  .tooltip p.text-mb {
+    margin-bottom: 10px;
+  }
+
+  .tooltip p span {
+    color: $tc-dark-blue;
+    font-weight: 500;
+  }
+
+  .tooltip p .check {
+    width: 12px;
+    height: 9px;
+    margin-right: (2 * $base-unit);
+  }
+
+  .tooltip p.line:before {
+    content: "";
+    width: (2 * $base-unit);
+    height: 3px;
+    position: relative;
+    top: -3px;
+    display: inline-block;
+    margin-right: 12px;
+    background: $tc-white;
+  }
+
+  // Autocomplete
+  .angucomplete-dropdown {
+    // box-shadow: 0 1px 3px 1px rgba(0, 0, 0, .4);
+    border-color: $tc-gray-30;
+    color: $tc-black;
+    width: 100%;
+    text-align: left;
+    margin-top: 0px;
+  }
+
+  .angucomplete-selected-row {
+    background-color: $tc-gray-neutral-dark;
+    color: $tc-black;
+  }
+
+  /* Overrides form input error classes */
+  .form-input-error,
+  .error-block {
+    margin: 5px 0 0;
+    padding: 10px;
+    background: $tc-red-10;
+    border: 1px solid $tc-red-30;
+    font-style: italic;
+    font-size: 13px;
+    color: $tc-red;
+  }
+
+  .error-block.error-block-md {
+    font-size: 15px;
+    line-height: 25px;
+  }
+
+  .confirmation-block {
+    margin: 5px 0 0;
+    padding: 10px;
+    background: $tc-green-10;
+    border: 1px solid $tc-green-30;
+    font-style: italic;
+    font-size: 13px;
+    color: $tc-green-110;
+    text-align: center;
+  }
+
+  .confirmation-block.confirmation-block-md {
+    font-size: 15px;
+    line-height: 20px;
+  }
+}

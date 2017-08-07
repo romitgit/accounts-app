@@ -12,12 +12,12 @@ import angular from 'angular'
       template: require('../../views/directives/toggle-password-with-tips.directive')(),
       link: function(scope, element, attrs, formController) {
         var vm = scope.vm
-        vm.passwordField = formController.password
-        vm.defaultPlaceholder = attrs.placeholder || 'Create new password'
-        vm.placeholder = vm.defaultPlaceholder
-        vm.password = ''
+        vm.defaultPlaceholder = attrs.placeholder || ''
+        vm.placeholder        = vm.defaultPlaceholder
+        vm.password           = ''
+        vm.toggleShowLabel    = 'Show'
 
-        var passwordInput = element.children()[0]
+        var passwordInput = element.find('input')[0]
 
         element.bind('click', function(event) {
           passwordInput.focus()
@@ -40,7 +40,7 @@ import angular from 'angular'
           element.removeClass('focus')
 
           // If you are blurring from the password input and clicking the checkbox
-          if (relatedTarget.attr('type') === 'checkbox' && relatedTarget.attr('id') === 'passwordCheckbox') {
+          if (relatedTarget.attr('type') === 'checkbox' && relatedTarget.attr('id') === 'toggleInputTypeBtn') {
             vm.passwordFocus = true
             vm.placeholder = ''
             passwordInput.focus()
@@ -60,8 +60,10 @@ import angular from 'angular'
 
           if ($passwordInput.attr('type') === 'text') {
             $passwordInput.attr('type', 'password')
+            vm.toggleShowLabel = 'Show'
           } else {
             $passwordInput.attr('type', 'text')
+            vm.toggleShowLabel = 'Hide'
           }
         }
       }
