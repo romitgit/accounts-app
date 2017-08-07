@@ -620,6 +620,8 @@ export function getOneTimeToken(userId, password) {
 
 export function verifyPIN(pin, source) {
   let url = API_URL + '/users/activate?code=' + pin
+  // adds source param, if available. Can be used to identify the calling app.
+  // one implemented use case is to supress welcome email for connect users.
   if (source) {
     url += '&source=' + source
   }
