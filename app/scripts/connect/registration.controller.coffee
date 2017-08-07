@@ -1,34 +1,45 @@
 'use strict'
 
-{ registerUser, getFreshToken } = require '../../../core/auth.js'
-{ DOMAIN } = require '../../../core/constants.js'
+{ registerUser, getFreshToken, getOneTimeToken } = require '../../../core/auth.js'
+{ DOMAIN, CONNECT_PROJECT_CALLBACK, UTM_SOURCE_CONNECT } = require '../../../core/constants.js'
 { npad } = require '../../../core/utils.js'
 { decodeToken } = require '../../../core/token.js'
 _ = require 'lodash'
 
 RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm              = this
+  vm.termsUrl     = 'https://connect.' + DOMAIN + '/terms'
+  vm.privacyUrl   = 'https://www.' + DOMAIN + '/community/how-it-works/privacy-policy/'
   vm.username     = ''
   vm.password     = ''
   vm.error        = false
   vm.errorMessage = 'Error Creating User'
   vm.submit       = null
   vm.loading      = false
+  vm.isValidCountry    = false
+  vm.isCountryDirty    = false
   vm.ssoUser
   vm.retUrl = $stateParams && $stateParams.retUrl ? null
 
   vm.countries = ISO3166.getAllCountryObjects()
 
+  afterActivationURL = $stateParams.retUrl ? 'https://connect.' + DOMAIN
+  vm.isConnectProjectFlow = afterActivationURL && afterActivationURL.indexOf(CONNECT_PROJECT_CALLBACK) != -1
+  
   vm.updateCountry = (angucompleteCountryObj) ->
     countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
 
     isValidCountry = !_.isUndefined(countryCode)
     vm.registerForm.country.$setValidity('required', isValidCountry)
     vm.isValidCountry = isValidCountry
-    if isValidCountry
-      vm.country = angucompleteCountryObj.originalObject
+    vm.country = _.get(angucompleteCountryObj, 'originalObject')
 
-  afterActivationURL = $stateParams.returnUrl ? 'https://connect.' + DOMAIN
+  vm.onCountryBlur = () ->
+    isValidCountry = !_.isUndefined(vm.country)
+    vm.registerForm.country.$setValidity('required', isValidCountry)
+    vm.isCountryDirty = vm.registerForm.country.$dirty
+    vm.isValidCountry = isValidCountry
+
   vm.submit = ->
     vm.error = false
     vm.loading = true
@@ -48,7 +59,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
         firstName         : vm.firstName
         lastName          : vm.lastName
         email             : vm.email
-        utmSource         : 'connect'
+        utmSource         : UTM_SOURCE_CONNECT
         country           :
           code: npad(vm.country.code, 3)
           isoAlpha3Code: vm.country.alpha3
@@ -62,15 +73,63 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
       config.param.credential =
         password : vm.password
     registerUser(config).then(registerSuccess, registerError)
+    # registerSuccess({ id: 40152526})
 
   registerError = (error) ->
     $scope.$apply ->
       vm.error        = true
       vm.loading      = false
-      vm.errorMessage = error.message
+      if error.message.indexOf('JSON') != -1
+        vm.errorMessage = "We weren't able to register you because of a system error. Please try again or contact suppor@topcoder.com."
+      else
+        vm.errorMessage = error.message
 
-  registerSuccess = ->
-    $state.go 'CONNECT_REGISTRATION_SUCCESS'
+  registerSuccess = (user) ->
+    # options =
+    #   username: vm.username
+    #   password: vm.password
+    
+    # getOneTimeToken(options).then(tokenSuccess, registerError)
+    stateParams =
+      email              : vm.email
+      username           : vm.username
+      password           : vm.password
+      userId             : user.id
+      afterActivationURL : afterActivationURL
+
+    $state.go 'CONNECT_PIN_VERIFICATION', stateParams
+
+  # following method could be used if we want to procure the temp token before
+  # landing user on pin verificaiton screen
+  # tokenSuccess = ({ token }) ->
+  #   stateParams =
+  #     email: vm.email
+  #     username: vm.username
+  #     password: vm.password
+  #     tempToken : token
+  #   $state.go 'CONNECT_PIN_VERIFICATION',stateParams
+
+  vm.ssoRegister = ->
+    vm.isSSORegistration = true
+
+  vm.ssoRegisterCancel = ->
+    vm.isSSORegistration = false
+
+  vm.onSSORegister = (ssoUser) ->
+    vm.isSSORegistration = false
+    vm.ssoUser = ssoUser
+    
+    if ssoUser && ssoUser.firstName
+      vm.firstName = ssoUser.firstName
+      vm.registerForm['first-name'].$setDirty()
+
+    if ssoUser && ssoUser.lastName
+      vm.lastName = ssoUser.lastName
+      vm.registerForm['last-name'].$setDirty()
+
+    if ssoUser && ssoUser.email
+      vm.email = ssoUser.email
+      vm.registerForm.email.$setDirty()
 
   vm
 

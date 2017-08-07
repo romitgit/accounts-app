@@ -4,6 +4,7 @@ export const AUTH0_JWT = 'auth0Jwt'
 export const V2_JWT = 'tcjwt'
 export const V2_SSO = 'tcsso'
 export const ZENDESK_JWT = 'zendeskJwt'
+export const V3_TEMP_JWT = 'v3tempjwt'
 
 export const SCHEME = 'https'
 export const DOMAIN = process.env.DOMAIN
@@ -31,9 +32,12 @@ export const TOPCODER_SSO_PROVIDER = 'sfdc-aspdev'//TODO update provider for top
 
 export const SEGMENT_KEY = process.env.ACCOUNTS_SEGMENT_KEY
 
+export const CONNECT_PROJECT_CALLBACK = 'new-project-callback'
 // this string should be regex aware i.e. it should backquote any regex reserve characters
 export const SSO_PROVIDER_DOMAINS = 'wipro|asp\\.appirio\\.com|topcoder'
 // individual domains should not backquote anything because it is matched without regex
 export const SSO_PROVIDER_DOMAIN_WIPRO = 'wipro'
 export const SSO_PROVIDER_DOMAIN_APPIRIO = 'asp.appirio.com'
 export const SSO_PROVIDER_DOMAIN_TOPCODER = 'topcoder'
+
+export const UTM_SOURCE_CONNECT = 'connect'

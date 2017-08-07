@@ -1,43 +1,19 @@
-@import "work/work-includes";
-@import "variables";
+@import "../tc-ui-variables";
 
-login {
-  display: block;
-  text-align: center;
+.connect-accounts-container {
 
-  .forgot {
-    width: 100%;
-    text-align: center;
-    margin-top: 10px;
-    padding-bottom: 20px;
+  .login-options {
+    margin-top: 4 * $base-unit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-    @media (min-width: 768px) {
-      width     : 380px;
+    hr {
+      width: 50%;
     }
 
-    a {
-      text-decoration: none;
-    }
-  }
-
-  hr {
-    width: 100%;
-    margin: 20px 0;
-  }
-
-  .sso-signon {
-    margin: 20px auto;
-  }
-
-  .thankyou {
-    background-color: $primary-color;
-    margin: 1em 0;
-    padding: 1em;
-
-    p {
-      color: $white;
-      font-size: 16px;
-      font-weight: normal;
+    .sso-signon {
+      margin-top: 2 * $base-unit;
     }
   }
 }

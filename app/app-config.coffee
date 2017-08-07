@@ -125,6 +125,7 @@ config = (
 
   states['CONNECT_LOGIN'] =
     url: '/connect?retUrl&handle&password'
+    params: {'passwordReset'}
     controller  : 'ConnectLoginController as vm'
     template: require('./views/connect/login')()
     public: true
@@ -142,6 +143,13 @@ config = (
     controller: 'TCRegistrationSuccessController as vm'
     public: true
 
+  states['CONNECT_PIN_VERIFICATION'] =
+    url: '/connect/pin-verification'
+    params: {'email', 'username', 'password', 'userId', 'afterActivationURL'}
+    controller  : 'ConnectPinVerificationController as vm'
+    template: require('./views/connect/pin-verification.jade')()
+    public: true
+
   states['CONNECT_FORGOT_PASSWORD'] =
     url: '/connect/forgot-password'
     controller  : 'ConnectForgotPasswordController as vm'
@@ -149,7 +157,7 @@ config = (
     public: true
 
   states['CONNECT_RESET_PASSWORD'] =
-    url: '/connect/reset-password?token&handle'
+    url: '/connect/reset-password?token&handle&retUrl'
     controller  : 'ConnectResetPasswordController as vm'
     template   : require('./views/connect/reset-password.jade')()
     public: true

@@ -1,9 +1,9 @@
-main.layout-main.login-reg.flex.center.middle("role"="main")
+main.layout-main.login-reg.flex.center.middle.connect-accounts-container.tc-ui("role"="main")
   login-reg-shell
     header.flex.center.middle
       img(src=require("../../images/logo_mobile.svg"))
 
-    main.light-bg.elevated-bottom
+    main.light-bg.elevated-bottom.connect-accounts-content
       sso-login
         loader(ng-if="vm.loading")
 
@@ -15,11 +15,12 @@ main.layout-main.login-reg.flex.center.middle("role"="main")
           p.error(ng-show="vm.error") {{ vm.error }}
 
           form(ng-submit="vm.submit()")
-            input.widest(type="text" ng-model="vm.emailOrHandle" required=true placeholder="Email or handle" autofocus=true)
+            input.input.input-sm(type="text" ng-model="vm.emailOrHandle" required=true placeholder="Email or handle" autofocus=true)
 
-            button.action(type="submit" style="margin-bottom:11px") Continue
+            button.action.tc-btn.tc-btn-primary(type="submit" style="margin-bottom:11px") Continue
+          p <a ng-click="vm.showLoginPage()">Back to Login</a>
 
         p.success(ng-show="vm.success") Redirecting to {{ vm.retUrl }} ...
 
     footer
-      p <a ng-click="vm.showLoginPage()">Back to Login</a>
+      p.copyright © Topcoder 2017
