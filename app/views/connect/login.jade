@@ -23,7 +23,8 @@
       .forgot.small-text
         a(href="{{vm.forgotPasswordUrl}}") Forgot your password?
 
-      button.action.tc-btn.tc-btn-primary.tc-btn-sm(type="submit") Log in
+      button.action.tc-btn.tc-btn-primary.tc-btn-sm.disabled(type="button" disabled="disabled" ng-show="!vm.username || !vm.password") Log in
+      button.action.tc-btn.tc-btn-primary.tc-btn-sm(type="submit" ng-show="vm.username && vm.password") Log in
 
       //- hiding until we have refined sso flow working
       .login-options(ng-hide="true")
