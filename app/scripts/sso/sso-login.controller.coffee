@@ -19,7 +19,7 @@ SSOLoginController = (
   vm.error         = ''
   vm.emailOrHandle = ''
   vm.baseUrl       = "https://www.#{DOMAIN}"
-  vm.org           = $stateParams.org
+  vm.org           = ''
   vm.retUrl        = if $stateParams.retUrl then $stateParams.retUrl else vm.baseUrl
   vm.app           = $stateParams.app
 

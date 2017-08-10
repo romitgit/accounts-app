@@ -165,7 +165,7 @@ config = (
   # State parameters
   # see SOCIAL_CALLBACK
   states['SSO_LOGIN'] =
-    url: '/sso-login/:org?app&retUrl'
+    url: '/sso-login/?app&retUrl'
     template   : require('./views/sso/sso-login')()
     controller : 'SSOLoginController as vm'
     public: true
