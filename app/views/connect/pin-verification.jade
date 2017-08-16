@@ -2,7 +2,8 @@
   .connect-accounts-header
     a(href='#')
       img(src=require("../../images/connect/connect.png"), alt='')
-  h2.title Your account has been created. Last step: double-check your email address to help keep your account secure.
+  .confirmation-block.confirmation-block-md(ng-if="vm.isConnectProjectFlow")
+    span Your account has been created. Last step: double-check your email address to help keep your account secure.
   .connect-accounts-content
     h3 Verify your email address
     .error-block.error-block-md(ng-if="vm.error && !vm.pinError && !vm.emailError") {{ vm.message || "Currently we can't verify your security PIN" }}
