@@ -316,10 +316,17 @@ export function registerUser(body) {
   function success(data) {
     return get(data, 'result.content')
   }
+
+  function failure(res) {
+    throw new Error( get(res, 'result.content') || "We weren't able to register you because of a system error. Please try again or contact suppor@topcoder.com." )
+  }
+
   return fetchJSON(API_URL + '/users', {
     method: 'POST',
     body
-  }).then(success)
+  })
+  .then(success)
+  .catch(failure)
 }
 
 export function ssoLogin(provider, state) {
