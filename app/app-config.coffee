@@ -76,15 +76,27 @@ config = (
     template: require('./views/tc/login')()
     public: true
 
+  # State parameters
+  # retUrl       : (required) URL to redirect after SSO
+  # utm_source   : (optional) UTM source for the registration
+  # utm_medium   : (optional) UTM medium for the registration
+  # utm_campaign : (optional) UTM campaign for the registration
+  # userJWTToken : (optional) v3 JWT Token
+  # auth0Jwt     : (optional) Auth0(v2) JWT Token
+  # auth0Refresh : (optional) Auth0 Refresh Token
+  # message      : (optional) A message handed by Identity Service when some error occurs
   states['MEMBER_REGISTRATION'] =
-    url: '/member/registration?retUrl&utm_source&utm_medium&utm_campaign'
+    url: '/member/registration?retUrl&utm_source&utm_medium&utm_campaign&userJWTToken&auth0Jwt&auth0Refresh&message'
+    params: { 'auth0Data' }
     controller  : 'TCRegistrationController as vm'
     template: require('./views/tc/register.jade')()
     public: true
 
   states['MEMBER_REGISTRATION_SUCCESS'] =
-    url: '/member/registration-success'
+    url: '/member/registration-success?retUrl'
+    params: { 'ssoUser' }
     template: require('./views/tc/registered-successfully.jade')()
+    controller: 'TCRegistrationSuccessController as vm'
     public: true
 
   states['MEMBER_FORGOT_PASSWORD'] =
@@ -99,27 +111,43 @@ config = (
     template   : require('./views/tc/reset-password.jade')()
     public: true
     
+  # State parameters
+  # retUrl       : (required) URL to redirect after SSO
+  # userJWTToken : (optional) v3 JWT Token
+  # auth0Jwt     : (optional) Auth0(v2) JWT Token
+  # auth0Refresh : (optional) Auth0 Refresh Token
+  # message      : (optional) A message handed by Identity Service when some error occurs
   states['SOCIAL_CALLBACK'] =
-    url: '/social-callback?retUrl&userJWTToken&status&message'
+    url: '/social-callback?retUrl&userJWTToken&auth0Jwt&auth0Refresh&message'
     template   : require('./views/tc/social-callback')()
     controller : 'SSOCallbackController as vm'
     public: true
 
   states['CONNECT_LOGIN'] =
     url: '/connect?retUrl&handle&password'
+    params: {'passwordReset'}
     controller  : 'ConnectLoginController as vm'
     template: require('./views/connect/login')()
     public: true
 
   states['CONNECT_REGISTRATION'] =
-    url: '/connect/registration?retUrl'
+    url: '/connect/registration?retUrl&userJWTToken&auth0Jwt&auth0Refresh&message'
     controller  : 'ConnectRegistrationController as vm'
     template: require('./views/connect/registration.jade')()
     public: true
 
   states['CONNECT_REGISTRATION_SUCCESS'] =
     url: '/connect/registration-success'
+    params: { 'ssoUser' }
     template: require('./views/connect/registration-success.jade')()
+    controller: 'TCRegistrationSuccessController as vm'
+    public: true
+
+  states['CONNECT_PIN_VERIFICATION'] =
+    url: '/connect/pin-verification'
+    params: {'email', 'username', 'password', 'userId', 'afterActivationURL'}
+    controller  : 'ConnectPinVerificationController as vm'
+    template: require('./views/connect/pin-verification.jade')()
     public: true
 
   states['CONNECT_FORGOT_PASSWORD'] =
@@ -129,20 +157,28 @@ config = (
     public: true
 
   states['CONNECT_RESET_PASSWORD'] =
-    url: '/connect/reset-password?token&handle'
+    url: '/connect/reset-password?token&handle&retUrl'
     controller  : 'ConnectResetPasswordController as vm'
     template   : require('./views/connect/reset-password.jade')()
     public: true
 
+  # State parameters
+  # see SOCIAL_CALLBACK
   states['SSO_LOGIN'] =
-    url: '/sso-login/:org?retUrl'
-    template   : require('./views/connect/sso-login')()
+    url: '/sso-login/?app&retUrl'
+    template   : require('./views/sso/sso-login')()
     controller : 'SSOLoginController as vm'
     public: true
 
+  # State parameters
+  # retUrl       : (required) URL to redirect after SSO
+  # userJWTToken : (optional) v3 JWT Token
+  # auth0Jwt     : (optional) Auth0(v2) JWT Token
+  # auth0Refresh : (optional) Auth0 Refresh Token
+  # message      : (optional) A message handed by Identity Service when some error occurs
   states['SSO_CALLBACK'] =
-    url: '/sso-callback?retUrl&userJWTToken&tcjwt&tcsso&status&message'
-    template   : require('./views/connect/sso-callback')()
+    url: '/sso-callback?retUrl&userJWTToken&auth0Jwt&auth0Refresh&message'
+    template   : require('./views/sso/sso-callback')()
     controller : 'SSOCallbackController as vm'
     public: true
 

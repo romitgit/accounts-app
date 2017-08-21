@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack -p --bail --progress --build",
     "build:dev": "webpack --bail --progress",
-    "dev": "webpack-dev-server --history-api-fallback --dev --inline --progress --port 3000",
+    "dev": "webpack-dev-server --history-api-fallback --dev --inline --progress --port 3100 --public local.topcoder-dev.com",
     "prod": "webpack-dev-server --history-api-fallback --prod --inline --progress --port 3000",
     "build-connector": "webpack --bail --progress -p --build --config webpack.config.connector.js",
     "build-connector:dev": "webpack --bail --progress --config webpack.config.connector.js"
@@ -15,9 +15,8 @@
     "angular": "^1.4.8",
     "angular-cookies": "^1.5.1",
     "angular-messages": "^1.5.2",
-    "angular-ui-router": "^0.2.18",
     "angucomplete-alt": "^2.1.0",
-    "appirio-tech-ng-auth": "^4.2.5",
+    "@uirouter/angularjs": "^1.0.0",
     "appirio-tech-ng-ui-components": "^2.2.4",
     "appirio-tech-ng-iso-constants": "^1.0.6",
     "auth0-angular": "^4.1.0",

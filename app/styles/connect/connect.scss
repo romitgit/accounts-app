@@ -1,0 +1,215 @@
+@import "../tc-ui-variables";
+
+.connect-accounts-container {
+  background: $tc-gray-neutral-light;
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
+  
+  loader {
+    z-index: 1000;
+  }
+
+  .angucomplete-dropdown {
+    overflow-y: auto;
+    max-height: 10 * 6 * $base-unit;
+  }
+ 
+  input::-ms-clear{
+    display: none !important;
+  }
+  
+  h2 {
+    margin: 0 (4 * $base-unit) (2 * $base-unit);
+    font-weight: 300;
+    font-size: 36px;
+    color: $tc-black;
+    line-height: (8 * $base-unit);
+    text-align: center;
+
+    /* remove side effect of appirio-styles */
+    text-transform: none;
+    font-family: inherit;
+  }
+
+  h2.title {
+    margin-top: -30px;
+    margin-bottom: (10 * $base-unit);
+  }
+
+  h2 + .error-block,
+  h3 + .error-block {
+    margin-right: 30px;
+    margin-left: 30px;
+  }
+
+  p.subTitle {
+    font-size: (4 * $base-unit);
+    color: $tc-gray-50;
+    line-height: (6 * $base-unit);
+    text-align: center;
+
+    /* remove side effect of appirio-styles */
+    font-weight: inherit;
+  }
+
+  h3 {
+    margin: 0 0 (6 * $base-unit);
+    font-weight: 400;
+    font-size: (4 * $base-unit);
+    color: $tc-gray-80;
+    line-height: (6 * $base-unit);
+    text-align: center;
+    
+    /* remove side effect of appirio-styles */
+    text-transform: none;
+    font-family: inherit;
+  }
+
+  p.text {
+    margin: 0 0 (4 * $base-unit);
+    font-size: (3 * $base-unit);
+    color: $tc-gray-80;
+    line-height: (5 * $base-unit);
+  }
+
+  p.error {
+    text-align: center;
+  }
+
+  a {
+    color: #0B71E6;
+    text-decoration: none;
+  }
+
+  .small-text {
+    margin: (6 * $base-unit) 0 0;
+    font-size: 12px;
+    color: $tc-gray-50;
+    line-height: (4 * $base-unit);
+  }
+
+
+  .connect-accounts-header {
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    text-align: right;
+    padding: (4 * $base-unit) (4 * $base-unit) (5 * $base-unit) 24px;
+    font-size: (3 * $base-unit);
+    color: $tc-gray-50;
+    line-height: (6 * $base-unit);
+  }
+
+  .connect-accounts-header a {
+    display: inline-block;
+  }
+
+  .connect-accounts-header .tc-btn {
+    margin-left: (2 * $base-unit);
+  }
+
+  .connect-accounts-content {
+    max-width: 540px;
+    width: 90%;
+    margin: 0 auto;
+    padding: (10 * $base-unit);
+    background: #FFFFFF;
+    box-shadow: 0 2px 9px 0 rgba(38, 38, 40, 0.06);
+    border-radius: 7px;
+  }
+
+  .connect-accounts-content .terms-policy {
+    margin: 0 (4 * $base-unit);
+    font-size: 12px;
+    color: #747480;
+    line-height: (4 * $base-unit);
+    text-align: center;
+  }
+
+  .connect-accounts-content .tc-btn-primary {
+    display: block;
+    margin: (6 * $base-unit) auto 0;
+  }
+
+  .connect-accounts-form {
+    max-width: 390px;
+    width: 90%;
+    margin: (6 * $base-unit) auto 0;
+  }
+
+  .connect-accounts-form.connect-accounts-form--mt50 {
+    margin-top: (10 * $base-unit);
+  }
+
+  .connect-accounts-form .wrapper {
+    position: relative;
+    margin: 0 $base-unit (3 * $base-unit);
+  }
+
+  .connect-accounts-form .wrapper.wrapper-half {
+    display: inline-block;
+    width: calc(50% - 12px);
+  }
+
+  .connect-accounts-form .wrapper.wrapper-tooltip .input:focus ~ .tooltip {
+    opacity: 1;
+  }
+
+  .connect-accounts-form .wrapper .input {
+    display: block;
+    width: 100%;
+  }
+
+  .connect-accounts-form .wrapper label {
+    display: block;
+    margin-bottom: $base-unit;
+    font-size: 12px;
+    color: $tc-gray-80;
+    line-height: (3 * $base-unit);
+
+    /* remove side effect of appirio-styles */
+    text-transform: none;
+    font-weight: inherit;
+  }
+
+  .connect-accounts-form .small-text {
+    margin-top: (2 * $base-unit);
+    text-align: center;
+  }
+
+  .connect-accounts-form .wrapper toggle-password-with-tips label {
+    color: $tc-gray-40;
+  }
+
+  .register-options {
+    margin-top: 4 * $base-unit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    hr {
+      width: 50%;
+    }
+
+    .sso-signon {
+      margin-top: 2 * $base-unit;
+    }
+  }
+
+  .copyright {
+    margin-top: (6 * $base-unit);
+    font-size: 12px;
+    color: #656565;
+    text-align: center;
+    line-height: (3 * $base-unit);
+
+    /* remove side effect of appirio-styles */
+    font-weight: inherit;
+  }
+
+  .info {
+    background: #CFEFB2;
+    color: #47474F;
+    padding: 10px;
+  }
+}

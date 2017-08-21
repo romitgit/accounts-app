@@ -15,18 +15,18 @@ export function getToken(key) {
 }
 
 export function setToken(key, token) {
-  updateCookie(key, token, 60) // valid for 60 days
+  updateCookie(key, token, 60, DOMAIN) // valid for 60 days
 }
 
 export function removeToken(key) {
-  deleteCookie(key)
+  deleteCookie(key, DOMAIN)
 }
 
 export function decodeToken(token) {
   const parts = token.split('.')
 
   if (parts.length !== 3) {
-    throw new Error('JWT must have 3 parts')
+    throw new Error('The token is invalid')
   }
 
   const decoded = urlBase64Decode(parts[1])

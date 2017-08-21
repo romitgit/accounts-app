@@ -1,122 +1,19 @@
-@import "work/work-includes";
-@import "variables";
+@import "../tc-ui-variables";
 
-registration {
-  display: block;
+.connect-accounts-container {
 
-  p.error {
-    width: 100%;
-    margin-right: auto;
-    margin-left : auto;
-    padding-top: 0px;
-
-    @media (min-width: 768px) {
-      width       : 380px;
-    }
-  }
-
-  form {
+  .register-options {
+    margin-top: 4 * $base-unit;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    width: 100%;
 
-    @media (min-width: 768px) {
-      input[name='first-name'],
-      input[name='last-name'] {
-        width: 185px;
-        padding-right: 45px;
-      }
-      input[name='username'],
-      input[name='email'] {
-        padding-right: 85px;
-      }
-    }
-  }
-
-  .first-last-names {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-
-    @media (min-width: 768px) {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      width: 380px;
-    }
-  }
-
-  .organization {
-    width: 100%;
-
-    @media (min-width: 768px) {
-      width: 380px;
-    }
-  }
-
-  hr {
-    margin: $vertical-smallest 0;
-  }
-
-  .username, .password {
-    position: relative;
-    width: 100%;
-
-    @media (min-width: 768px) {
-      width: 380px;
+    hr {
+      width: 50%;
     }
 
-    .header {
-      font-weight: 500;
+    .sso-signon {
+      margin-top: 2 * $base-unit;
     }
-
-    p {
-      line-height: 24px;
-    }
-  }
-
-  .tooltip {
-    display: none;
-
-    @media (max-width: 914px) {
-      position: relative;
-      left: 0px;
-      margin-left: 0px;
-      margin-bottom: 20px;
-      width: 100%;
-      box-shadow: none;
-      background-color: $gray-lighter;
-    }
-
-    .arrow {
-
-      @media (max-width: 914px) {
-        display: none;
-      }
-    }
-  }
-
-  ul.use {
-    list-style: circle;
-    margin-left: 20px;
-    margin-top: 15px;
-  }
-
-  input {
-    &:focus + .tooltip {
-      display: block;
-    }
-  }
-
-  .action {
-    margin: 20px auto;
-  }
-
-  .thanks {
-    text-align : center;
-    max-width  : 380px;
-    margin     : 0 auto;
   }
 }

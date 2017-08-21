@@ -4,11 +4,13 @@ export const AUTH0_JWT = 'auth0Jwt'
 export const V2_JWT = 'tcjwt'
 export const V2_SSO = 'tcsso'
 export const ZENDESK_JWT = 'zendeskJwt'
+export const V3_TEMP_JWT = 'v3tempjwt'
 
 export const SCHEME = 'https'
 export const DOMAIN = process.env.DOMAIN
 export const API_URL = process.env.API_URL
 export const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN
+export const AUTH0_CALLBACK = process.env.auth0Callback
 export const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID
 export const ZENDESK_DOMAIN = process.env.ZENDESK_DOMAIN
 
@@ -23,3 +25,19 @@ export const LOGOUT_FAILURE = 'LOGOUT_FAILURE'
 export const BUSY_PROGRESS_MESSAGE = 'Processing...'
 
 export const ALLOWED_ORIGINS = [DOMAIN, 'http://localhost:3000', 'local.topcoder-dev.com:3000']
+
+export const WIPRO_SSO_PROVIDER = 'wipro-adfs'
+export const APPIRIO_SSO_PROVIDER = 'sfdc-aspdev'
+export const TOPCODER_SSO_PROVIDER = 'sfdc-aspdev'//TODO update provider for topcoder sfdc org
+
+export const SEGMENT_KEY = process.env.ACCOUNTS_SEGMENT_KEY
+
+export const CONNECT_PROJECT_CALLBACK = 'new-project-callback'
+// this string should be regex aware i.e. it should backquote any regex reserve characters
+export const SSO_PROVIDER_DOMAINS = 'wipro|asp\\.appirio\\.com|topcoder'
+// individual domains should not backquote anything because it is matched without regex
+export const SSO_PROVIDER_DOMAIN_WIPRO = 'wipro'
+export const SSO_PROVIDER_DOMAIN_APPIRIO = 'asp.appirio.com'
+export const SSO_PROVIDER_DOMAIN_TOPCODER = 'topcoder'
+
+export const UTM_SOURCE_CONNECT = 'connect'

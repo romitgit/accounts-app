@@ -19,17 +19,6 @@
       input(ng-model="vm.username", name="username", placeholder="Username or Email", type="text", required)
 
     toggle-password
-      input#current-password-input(
-        ng-model="vm.currentPassword",
-        ng-model-options="{allowInvalid: true}",
-        ng-focus="vm.onCPFocus($event)",
-        ng-blur="vm.onCPBlur($event)",
-        name="currentPassword",
-        type="password",
-        placeholder="{{currentPasswordPlaceholder}}",
-        required)
-
-      label #[input(type="checkbox", id="currentPasswordCheckbox", ng-model="focusOnCurrentPasswordInput", ng-change="vm.toggleTypeAttribute()")] Show
 
     p.problem-signin
       a.forgot-password(href="{{vm.forgotPasswordUrl}}") Forgot your password?
@@ -53,6 +42,9 @@
       li.network.twitter
         a.ico(ng-click="vm.socialLogin('twitter')")
         span Twitter
+      li.network.sso
+        a.ico(ui-sref="SSO_LOGIN({app:'member',retUrl:vm.$stateParams.retUrl})")
+        span Single Sign On
 
 p.join-topcoder Not a member yet? &nbsp;
   a(href="{{vm.registrationUrl}}") Join Now

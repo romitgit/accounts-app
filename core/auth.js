@@ -1,9 +1,12 @@
 import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
-import { getLoginConnection } from './utils.js'
+import { getLoginConnection, isEmail } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
-import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL, AUTH0_DOMAIN, AUTH0_CLIENT_ID } from './constants.js'
+import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
+  AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
+  TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
+  SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -21,7 +24,8 @@ function fetchJSON(url, options) {
     }
   }, options)
 
-  if (config.body) config.body = JSON.stringify(config.body)
+  if (config.body && typeof config.body === 'object')
+    config.body = JSON.stringify(config.body)
 
   function handleResponse(response) {
     return response.json()
@@ -193,7 +197,7 @@ function setAuth0Tokens({id_token, refresh_token}) {
   setToken(AUTH0_REFRESH, refresh_token)
 }
 
-function getNewJWT() {
+export function getNewJWT() {
   const externalToken = getToken(AUTH0_JWT)
   const refreshToken = getToken(AUTH0_REFRESH)
 
@@ -309,9 +313,62 @@ export function resetPassword(handle, resetToken, password) {
 }
 
 export function registerUser(body) {
+  function success(data) {
+    return get(data, 'result.content')
+  }
+
+  function failure(res) {
+    throw new Error( get(res, 'result.content') || "We weren't able to register you because of a system error. Please try again or contact suppor@topcoder.com." )
+  }
+
   return fetchJSON(API_URL + '/users', {
     method: 'POST',
     body
+  })
+  .then(success)
+  .catch(failure)
+}
+
+export function ssoLogin(provider, state) {
+  return new Promise(function(resolve, reject) {
+    // supported backends
+    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER ]
+    if (providers.indexOf(provider) > -1) {
+      auth0.signin({
+        popup: true,
+        connection: provider,
+        scope: 'openid profile offline_access',
+        state: state
+      },
+        function(error, profile, idToken, accessToken, state, refreshToken) {
+          if (error) {
+            console.warn('onSSORegistrationFailure ' + JSON.stringify(error))
+            reject(error)
+            return
+          }
+          var ssoUserData = extractSSOUserData(profile, accessToken)
+          var result = {
+            status: 'SUCCESS',
+            data: {
+              profile: profile,
+              idToken: idToken,
+              accessToken: accessToken,
+              refreshToken: refreshToken,
+              ssoUserData : ssoUserData
+            }
+          }
+          console.debug('ssoLogin Result: ' + JSON.stringify(result))
+          resolve(result)
+        }
+      )
+    } else {
+      console.error('Unsupported SSO login provider', provider)
+
+      reject({
+        status: 'FAILED',
+        'error': 'Unsupported SSO login provider \'' + provider + '\''
+      })
+    }
   })
 }
 
@@ -327,21 +384,15 @@ export function socialRegistration(provider, state) {
         state: state
       },
         function(error, profile, idToken, accessToken, state, refreshToken) {
-          console.log('error ')
-          console.log(error)
           if (error) {
-            console.warning('onSocialLoginFailure ' + JSON.stringify(error))
+            console.warn('onSocialLoginFailure ' + JSON.stringify(error))
             reject(error)
             return
           }
-          console.log(profile)
-          console.log(accessToken)
           var socialData = extractSocialUserData(profile, accessToken)
-          console.log(socialData)
 
           validateSocialProfile(socialData.socialUserId, socialData.socialProvider)
             .then(function(resp) {
-              console.debug(JSON.stringify(resp))
               if (resp.valid) {
                 // success
                 var result = {
@@ -374,6 +425,41 @@ export function socialRegistration(provider, state) {
       })
     }
   })
+}
+
+function extractSSOUserData(profile, accessToken) {
+  var ssoProvider = profile.identities[0].connection
+  var firstName = '',
+    lastName = '',
+    name = '',
+    handle = '',
+    email = ''
+
+  var ssoUserId = profile.user_id.substring(profile.user_id.lastIndexOf('|') + 1)
+  if (ssoProvider === WIPRO_SSO_PROVIDER || ssoProvider === APPIRIO_SSO_PROVIDER
+    || ssoProvider === TOPCODER_SSO_PROVIDER) {
+    firstName = profile.given_name
+    lastName  = profile.family_name
+    name      = profile.name
+    email     = profile.email
+  }
+  if (!firstName && !lastName && name) {
+    var names = name.split(/\s/)
+    if (names.length > 0) {
+      firstName = names[0]
+    }
+    if (names.length > 1) {
+      lastName = names[1]
+    }
+  }
+  return {
+    ssoUserId: ssoUserId,
+    firstName: firstName,
+    lastName: lastName,
+    name: name,
+    email: email,
+    ssoProvider: ssoProvider
+  }
 }
 
 function extractSocialUserData(profile, accessToken) {
@@ -448,14 +534,13 @@ function extractSocialUserData(profile, accessToken) {
 }
 
 export function generateSSOUrl(org, callbackUrl) {
-  const apiUrl = replace(API_URL, 'api-work', 'api')
-
+  
   return [
     'https://' + AUTH0_DOMAIN + '/authorize?',
     'response_type=token',
     '&client_id=' + AUTH0_CLIENT_ID,
     '&connection=' + org,
-    '&redirect_uri=' + apiUrl + '/pub/callback.html',
+    '&redirect_uri=' + AUTH0_CALLBACK,
     '&state=' + (encodeURIComponent(callbackUrl)),
     '&scope=openid%20profile%20offline_access',
     '&device=device'
@@ -523,4 +608,99 @@ export function validateSocialProfile(userId, provider) {
   }
 
   return fetchJSON(url, config).then(success)
+}
+
+export function getOneTimeToken(userId, password) {
+  const url = API_URL + '/users/oneTimeToken'
+  const config = {
+    method: 'POST',
+    body: 'userId=' + userId + '&password=' + password,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  }
+  function success(data) {
+    return get(data, 'result.content')
+  }
+  return fetchJSON(url, config).then(success)
+}
+
+export function verifyPIN(pin, source) {
+  let url = API_URL + '/users/activate?code=' + pin
+  // adds source param, if available. Can be used to identify the calling app.
+  // one implemented use case is to supress welcome email for connect users.
+  if (source) {
+    url += '&source=' + source
+  }
+  const config = {
+    method: 'PUT',
+    body: {
+      param: {
+        code: pin
+      }
+    }
+  }
+  function success(data) {
+    return get(data, 'result.content')
+  }
+  return fetchJSON(url, config).then(success)
+}
+
+export function resendActivationCode(userId, afterActivationURL) {
+  const url = API_URL + '/users/' + userId + '/sendActivationCode'
+  const config = {
+    method: 'POST',
+    body: {
+      param: {},
+      options: {
+        afterActivationURL : afterActivationURL
+      }
+    }
+  }
+
+  return fetchJSON(url, config)
+}
+
+export function updatePrimaryEmail(userId, email, tempToken) {
+  const url = API_URL + '/users/' + userId + '/email/' + email
+  const config = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + tempToken
+    },
+    body: {
+      param: {
+        email: email
+      }
+    }
+  }
+  function success(data) {
+    return get(data, 'result.content')
+  }
+  return fetchJSON(url, config).then(success)
+}
+
+export function identifySSOProvider(emailOrHandle) {
+  var EMAIL_DOMAIN_REGEX = new RegExp('^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\\.)?[a-zA-Z]+\\.)?(' + SSO_PROVIDER_DOMAINS + ')\\.[a-zA-Z]{2,15}$')
+  var match = EMAIL_DOMAIN_REGEX.exec(emailOrHandle)
+  var domain, provider = null
+  if (match && match.length > 1) {
+    domain = match[1]
+  }
+  // identify SSO provider by looking at domain of the email or handle
+  // if handle does not follow email pattern, this won't work
+  switch(domain) {
+  case SSO_PROVIDER_DOMAIN_WIPRO:
+    provider = WIPRO_SSO_PROVIDER
+    break
+  case SSO_PROVIDER_DOMAIN_APPIRIO:
+    provider = APPIRIO_SSO_PROVIDER
+    break
+  case SSO_PROVIDER_DOMAIN_TOPCODER:
+    provider = TOPCODER_SSO_PROVIDER
+    break
+  default:
+    break
+  }
+  return provider
 }

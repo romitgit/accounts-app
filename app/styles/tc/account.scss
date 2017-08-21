@@ -30,6 +30,9 @@
       height: 30px;
     }
   }
+  form {
+    margin-bottom: 15px;
+  }
   // Basic element stylings
   h1 {
     @include font-with-weight('Sofia Pro', 300);
@@ -110,7 +113,6 @@
   }
   .login-options {
     margin-bottom: 40px;
-    margin-top: 15px;
     p {
       @include font-with-weight;
       color: $accent-gray;
@@ -174,6 +176,14 @@
           background-image: url(../../images/tc/twitter.svg);
           background-repeat: no-repeat;
           color: #26a9e0;
+        }
+      }
+      .sso {
+        margin-left: 22px;
+        .ico {
+          background-image: url(../../images/tc/sso.svg);
+          background-repeat: no-repeat;
+          color: #000000;
         }
       }
     }

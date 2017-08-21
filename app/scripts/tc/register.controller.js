@@ -1,11 +1,16 @@
 import angular from 'angular'
 import _ from 'lodash'
-import { BUSY_PROGRESS_MESSAGE, DOMAIN } from '../../../core/constants.js'
+import { BUSY_PROGRESS_MESSAGE, DOMAIN, WIPRO_SSO_PROVIDER, V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT } from '../../../core/constants.js'
 import { registerUser, socialRegistration } from '../../../core/auth.js'
 import { npad } from '../../../core/utils.js'
+import { generateReturnUrl, redirectTo } from '../../../core/url.js'
+import { getToken, decodeToken, setToken } from '../../../core/token.js'
+import { getNewJWT } from '../../../core/auth.js'
 
 (function() {
   'use strict'
+
+  const SKILL_PICKER_URL = 'https://www.' + DOMAIN + '/skill-picker'
 
   angular.module('accounts').controller('TCRegistrationController', TCRegistrationController)
 
@@ -14,6 +19,10 @@ import { npad } from '../../../core/utils.js'
   function TCRegistrationController($log, $scope, $state, $stateParams, UserService, ISO3166) {
     var vm = this
     vm.registering = false
+    // auth0 login data, passed from another states as state param
+    vm.auth0Data = $stateParams.auth0Data
+    // SSO user data extracted from auth0 login data
+    vm.ssoUser = vm.auth0Data && vm.auth0Data.ssoUserData ? vm.auth0Data.ssoUserData : null
     // prepares utm params, if available
     var utm = {
       source : $stateParams && $stateParams.utm_source ? $stateParams.utm_source : '',
@@ -24,8 +33,16 @@ import { npad } from '../../../core/utils.js'
     // Set default for toggle password directive
     vm.defaultPlaceholder = 'Create Password'
     vm.busyMessage = BUSY_PROGRESS_MESSAGE
-
+    vm.retUrl = $stateParams && $stateParams.retUrl ? $stateParams.retUrl : null
     vm.countries = ISO3166.getAllCountryObjects()
+
+    vm.$stateParams = $stateParams
+
+    $scope.$watch("registerForm", function(registerForm) {
+      if (vm.ssoUser) {
+        loadSSOUser(vm.ssoUser)
+      }
+    })
 
     vm.updateCountry = function (angucompleteCountryObj) {
       var countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
@@ -36,6 +53,20 @@ import { npad } from '../../../core/utils.js'
       if (isValidCountry) {
         vm.country = angucompleteCountryObj.originalObject
       }
+    }
+
+    function setV3Tokens({token, zendeskJwt}) {
+      $log.debug('Received v3 tokens')
+      setToken(V3_JWT, token || '')
+      setToken(ZENDESK_JWT, zendeskJwt || '')
+      $log.debug('Redirecting to ' + vm.retUrl)
+      var error = redirectTo(generateReturnUrl(vm.retUrl))
+      $scope.$apply(function() {
+        vm.registering = false
+        if (error) {
+          vm.error = 'Invalid URL is assigned to the return-URL.'
+        }
+      })
     }
 
     vm.register = function() {
@@ -55,8 +86,17 @@ import { npad } from '../../../core/utils.js'
         utmCampaign: utm.campaign
       }
 
-      if (!vm.isSocialRegistration) {
+      if (!vm.isSocialRegistration && !vm.ssoUser) {// if not social or sso registration
         userInfo.credential = { password: vm.password }
+      } else if (vm.ssoUser) {//SSO user
+        userInfo.active = true, // activate in registration
+        userInfo.profile = {
+          name: vm.ssoUser.name,
+          email: vm.ssoUser.email,
+          providerType: 'samlp',
+          provider: vm.ssoUser.ssoProvider,
+          userId: vm.ssoUser.ssoUserId
+        }
       } else {
         userInfo.profile = {
           userId: vm.socialUserId,
@@ -71,11 +111,11 @@ import { npad } from '../../../core/utils.js'
           }
         }
       }
-
+      var redirectURL = vm.retUrl ? vm.retUrl : SKILL_PICKER_URL;
       var body = {
         param: userInfo,
         options: {
-          afterActivationURL: 'https://www.' + DOMAIN + '/skill-picker'
+          afterActivationURL: redirectURL
         }
       }
 
@@ -84,12 +124,31 @@ import { npad } from '../../../core/utils.js'
         vm.registering = false
         $log.debug('Registered successfully')
 
-        // In the future, go to dashboard
-        $state.go('MEMBER_REGISTRATION_SUCCESS')
+        if (vm.ssoUser && vm.auth0Data) {
+          // LOG IN user
+          setToken(AUTH0_JWT, vm.auth0Data.idToken)
+          setToken(AUTH0_REFRESH, vm.auth0Data.refreshToken)
+          $log.debug('Getting v3jwt')
+          getNewJWT()
+            .then(setV3Tokens)
+            .catch(function(err) {
+              vm.registering = false
+              vm.errMsg = err && err.message ? err.message : 'Error in logging in new user'
+              $scope.$apply()
+              $log.error('Error in logging in new user', err)
+            })
+        } else {
+          // In the future, go to dashboard
+          $state.go('MEMBER_REGISTRATION_SUCCESS', {
+            ssoUser : !!vm.ssoUser,
+            retUrl  : redirectURL
+          })
+        }
       })
       .catch(function(err) {
         vm.registering = false
-
+        vm.errMsg = err && err.message ? err.message : 'Error in registering new user'
+        $scope.$apply()
         $log.error('Error in registering new user', err)
       })
     }
@@ -145,6 +204,26 @@ import { npad } from '../../../core/utils.js'
       })
     }
 
-    vm.$stateParams = $stateParams
+    function loadSSOUser(ssoUser) {
+      vm.ssoUser = ssoUser
+      
+      if (ssoUser && ssoUser.firstName) {
+        vm.firstname = ssoUser.firstName
+        vm.registerForm.firstname.$setDirty()
+      }
+      if (ssoUser && ssoUser.lastName) {
+        vm.lastname = ssoUser.lastName
+        vm.registerForm.lastname.$setDirty()
+      }
+      if (ssoUser && ssoUser.email) {
+        vm.email = ssoUser.email
+        vm.registerForm.email.$setDirty()
+      }
+    }
+
+    vm.showRegistrationPage = function(){
+      $state.go('MEMBER_REGISTRATION', $stateParams)
+    }
+
   }
 })()

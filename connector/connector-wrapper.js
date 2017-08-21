@@ -38,12 +38,12 @@ const proxyCall = function(REQUEST, SUCCESS, FAILURE, params = {}) {
   function request() {
     return new Promise( (resolve, reject) => {
       function receiveMessage(e) {
-        const safeFormat = e.data.type === SUCCESS || e.data.type === FAILURE
-        if (safeFormat) {
-          window.removeEventListener('message', receiveMessage)
-          if (e.data.type === SUCCESS) resolve(e.data)
-          if (e.data.type === FAILURE) reject(e.error)
-        }
+          const safeFormat = e.data.type === SUCCESS || e.data.type === FAILURE
+          if (safeFormat) {
+              window.removeEventListener('message', receiveMessage)
+              if (e.data.type === SUCCESS) resolve(e.data)
+              if (e.data.type === FAILURE) reject(e.error)
+          }
       }
 
       window.addEventListener('message', receiveMessage)

@@ -1,9 +1,9 @@
 require('./node_modules/coffee-script/register')
 const filter = require('lodash/filter')
 
-if (process.env.TRAVIS_BRANCH === 'master') process.env.ENV = 'PROD'
-if (process.env.TRAVIS_BRANCH === 'dev') process.env.ENV = 'DEV'
-if (process.env.TRAVIS_BRANCH === 'qa') process.env.ENV = 'QA'
+if (process.env.CIRCLE_BRANCH === 'master') process.env.ENV = 'PROD'
+if (process.env.CIRCLE_BRANCH === 'dev') process.env.ENV = 'DEV'
+if (process.env.CIRCLE_BRANCH === 'qa') process.env.ENV = 'QA'
 
 
 if (process.env.ENV === 'DEV') {
