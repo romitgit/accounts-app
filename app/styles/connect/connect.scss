@@ -37,7 +37,8 @@
   }
 
   h2 + .error-block,
-  h3 + .error-block {
+  h3 + .error-block,
+  .subTitle + .error-block {
     margin-right: 30px;
     margin-left: 30px;
   }
