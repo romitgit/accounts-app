@@ -651,7 +651,11 @@ export function verifyPIN(pin, source) {
   function success(data) {
     return get(data, 'result.content')
   }
-  return fetchJSON(url, config).then(success)
+
+  function failure(res) {
+    throw new Error( get(res, 'result.content') || "We weren't able to verify PIN because of a system error. Please try again or contact suppor@topcoder.com." )
+  }
+  return fetchJSON(url, config).then(success).catch(failure)
 }
 
 export function resendActivationCode(userId, afterActivationURL) {
