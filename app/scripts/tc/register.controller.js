@@ -111,6 +111,9 @@ import { getNewJWT } from '../../../core/auth.js'
           }
         }
       }
+      if (vm.isSocialRegistration) {
+        userInfo.active = true
+      }
       var redirectURL = vm.retUrl ? vm.retUrl : SKILL_PICKER_URL;
       var body = {
         param: userInfo,
