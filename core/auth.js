@@ -292,7 +292,7 @@ export function socialLogin(options) {
 
 export function sendResetEmail(email, resetPasswordUrlPrefix) {
   function failure(res) {
-    throw new Error( get(res, 'result.content') || "We weren't able to send reset link because of a system error. Please try again or contact suppor@topcoder.com." )
+    throw new Error( get(res, 'result.content') || "We weren't able to send a reset link because of a system error. Please try again or contact suppor@topcoder.com." )
   }
   return fetchJSON(API_URL + '/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix))
   .catch(failure)
