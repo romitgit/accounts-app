@@ -29,7 +29,7 @@ test:
 
 deployment:
   development:
-    branch: [dev, feature/updated-connect-reg-flow]
+    branch: [dev, feature/updated-connect-reg-flow, feature/sso_add_topcoder_role]
     owner: appirio-tech
     commands:
       - ./deploy.sh DEV

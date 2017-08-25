@@ -1,7 +1,7 @@
 import angular from 'angular'
 import _ from 'lodash'
 import { BUSY_PROGRESS_MESSAGE, DOMAIN, WIPRO_SSO_PROVIDER, V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT } from '../../../core/constants.js'
-import { registerUser, socialRegistration } from '../../../core/auth.js'
+import { registerUser, socialRegistration, addRole } from '../../../core/auth.js'
 import { npad } from '../../../core/utils.js'
 import { generateReturnUrl, redirectTo } from '../../../core/url.js'
 import { getToken, decodeToken, setToken } from '../../../core/token.js'
@@ -120,6 +120,13 @@ import { getNewJWT } from '../../../core/auth.js'
       }
 
       registerUser(body)
+      .then(function(data) {
+        if (body.param.active) {
+          return addRole(data.id, 6)
+        } else {
+          return Promise.resolve()
+        }
+      })
       .then(function(data) {
         vm.registering = false
         $log.debug('Registered successfully')

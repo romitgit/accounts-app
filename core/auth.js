@@ -337,6 +337,22 @@ export function registerUser(body) {
   .catch(failure)
 }
 
+export function addRole(userId, roleId) {
+  function success(data) {
+    return get(data, 'result.content')
+  }
+
+  function failure(res) {
+    throw new Error( get(res, 'result.content') || "We weren't able to register you because of a system error. Please try again or contact suppor@topcoder.com." )
+  }
+
+  return fetchJSON(API_URL + '/roles/' + roleId + '/assign?filter=subjectID=' + userId, {
+    method: 'POST'
+  })
+  .then(success)
+  .catch(failure)
+}
+
 export function ssoLogin(provider, state) {
   return new Promise(function(resolve, reject) {
     // supported backends
