@@ -4,7 +4,7 @@
     .login
       span Already have an account? 
       a.tc-btn.tc-btn-default.tc-btn-sm(ui-sref="CONNECT_LOGIN({retUrl:vm.retUrl})") Log in
-  .confirmation-block.confirmation-block-md(ng-if="vm.isConnectProjectFlow")
+  .confirmation-block.confirmation-block-md(ng-if="!vm.isConnectProjectFlow")
     span Your project has been saved. Now please create an account or log in to submit it for review.
   .connect-accounts-content
     h3 Register for Topcoder
