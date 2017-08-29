@@ -131,10 +131,6 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
       vm.email = ssoUser.email
       vm.registerForm.email.$setDirty()
 
-
-  vm.hasPasswordError = ->
-    vm.registerForm.password.$dirty && vm.registerForm.password.$invalid
-
   vm
 
 RegistrationController.$inject = [

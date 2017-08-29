@@ -66,9 +66,6 @@ ResetPasswordController = ($stateParams, $state, $scope) ->
       vm.error    = error.message
       vm.loading  = false
 
-  vm.hasPasswordError = ->
-    vm.resetPasswordForm.password.$dirty && vm.resetPasswordForm.password.$invalid
-
   vm
 
 ResetPasswordController.$inject = [
