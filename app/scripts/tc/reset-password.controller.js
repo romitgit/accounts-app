@@ -68,7 +68,7 @@ import { DOMAIN } from '../../../core/constants.js'
 
             login(loginOptions).then(
               function() {
-                $location.url('https://www.' + DOMAIN + '/my-dashboard')
+                window.location.href = 'https://www.' + DOMAIN + '/my-dashboard'
               },
               function(err) {
                 $state.go('MEMBER_LOGIN', { 'notifyReset': true })
