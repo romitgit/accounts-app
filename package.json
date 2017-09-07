@@ -12,14 +12,13 @@
     "build-connector:dev": "webpack --bail --progress --config webpack.config.connector.js"
   },
   "dependencies": {
+    "@uirouter/angularjs": "^1.0.0",
+    "angucomplete-alt": "^2.1.0",
     "angular": "^1.4.8",
     "angular-cookies": "^1.5.1",
     "angular-messages": "^1.5.2",
-    "angucomplete-alt": "^2.1.0",
-    "@uirouter/angularjs": "^1.0.0",
-    "appirio-tech-ng-ui-components": "^2.2.4",
     "appirio-tech-ng-iso-constants": "^1.0.6",
-    "auth0-angular": "^4.1.0",
+    "appirio-tech-ng-ui-components": "^2.2.4",
     "auth0-js": "^6.8.0",
     "babel-polyfill": "^6.7.4",
     "isomorphic-fetch": "^2.2.1",

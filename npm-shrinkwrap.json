@@ -270,11 +270,6 @@
       "from": "asynckit@https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz",
       "resolved": "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz"
     },
-    "auth0-angular": {
-      "version": "4.2.7",
-      "from": "auth0-angular@https://registry.npmjs.org/auth0-angular/-/auth0-angular-4.2.7.tgz",
-      "resolved": "https://registry.npmjs.org/auth0-angular/-/auth0-angular-4.2.7.tgz"
-    },
     "auth0-js": {
       "version": "6.8.4",
       "from": "auth0-js@https://registry.npmjs.org/auth0-js/-/auth0-js-6.8.4.tgz",

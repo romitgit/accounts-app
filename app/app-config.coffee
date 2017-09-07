@@ -7,7 +7,6 @@
 config = (
   $locationProvider
   $stateProvider
-  authProvider
 ) ->
   
   states = {}
@@ -195,19 +194,10 @@ config = (
 
   for key, state of states
     $stateProvider.state key, state
-  
-  # Setup Auth0 (for Social Login)
-  authProvider.init({
-    domain: AUTH0_DOMAIN
-    clientID: AUTH0_CLIENT_ID
-    sso: false
-  }, Auth0)
-
 
 config.$inject = [
   '$locationProvider'
   '$stateProvider'
-  'authProvider'
 ]
 
 angular.module('accounts').config config
