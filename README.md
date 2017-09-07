@@ -88,5 +88,4 @@ If you need to test your integration locally, you'll need a few more steps. The 
 
 You'll need to rerun the ``build:dev`` and ``build:connector`` commands manually to see your updates.
 
-# License
 © 2017 Topcoder. All Rights Reserved
