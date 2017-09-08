@@ -87,3 +87,5 @@ If you need to test your integration locally, you'll need a few more steps. The 
 - You should now be able to browse to ``http://local.topcoder-dev.com:8000`` to see your local version of the accounts app
 
 You'll need to rerun the ``build:dev`` and ``build:connector`` commands manually to see your updates.
+
+© 2017 Topcoder. All Rights Reserved

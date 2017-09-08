@@ -291,7 +291,11 @@ export function socialLogin(options) {
 }
 
 export function sendResetEmail(email, resetPasswordUrlPrefix) {
-  return fetchJSON(API_URL + '/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix) )
+  function failure(res) {
+    throw new Error( get(res, 'result.content') || "We weren't able to send a reset link because of a system error. Please try again or contact suppor@topcoder.com." )
+  }
+  return fetchJSON(API_URL + '/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix))
+  .catch(failure)
 }
 
 export function resetPassword(handle, resetToken, password) {
@@ -309,17 +313,28 @@ export function resetPassword(handle, resetToken, password) {
     }
   }
 
-  return fetchJSON(url, config)
+  function failure(res) {
+    throw new Error( get(res, 'result.content') || "We weren't able to reset password because of a system error. Please try again or contact suppor@topcoder.com." )
+  }
+
+  return fetchJSON(url, config).catch(failure)
 }
 
 export function registerUser(body) {
   function success(data) {
     return get(data, 'result.content')
   }
+
+  function failure(res) {
+    throw new Error( get(res, 'result.content') || "We weren't able to register you because of a system error. Please try again or contact suppor@topcoder.com." )
+  }
+
   return fetchJSON(API_URL + '/users', {
     method: 'POST',
     body
-  }).then(success)
+  })
+  .then(success)
+  .catch(failure)
 }
 
 export function ssoLogin(provider, state) {
@@ -636,7 +651,11 @@ export function verifyPIN(pin, source) {
   function success(data) {
     return get(data, 'result.content')
   }
-  return fetchJSON(url, config).then(success)
+
+  function failure(res) {
+    throw new Error( get(res, 'result.content') || "We weren't able to verify PIN because of a system error. Please try again or contact suppor@topcoder.com." )
+  }
+  return fetchJSON(url, config).then(success).catch(failure)
 }
 
 export function resendActivationCode(userId, afterActivationURL) {
