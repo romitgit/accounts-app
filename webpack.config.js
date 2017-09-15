@@ -29,7 +29,7 @@ const config = require('appirio-tech-webpack-config')({
   favicon: './app/images/favicon.ico'
 })
 
-process.env.AUTH0_DOMAIN = 'topcoder-newauth0.auth0.com'
+process.env.AUTH0_DOMAIN = 'topcoder-newauth.auth0.com'
 process.env.ACCOUNTS_APP_URL = 'http://accounts-auth0.topcoder-dev.com/#!/member'
 process.env.ACCOUNTS_APP_CONNECTOR_URL = 'http://accounts-auth0.topcoder-dev.com/connector.html'
 process.env.AUTH0_CLIENT_ID = 'G76ar2SI4tXz0jAyEbVGM7jFxheRnkqc'
