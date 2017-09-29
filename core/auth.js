@@ -135,7 +135,7 @@ function setConnection(options) {
 }
 
 function auth0Signin(options) {
-  const url = 'https://' + AUTH0_DOMAIN + '/oauth/ro'
+  const url = 'https://' + AUTH0_DOMAIN + '/oauth/token'
 
   /* eslint camelcase: 0 */
   const config = {
@@ -144,12 +144,11 @@ function auth0Signin(options) {
       username: options.username,
       password: options.password,
       client_id: AUTH0_CLIENT_ID,
-      sso: false,
       scope: 'openid profile offline_access',
       response_type: 'token',
       connection: options.connection || 'LDAP',
-      grant_type: 'password',
-      device: 'Browser'
+      realm: options.connection || 'LDAP',
+      grant_type: 'http://auth0.com/oauth/grant-type/password-realm'
     }
   }
 
