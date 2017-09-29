@@ -11,10 +11,14 @@ import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
 /// Adding a temp comment to kick off a fresh deploy
-const auth0 = new Auth0({
+const auth0 = new Auth0.WebAuth({
   domain      : AUTH0_DOMAIN,
   clientID    : AUTH0_CLIENT_ID,
-  callbackOnLocationHash: true
+  responseType: 'id_token token',
+  scope: 'openid profile offline_access',
+  redirectUri: AUTH0_CALLBACK
+  // TODO: Enable when API is created in Tenant
+  // audience: API_URL
 })
 
 function fetchJSON(url, options) {
@@ -135,65 +139,55 @@ function setConnection(options) {
 }
 
 function auth0Signin(options) {
-  const url = 'https://' + AUTH0_DOMAIN + '/oauth/token'
-
-  /* eslint camelcase: 0 */
-  const config = {
-    method: 'POST',
-    body: {
+  return new Promise((resolve, reject) => 
+    auth0.client.login({
       username: options.username,
       password: options.password,
-      client_id: AUTH0_CLIENT_ID,
-      scope: 'openid profile offline_access',
-      response_type: 'token',
-      connection: options.connection || 'LDAP',
-      realm: options.connection || 'LDAP',
-      grant_type: 'http://auth0.com/oauth/grant-type/password-realm'
-    }
-  }
-
-  return fetchJSON(url, config)
+      realm: options.connection || 'LDAP'
+    }, (err, result) => {
+      if (err) return reject(err);
+      resolve(result)
+    }))
 }
 
 function auth0Popup(options) {
   return new Promise( (resolve, reject) => {
-    auth0.login(
+    auth0.popup.authorize(
       {
-        scope: options.scope || 'openid profile offline_access',
-        connection: options.connection,
-        popup: true
+        scope: options.scope,
+        connection: options.connection
       },
-      (err, profile, id_token, access_token, state, refresh_token) => {
+      (err, { idTokenPayload, idToken, accessToken, state, refreshToken }) => {
         if (err) {
           reject(err)
           return
         }
 
-        /* eslint camelcase: 0 */
         resolve({
-          profile,
-          id_token,
-          access_token,
+          profile: idTokenPayload,
+          idToken,
+          accessToken,
           state,
-          refresh_token
+          refreshToken
         })
       }
     )
   })
 }
 
-function setAuth0Tokens({id_token, refresh_token}) {
-  if (id_token === undefined || refresh_token === undefined) {
+function setAuth0Tokens({idToken, refreshToken, accessToken}) {
+  if (idToken === undefined || refreshToken === undefined || accessToken === undefined) {
     const error = new Error('Unable to contact login server')
     error.reason = 'Auth0 response did not contain proper tokens',
-    error.id_token = id_token
-    error.refresh_token = refresh_token
+    error.id_token = idToken
+    error.refresh_token = refreshToken
 
     throw error
   }
 
-  setToken(AUTH0_JWT, id_token)
-  setToken(AUTH0_REFRESH, refresh_token)
+  setToken(AUTH0_JWT, idToken)
+  setToken(AUTH0_REFRESH, refreshToken)
+  setToken(V3_JWT, accessToken)
 }
 
 export function getNewJWT() {
@@ -221,15 +215,6 @@ export function getNewJWT() {
   return fetchJSON(url, config).then(success)
 }
 
-function handleAuthResult({token, zendeskJwt}) {
-  setTcJwt(token)
-  setZendeskJwt(zendeskJwt)
-}
-
-function setTcJwt(token) {
-  setToken(V3_JWT, token || '')
-}
-
 function setZendeskJwt(token) {
   setToken(ZENDESK_JWT, token || '')
 }
@@ -242,34 +227,16 @@ export function refreshToken() {
     return refreshPromise
   }
 
-  const token = getV3Jwt() || ''
-  const url = API_URL + '/authorizations/1'
-  const config = {
-    headers: {
-      Authorization: 'Bearer ' + token
-    }
-  }
-
-  function refreshSuccess(data) {
-    // Assign it to local storage
-    const newToken = get(data, 'result.content.token')
-    setToken(V3_JWT, newToken)
-
-    refreshPromise = null
-
-    return newToken
-  }
-
-  function refreshFailure(response) {
-    refreshPromise = null
-
-    const error = new Error('Unable to refresh token')
-    error.reponse = response
-
-    throw error
-  }
-
-  refreshPromise = fetchJSON(url, config).then(refreshSuccess, refreshFailure)
+  refreshPromise = new Promise ((resolve, reject) => 
+    auth0.renewAuth({}, (err, result) => {
+      if (err) { 
+        reject(err)
+      } else {
+        setAuth0Tokens(result)
+        resolve(getV3Jwt())
+      }
+      refreshPromise = null
+    }));
 
   return refreshPromise
 }
@@ -278,15 +245,11 @@ export function login(options) {
   return setConnection(options)
     .then(auth0Signin)
     .then(setAuth0Tokens)
-    .then(getNewJWT)
-    .then(handleAuthResult)
 }
 
 export function socialLogin(options) {
   return auth0Popup(options)
     .then(setAuth0Tokens)
-    .then(getNewJWT)
-    .then(handleAuthResult)
 }
 
 export function sendResetEmail(email, resetPasswordUrlPrefix) {
@@ -337,31 +300,27 @@ export function registerUser(body) {
 }
 
 export function ssoLogin(provider, state) {
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     // supported backends
     var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER ]
     if (providers.indexOf(provider) > -1) {
-      auth0.signin({
-        popup: true,
-        connection: provider,
-        scope: 'openid profile offline_access',
-        state: state
-      },
-        function(error, profile, idToken, accessToken, state, refreshToken) {
+      auth0.popup.authorize({
+        connection: provider
+      },(error, { idTokenPayload, idToken, accessToken, state, refreshToken }) => {
           if (error) {
             console.warn('onSSORegistrationFailure ' + JSON.stringify(error))
             reject(error)
             return
           }
-          var ssoUserData = extractSSOUserData(profile, accessToken)
+          var ssoUserData = extractSSOUserData(idTokenPayload, accessToken)
           var result = {
             status: 'SUCCESS',
             data: {
-              profile: profile,
-              idToken: idToken,
-              accessToken: accessToken,
-              refreshToken: refreshToken,
-              ssoUserData : ssoUserData
+              profile: idTokenPayload,
+              idToken,
+              accessToken,
+              refreshToken,
+              ssoUserData
             }
           }
           console.debug('ssoLogin Result: ' + JSON.stringify(result))
@@ -384,19 +343,16 @@ export function socialRegistration(provider, state) {
     // supported backends
     var providers = ['facebook', 'google-oauth2', 'twitter', 'github']
     if (providers.indexOf(provider) > -1) {
-      auth0.signin({
-        popup: true,
+      auth0.popup.authorize({
         connection: provider,
-        scope: 'openid profile offline_access',
         state: state
-      },
-        function(error, profile, idToken, accessToken, state, refreshToken) {
+      },function(error, {idTokenPayload, idToken, accessToken, state, refreshToken}) {
           if (error) {
             console.warn('onSocialLoginFailure ' + JSON.stringify(error))
             reject(error)
             return
           }
-          var socialData = extractSocialUserData(profile, accessToken)
+          var socialData = extractSocialUserData(idTokenPayload, accessToken)
 
           validateSocialProfile(socialData.socialUserId, socialData.socialProvider)
             .then(function(resp) {
@@ -442,7 +398,7 @@ function extractSSOUserData(profile, accessToken) {
     handle = '',
     email = ''
 
-  var ssoUserId = profile.user_id.substring(profile.user_id.lastIndexOf('|') + 1)
+  var ssoUserId = profile.sub.substring(profile.sub.lastIndexOf('|') + 1)
   if (ssoProvider === WIPRO_SSO_PROVIDER || ssoProvider === APPIRIO_SSO_PROVIDER
     || ssoProvider === TOPCODER_SSO_PROVIDER) {
     firstName = profile.given_name
