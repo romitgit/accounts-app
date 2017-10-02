@@ -34,7 +34,8 @@
         label Security PIN:
         input.input.input-md(type="text" name="pin" ng-model="vm.pin" required=true ng-class="{ 'error' : vm.pinForm.pin.$dirty && vm.pinForm.pin.$invalid }")
         button.tc-btn.tc-btn-primary.tc-btn-md(ng-disabled="vm.pinForm.$invalid" type="submit") Verify
-      .error-block.error-block-md(ng-if="vm.error && vm.pinError && !vm.emailError") {{ vm.message || "Currently we can't verify your security PIN" }}
+      .error-block.error-block-md(ng-if="vm.error && vm.pinError && !vm.emailError && !vm.errorLimit") {{ vm.message || "Currently we can't verify your security PIN" }}
+      .error-block.error-block-md(ng-if="vm.error && vm.pinError && !vm.emailError && vm.errorLimit") {{ vm.message + vm.errorCountDown + " seconds" || "Currently we can't verify your security PIN" }}
       .confirmation-block.confirmation-block-md(ng-if="vm.activated")
         span Thank you for verifying your account. Loggin you in...
 
