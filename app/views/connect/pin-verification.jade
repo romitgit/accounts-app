@@ -30,7 +30,7 @@
         a(ng-click="vm.toggleEmailEdit()") edit
       .confirmation-block.confirmation-block-md(ng-if="vm.emailEditSuccess")
         span Your email was updated, and we’ve sent you a new PIN. Please enter it below.
-      .security-pin
+      .security-pin(ng-if="!vm.errorLimit")
         label Security PIN:
         input.input.input-md(type="text" name="pin" ng-model="vm.pin" required=true ng-class="{ 'error' : vm.pinForm.pin.$dirty && vm.pinForm.pin.$invalid }")
         button.tc-btn.tc-btn-primary.tc-btn-md(ng-disabled="vm.pinForm.$invalid" type="submit") Verify

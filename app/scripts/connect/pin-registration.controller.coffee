@@ -21,6 +21,8 @@ ConnectPinVerificationController = (
   vm.emailEditMode = false
   vm.emailError = false
   vm.pinError   = false
+  vm.countErrors = 0
+  vm.errorLimit = false
   vm.$stateParams = $stateParams
   
   vm.baseUrl = "https://connect.#{DOMAIN}"
@@ -49,7 +51,12 @@ ConnectPinVerificationController = (
       vm.error    = true
       vm.pinError = true
       vm.loading  = false
-      vm.message  = 'That PIN is incorrect. Please check that you entered the one you received.'
+      vm.countErrors++
+      if vm.countErrors < 10
+        vm.message  = 'That PIN is incorrect. Please check that you entered the one you received.'
+      else
+        vm.message  = 'Whoops, you entered the wrong PIN too many times. If you still can\'t get your PIN, please contact support@connect.com'
+        vm.errorLimit = true
       if error.status == 400 && error.message.indexOf('has been activated')  != -1
         vm.message = 'User is already activated. Please login.'
 
