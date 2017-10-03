@@ -37,7 +37,7 @@
       .error-block.error-block-md(ng-if="vm.error && vm.pinError && !vm.emailError && !vm.errorLimit") {{ vm.message || "Currently we can't verify your security PIN" }}
       .error-block.error-block-md(ng-if="vm.error && vm.pinError && !vm.emailError && vm.errorLimit") {{ vm.message + vm.errorCountDown + " seconds" || "Currently we can't verify your security PIN" }}
       .confirmation-block.confirmation-block-md(ng-if="vm.activated")
-        span Thank you for verifying your account. Loggin you in...
+        span Thank you for verifying your account. Logging you in...
 
       .confirmation-block.confirmation-block-md(ng-if="vm.loggedIn")
         span Sucessfully logged you in. #[span(ng-if="vm.isConnectProjectFlow") Redirecting to your project...] #[span(ng-if="!vm.isConnectProjectFlow") Redirecting...]
