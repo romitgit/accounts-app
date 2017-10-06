@@ -56,8 +56,8 @@ ConnectPinVerificationController = (
       if vm.countErrors < 10
         vm.message  = 'That PIN is incorrect. Please check that you entered the one you received.'
       else
-        vm.errorCountDown = 3
-        vm.message  = 'Whoops, you entered the wrong PIN too many times. If you still can\'t get your PIN, please contact support@connect.com. Please try again in '
+        vm.errorCountDown = 30
+        vm.message  = 'Whoops, you entered the wrong PIN too many times. If you still can\'t get your PIN, please contact support@topcoder.com. Please try again in '
         vm.errorLimit = true
         timer = countDown(vm.errorCountDown, onTick=undefined, onEnd=resetPINFailure)
         timer.start()
@@ -68,6 +68,7 @@ ConnectPinVerificationController = (
   resetPINFailure = ->
     $scope.$apply ->
       vm.errorLimit = false
+      vm.message = 'That PIN is incorrect. Please check that you entered the one you received.'
 
   # Login the user
   loginUser = ->
@@ -190,7 +191,7 @@ ConnectPinVerificationController = (
       vm.loading = false
       vm.emailEditMode = true
 
-  # CountDown for the error when there were too many erroneous PIN attempts TODO : Maybe this needs to be made generic and moved into the components repo?
+  # CountDown for the error when there were too many erroneous PIN attempts
   countDown = (n=0, onTick=undefined, onEnd=undefined) ->
     start = (tick=n) ->
       vm.errorCountDown = tick
