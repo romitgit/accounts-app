@@ -16,9 +16,8 @@ const auth0 = new Auth0.WebAuth({
   clientID    : AUTH0_CLIENT_ID,
   responseType: 'id_token token',
   scope: 'openid profile offline_access',
-  redirectUri: AUTH0_CALLBACK
-  // TODO: Enable when API is created in Tenant
-  // audience: API_URL
+  redirectUri: AUTH0_CALLBACK,
+  audience: API_URL
 })
 
 function fetchJSON(url, options) {
