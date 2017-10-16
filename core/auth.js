@@ -86,10 +86,9 @@ export function getV2Sso() {
 
 export function getFreshToken() {
   const v3Token = getV3Jwt()
-  const v2TokenExists = getV2Jwt() && getV2Sso()
 
   // If we have no token, short circuit
-  if (!v3Token || !v2TokenExists) {
+  if (!v3Token) {
     return Promise.reject('No token found')
   }
 
