@@ -1,4 +1,4 @@
-import { V3_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_JWT, V2_SSO, ZENDESK_JWT, DOMAIN } from './constants.js'
+import { V3_JWT, AUTH0_REFRESH, AUTH0_JWT, V2_JWT, V2_SSO, ZENDESK_JWT, DOMAIN, AUTH0_CLAIM_NAMESPACE } from './constants.js'
 import fromPairs from 'lodash/fromPairs'
 
 export function clearTokens() {
@@ -35,7 +35,17 @@ export function decodeToken(token) {
     throw new Error('Cannot decode the token')
   }
 
-  return JSON.parse(decoded)
+  const decodeToken = JSON.parse(decoded)
+
+  // We transform Auth0 issued claims into previously existing claims
+  Object.keys(decodeToken)
+    .filter(k => k.startsWith(AUTH0_CLAIM_NAMESPACE))
+    .forEach(k => {
+      decodeToken[k.substr(AUTH0_CLAIM_NAMESPACE.length)] = decodeToken[k]
+      delete decodeToken[k]
+    })
+
+  return decodeToken
 }
 
 export function isTokenExpired(token, offsetSeconds = 0) {

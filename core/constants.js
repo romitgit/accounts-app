@@ -41,3 +41,6 @@ export const SSO_PROVIDER_DOMAIN_APPIRIO = 'asp.appirio.com'
 export const SSO_PROVIDER_DOMAIN_TOPCODER = 'topcoder'
 
 export const UTM_SOURCE_CONNECT = 'connect'
+
+// Custom Auth0 namespace
+export const AUTH0_CLAIM_NAMESPACE = 'https://topcoder.com/claims/'
