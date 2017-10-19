@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection, isEmail } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
-import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
+import { V3_JWT, V2_JWT, V2_SSO, AUTH0_JWT, ZENDESK_JWT, API_URL,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
   TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
   SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER } from './constants.js'
@@ -15,7 +15,7 @@ const auth0 = new Auth0.WebAuth({
   domain      : AUTH0_DOMAIN,
   clientID    : AUTH0_CLIENT_ID,
   responseType: 'id_token token',
-  scope: 'openid profile offline_access',
+  scope: 'openid profile',
   redirectUri: AUTH0_CALLBACK,
   audience: API_URL
 })
@@ -155,7 +155,7 @@ function auth0Popup(options) {
         scope: options.scope,
         connection: options.connection
       },
-      (err, { idTokenPayload, idToken, accessToken, state, refreshToken }) => {
+      (err, { idTokenPayload, idToken, accessToken, state }) => {
         if (err) {
           reject(err)
           return
@@ -165,37 +165,32 @@ function auth0Popup(options) {
           profile: idTokenPayload,
           idToken,
           accessToken,
-          state,
-          refreshToken
+          state
         })
       }
     )
   })
 }
 
-function setAuth0Tokens({idToken, refreshToken, accessToken}) {
-  if (idToken === undefined || refreshToken === undefined || accessToken === undefined) {
+function setAuth0Tokens({idToken, accessToken}) {
+  if (idToken === undefined || accessToken === undefined) {
     const error = new Error('Unable to contact login server')
     error.reason = 'Auth0 response did not contain proper tokens',
     error.id_token = idToken
-    error.refresh_token = refreshToken
 
     throw error
   }
 
   setToken(AUTH0_JWT, idToken)
-  setToken(AUTH0_REFRESH, refreshToken)
   setToken(V3_JWT, accessToken)
 }
 
 export function getNewJWT() {
   const externalToken = getToken(AUTH0_JWT)
-  const refreshToken = getToken(AUTH0_REFRESH)
 
   const params = {
     param: {
-      externalToken,
-      refreshToken
+      externalToken
     }
   }
 
@@ -304,7 +299,7 @@ export function ssoLogin(provider, state) {
     if (providers.indexOf(provider) > -1) {
       auth0.popup.authorize({
         connection: provider
-      },(error, { idTokenPayload, idToken, accessToken, state, refreshToken }) => {
+      },(error, { idTokenPayload, idToken, accessToken, state }) => {
           if (error) {
             console.warn('onSSORegistrationFailure ' + JSON.stringify(error))
             reject(error)
@@ -317,7 +312,6 @@ export function ssoLogin(provider, state) {
               profile: idTokenPayload,
               idToken,
               accessToken,
-              refreshToken,
               ssoUserData
             }
           }
@@ -330,7 +324,7 @@ export function ssoLogin(provider, state) {
 
       reject({
         status: 'FAILED',
-        'error': 'Unsupported SSO login provider \'' + provider + '\''
+        error: 'Unsupported SSO login provider \'' + provider + '\''
       })
     }
   })
@@ -344,7 +338,7 @@ export function socialRegistration(provider, state) {
       auth0.popup.authorize({
         connection: provider,
         state: state
-      },function(error, {idTokenPayload, idToken, accessToken, state, refreshToken}) {
+      },function(error, {idTokenPayload, idToken, accessToken, state}) {
           if (error) {
             console.warn('onSocialLoginFailure ' + JSON.stringify(error))
             reject(error)
