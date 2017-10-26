@@ -38,14 +38,15 @@ export function decodeToken(token) {
   const decodeToken = JSON.parse(decoded)
 
   // We transform Auth0 issued claims into previously existing claims
-  Object.keys(decodeToken)
-    .filter(k => k.startsWith(AUTH0_CLAIM_NAMESPACE))
-    .forEach(k => {
-      decodeToken[k.substr(AUTH0_CLAIM_NAMESPACE.length)] = decodeToken[k]
-      delete decodeToken[k]
-    })
-
-  return decodeToken
+  return Object.keys(decodeToken)
+    .reduce((token, key) => {
+      if (key.indexOf(AUTH0_CLAIM_NAMESPACE) === 0) {
+        token[key.substr(AUTH0_CLAIM_NAMESPACE.length)] = decodeToken[key]
+      } else {
+        token[key] = decodeToken[key]
+      }
+      return token
+    }, {})
 }
 
 export function isTokenExpired(token, offsetSeconds = 0) {
