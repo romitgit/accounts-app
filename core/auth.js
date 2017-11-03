@@ -6,7 +6,7 @@ import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_JWT, ZENDESK_JWT, API_URL,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
   TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
-  SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER } from './constants.js'
+  SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER, ACCOUNTS_APP_CONNECTOR_URL } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -221,7 +221,9 @@ export function refreshToken() {
   }
 
   refreshPromise = new Promise ((resolve, reject) => 
-    auth0.renewAuth({}, (err, result) => {
+    auth0.checkSession({
+      redirectUri: ACCOUNTS_APP_CONNECTOR_URL
+    }, (err, result) => {
       if (err) { 
         reject(err)
       } else {
