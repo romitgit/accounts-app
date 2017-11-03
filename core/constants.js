@@ -13,6 +13,7 @@ export const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN
 export const AUTH0_CALLBACK = process.env.auth0Callback
 export const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID
 export const ZENDESK_DOMAIN = process.env.ZENDESK_DOMAIN
+export const ACCOUNTS_APP_CONNECTOR_URL = process.env.ACCOUNTS_APP_CONNECTOR_URL
 
 export const GET_FRESH_TOKEN_REQUEST = 'GET_FRESH_TOKEN_REQUEST'
 export const GET_FRESH_TOKEN_SUCCESS = 'GET_FRESH_TOKEN_SUCCESS'
