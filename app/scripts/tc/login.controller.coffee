@@ -3,7 +3,7 @@
 { DOMAIN } = require '../../../core/constants.js'
 { login, socialLogin, getFreshToken, isAuth0Hosted } = require '../../../core/auth.js'
 { isEmail, setupLoginEventMetrics } = require '../../../core/utils.js'
-{ redirectTo, generateZendeskReturnUrl, generateReturnUrl } = require '../../../core/url.js'
+{ redirectTo, generateZendeskReturnUrl, generateReturnUrl, getBaseUrl } = require '../../../core/url.js'
 
 TCLoginController = (
   $log
@@ -18,7 +18,7 @@ TCLoginController = (
   vm.loading   = false
   vm.init      = false
 
-  vm.baseUrl =  if isAuth0Hosted() then "https://#{window.location.hostname}/#{window.location.pathname}" else "https://www.#{DOMAIN}"
+  vm.baseUrl =  getBaseUrl()
   vm.registrationUrl   = $state.href('MEMBER_REGISTRATION', { activated: true })
   vm.forgotPasswordUrl = $state.href('MEMBER_FORGOT_PASSWORD', { absolute: true })
   vm.confirmActivationUrl = $state.href('MEMBER_REGISTRATION_SUCCESS', { absolute: true })

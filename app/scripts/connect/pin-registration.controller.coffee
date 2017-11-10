@@ -23,6 +23,7 @@ ConnectPinVerificationController = (
   vm.pinError   = false
   vm.$stateParams = $stateParams
   
+  # TODO: check if this needs to change
   vm.baseUrl = "https://connect.#{DOMAIN}"
   vm.loginUrl   = $state.href('CONNECT_LOGIN', { activated: true }, { absolute: true })
   vm.retUrl = if $stateParams.afterActivationURL then decodeURIComponent($stateParams.afterActivationURL) else vm.baseUrl  

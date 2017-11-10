@@ -1,9 +1,8 @@
 'use strict'
 
-{ DOMAIN }   = require '../../../core/constants.js'
 { login, resetPassword, getV3Jwt } = require '../../../core/auth.js'
 { removeToken } = require '../../../core/token.js'
-{ generateReturnUrl, redirectTo } = require '../../../core/url.js'
+{ generateReturnUrl, redirectTo, getBaseUrl } = require '../../../core/url.js'
 
 ResetPasswordController = ($stateParams, $state, $scope) ->
   vm          = this
@@ -14,7 +13,7 @@ ResetPasswordController = ($stateParams, $state, $scope) ->
   vm.loggedIn = false
   token       = $stateParams.token
   handle      = $stateParams.handle
-  vm.baseUrl  = "https://connect.#{DOMAIN}"
+  vm.baseUrl  = getBaseUrl()
   vm.loginUrl = $state.href('CONNECT_LOGIN', {}, { absolute: true })
   vm.retUrl   = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl  
 

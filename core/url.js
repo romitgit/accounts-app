@@ -1,5 +1,6 @@
 import replace from 'lodash/replace'
 import { getToken } from './token.js'
+import { isAuth0Hosted } from './auth.js'
 import { AUTH0_DOMAIN, AUTH0_CLIENT_ID, API_URL, DOMAIN, ZENDESK_JWT, ZENDESK_DOMAIN } from './constants.js'
 
 export function redirectTo(url) {
@@ -55,4 +56,8 @@ export function validateUrl(returnUrlBase) {
     return hostname.endsWith(DOMAIN) || hostname.endsWith(ZENDESK_DOMAIN)
   }
   return false
+}
+
+export function getBaseUrl() {
+  return isAuth0Hosted() ? ('https://' + window.location.hostname + '/' + window.location.pathname) : ('https://' + DOMAIN)
 }

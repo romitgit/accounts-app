@@ -1,9 +1,9 @@
 'use strict'
 
 { setToken } = require '../../../core/token.js'
-{ generateReturnUrl, redirectTo } = require '../../../core/url.js'
+{ generateReturnUrl, redirectTo, getBaseUrl } = require '../../../core/url.js'
 { getSSOProvider, ssoLogin, identifySSOProvider, getNewJWT, getFreshToken } = require '../../../core/auth.js'
-{ V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, DOMAIN } = require '../../../core/constants.js'
+{ V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT } = require '../../../core/constants.js'
 
 SSOLoginController = (
   $log
@@ -18,7 +18,7 @@ SSOLoginController = (
   vm.success       = false
   vm.error         = ''
   vm.emailOrHandle = ''
-  vm.baseUrl       = "https://www.#{DOMAIN}"
+  vm.baseUrl       = getBaseUrl()
   vm.org           = ''
   vm.retUrl        = if $stateParams.retUrl then $stateParams.retUrl else vm.baseUrl
   vm.app           = $stateParams.app

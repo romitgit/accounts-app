@@ -1,10 +1,9 @@
 'use strict'
 
-{ DOMAIN }   = require '../../../core/constants.js'
 { getFreshToken, login }    = require '../../../core/auth.js'
 { getV3Jwt } = require '../../../core/auth.js'
 { getLoginConnection, isEmail } = require '../../../core/utils.js'
-{ generateReturnUrl, redirectTo } = require '../../../core/url.js'
+{ generateReturnUrl, redirectTo, getBaseUrl } = require '../../../core/url.js'
 
 ConnectLoginController = (
   $scope
@@ -26,7 +25,7 @@ ConnectLoginController = (
     WRONG_PASSWORD: false
     ACCOUNT_INACTIVE: false
   
-  vm.baseUrl = "https://connect.#{DOMAIN}"
+  vm.baseUrl = getBaseUrl()
   vm.registrationUrl   = $state.href('CONNECT_REGISTRATION', { activated: true }, { absolute: true })
   vm.forgotPasswordUrl = $state.href('CONNECT_FORGOT_PASSWORD', { absolute: true })
   vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl  
