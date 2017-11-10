@@ -1,4 +1,6 @@
 { SEGMENT_KEY }   = require '../core/constants.js'
+{ isAuth0Hosted } = require '../core/auth.js'
+
 run = ($log, $rootScope, $state, $urlRouter, $location) ->
   $log.debug('run')
   window.analytics.load(SEGMENT_KEY);
@@ -13,10 +15,13 @@ run = ($log, $rootScope, $state, $urlRouter, $location) ->
     queryString = ''
     referrer = ''
 
-    if (path.indexOf '?' != -1)
+    # In the hosted login page the complete querystring should not be included for security reasons.
+    # TODO: Check what information should be sent to analytics (Cliend ID)
+    if (path.indexOf '?' != -1 and !isAuth0Hosted())
       queryString = path.substring(path.indexOf('?'), path.length)
     if (fromState.name)
       referrer = $location.protocol() + '://' + $location.host() + '/#' + fromState.url
+
     window.analytics.page
       path: path,
       referrer: referrer,

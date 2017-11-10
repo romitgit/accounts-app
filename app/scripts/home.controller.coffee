@@ -1,7 +1,7 @@
 'use strict'
 
 { DOMAIN }   = require '../../core/constants.js'
-{ getV3Jwt } = require '../../core/auth.js'
+{ isAuth0Hosted, getV3Jwt } = require '../../core/auth.js'
 
 HomeController = (
   $log
@@ -12,7 +12,7 @@ HomeController = (
   vm.title     = 'Home'
   
   init = ->
-    unless getV3Jwt()
+    unless !isAuth0Hosted() and getV3Jwt()
       $state.go 'MEMBER_LOGIN'
     else
       $window.location = 'https://www.' + DOMAIN + '/'
