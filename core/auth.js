@@ -685,5 +685,5 @@ export function identifySSOProvider(emailOrHandle) {
 }
 
 export function isAuth0Hosted() {
-  return (window.location.hostname.toLowerCase() !== AUTH0_DOMAIN.toLowerCase());
+  return window.location.hostname.toLowerCase() === AUTH0_DOMAIN.toLowerCase()
 }
