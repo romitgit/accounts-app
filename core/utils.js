@@ -66,3 +66,18 @@ export function supplant(template, values, pattern) {
     return (typeof r === 'string' || typeof r === 'number') ? r : a
   })
 }
+
+export function toCamelCase(object) {
+  if (typeof object !== 'object' || Array.isArray(object) || object === null) {
+    return object
+  }
+  const snakeToCamel = (str) => {
+    const parts = str.split('_')
+    return parts.reduce((p, c)=> p + c.charAt(0).toUpperCase() + c.slice(1), parts.shift())
+  }
+  
+  return Object.keys(object).reduce((p, key) => {
+    p[snakeToCamel(key)] = toCamelCase(object[key])
+    return p;
+  }, {})
+}

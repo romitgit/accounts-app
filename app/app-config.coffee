@@ -1,6 +1,4 @@
-
-`import Auth0 from "auth0-js";`
-`import { AUTH0_DOMAIN, AUTH0_CLIENT_ID } from "../core/constants.js"`
+`import { isAuth0Hosted } from "../core/auth.js"`
 
 'use strict'
 
@@ -11,7 +9,8 @@ config = (
   
   states = {}
 
-  $locationProvider.html5Mode true
+  # Disable html5Mode when using Auth0 Hosted Login Page
+  $locationProvider.html5Mode !isAuth0Hosted()
 
   # customer routes
   

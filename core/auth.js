@@ -1,7 +1,7 @@
 import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
-import { getLoginConnection, isEmail } from './utils.js'
+import { getLoginConnection, isEmail, toCamelCase } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_JWT, ZENDESK_JWT, API_URL,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
@@ -10,15 +10,30 @@ import { V3_JWT, V2_JWT, V2_SSO, AUTH0_JWT, ZENDESK_JWT, API_URL,
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
-/// Adding a temp comment to kick off a fresh deploy
-const auth0 = new Auth0.WebAuth({
+
+let auth0Params = {
   domain      : AUTH0_DOMAIN,
   clientID    : AUTH0_CLIENT_ID,
   responseType: 'id_token token',
   scope: 'openid profile',
   redirectUri: AUTH0_CALLBACK,
   audience: API_URL
-})
+}
+
+if (isAuth0Hosted() && window.config) {
+  // If running in the hosted page we use Auth0 configuration
+  auth0Params = Object.assign(
+    toCamelCase(window.config),
+    {
+      domain: window.config.auth0Domain,
+      clientID: window.config.clientID,
+      redirectUri: window.config.callbackURL
+    }
+  )
+}
+
+/// Adding a temp comment to kick off a fresh deploy
+const auth0 = new Auth0.WebAuth(auth0Params)
 
 function fetchJSON(url, options) {
   const config = merge({
@@ -137,15 +152,18 @@ function setConnection(options) {
 }
 
 function auth0Signin(options) {
-  return new Promise((resolve, reject) => 
-    auth0.client.login({
+  return new Promise((resolve, reject) => {
+    const login = isAuth0Hosted() ?  auth0.redirect.loginWithCredentials : auth0.client.login
+
+    login({
       username: options.username,
       password: options.password,
-      realm: options.connection || 'LDAP'
+      realm: options.connection || 'LDAP',
+      connection: options.connection || 'LDAP'
     }, (err, result) => {
-      if (err) return reject(err);
+      if (err) return reject(err)
       resolve(result)
-    }))
+    })})
 }
 
 function auth0Popup(options) {
@@ -664,4 +682,8 @@ export function identifySSOProvider(emailOrHandle) {
     break
   }
   return provider
+}
+
+export function isAuth0Hosted() {
+  return (window.location.hostname.toLowerCase() !== AUTH0_DOMAIN.toLowerCase());
 }
