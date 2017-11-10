@@ -153,16 +153,22 @@ function setConnection(options) {
 
 function auth0Signin(options) {
   return new Promise((resolve, reject) => {
-    const login = isAuth0Hosted() ?  auth0.redirect.loginWithCredentials : auth0.client.login
-
-    login({
+    const options = {
       username: options.username,
       password: options.password,
       realm: options.connection || 'LDAP'
-    }, (err, result) => {
+    }
+    const callback = (err, result) => {
       if (err) return reject(err)
       resolve(result)
-    })})
+    }
+
+    if (isAuth0Hosted()) {
+      auth0.redirect.loginWithCredentials(options, callback)
+    } else {
+      auth0.client.login(options, callback)
+    }
+  })
 }
 
 function auth0Popup(options) {
