@@ -14,10 +14,10 @@ run = ($log, $rootScope, $state, $urlRouter, $location) ->
     path = $location.path()
     queryString = ''
     referrer = ''
-
+    
     # In the hosted login page the complete querystring should not be included for security reasons.
     # TODO: Check what information should be sent to analytics (Cliend ID)
-    if (path.indexOf '?' != -1 and !isAuth0Hosted())
+    if ((path.indexOf '?' != -1) and !isAuth0Hosted())
       queryString = path.substring(path.indexOf('?'), path.length)
     if (fromState.name)
       referrer = $location.protocol() + '://' + $location.host() + '/#' + fromState.url

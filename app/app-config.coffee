@@ -15,7 +15,7 @@ config = (
   # customer routes
   
   states['home'] =
-    url         : '/'
+    url         : if isAuth0Hosted() then '' else '/'
     title       : 'Home'
     controller  : 'HomeController as vm'
     template    : require('./views/home')()

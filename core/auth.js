@@ -1,9 +1,8 @@
-import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
-import { getLoginConnection, isEmail, toCamelCase } from './utils.js'
+import { getLoginConnection,  toCamelCase } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
-import { V3_JWT, V2_JWT, V2_SSO, AUTH0_JWT, ZENDESK_JWT, API_URL,
+import { V3_JWT, V2_JWT, V2_SSO, AUTH0_JWT,  API_URL,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
   TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
   SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER, ACCOUNTS_APP_CONNECTOR_URL } from './constants.js'
@@ -153,7 +152,7 @@ function setConnection(options) {
 
 function auth0Signin(options) {
   return new Promise((resolve, reject) => {
-    const options = {
+    const params = {
       username: options.username,
       password: options.password,
       realm: options.connection || 'LDAP'
@@ -164,9 +163,9 @@ function auth0Signin(options) {
     }
 
     if (isAuth0Hosted()) {
-      auth0.redirect.loginWithCredentials(options, callback)
+      auth0.redirect.loginWithCredentials(params, callback)
     } else {
-      auth0.client.login(options, callback)
+      auth0.client.login(params, callback)
     }
   })
 }
@@ -231,10 +230,6 @@ export function getNewJWT() {
   return fetchJSON(url, config).then(success)
 }
 
-function setZendeskJwt(token) {
-  setToken(ZENDESK_JWT, token || '')
-}
-
 // refreshPromise is needed outside the refreshToken scope to allow throttling
 let refreshPromise = null
 
@@ -254,7 +249,7 @@ export function refreshToken() {
         resolve(getV3Jwt())
       }
       refreshPromise = null
-    }));
+    }))
 
   return refreshPromise
 }
@@ -272,7 +267,7 @@ export function socialLogin(options) {
 
 export function sendResetEmail(email, resetPasswordUrlPrefix) {
   function failure(res) {
-    throw new Error( get(res, 'result.content') || "We weren't able to send a reset link because of a system error. Please try again or contact suppor@topcoder.com." )
+    throw new Error( get(res, 'result.content') || 'We weren\'t able to send a reset link because of a system error. Please try again or contact suppor@topcoder.com.' )
   }
   return fetchJSON(API_URL + '/users/resetToken?email=' + encodeURIComponent(email) + '&resetPasswordUrlPrefix=' + encodeURIComponent(resetPasswordUrlPrefix))
   .catch(failure)
@@ -294,7 +289,7 @@ export function resetPassword(handle, resetToken, password) {
   }
 
   function failure(res) {
-    throw new Error( get(res, 'result.content') || "We weren't able to reset password because of a system error. Please try again or contact suppor@topcoder.com." )
+    throw new Error( get(res, 'result.content') || 'We weren\'t able to reset password because of a system error. Please try again or contact suppor@topcoder.com.' )
   }
 
   return fetchJSON(url, config).catch(failure)
@@ -306,7 +301,7 @@ export function registerUser(body) {
   }
 
   function failure(res) {
-    throw new Error( get(res, 'result.content') || "We weren't able to register you because of a system error. Please try again or contact suppor@topcoder.com." )
+    throw new Error( get(res, 'result.content') || 'We weren\'t able to register you because of a system error. Please try again or contact suppor@topcoder.com.' )
   }
 
   return fetchJSON(API_URL + '/users', {
@@ -320,30 +315,29 @@ export function registerUser(body) {
 export function ssoLogin(provider, state) {
   return new Promise((resolve, reject) => {
     // supported backends
-    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER ]
+    const providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER ]
     if (providers.indexOf(provider) > -1) {
       auth0.popup.authorize({
         connection: provider
       },(error, { idTokenPayload, idToken, accessToken, state }) => {
-          if (error) {
-            console.warn('onSSORegistrationFailure ' + JSON.stringify(error))
-            reject(error)
-            return
-          }
-          var ssoUserData = extractSSOUserData(idTokenPayload, accessToken)
-          var result = {
-            status: 'SUCCESS',
-            data: {
-              profile: idTokenPayload,
-              idToken,
-              accessToken,
-              ssoUserData
-            }
-          }
-          console.debug('ssoLogin Result: ' + JSON.stringify(result))
-          resolve(result)
+        if (error) {
+          console.warn('onSSORegistrationFailure ' + JSON.stringify(error))
+          reject(error)
+          return
         }
-      )
+        const ssoUserData = extractSSOUserData(idTokenPayload, accessToken)
+        var result = {
+          status: 'SUCCESS',
+          data: {
+            profile: idTokenPayload,
+            idToken,
+            accessToken,
+            ssoUserData
+          }
+        }
+        console.debug('ssoLogin Result: ' + JSON.stringify(result))
+        resolve(result)
+      })
     } else {
       console.error('Unsupported SSO login provider', provider)
 
