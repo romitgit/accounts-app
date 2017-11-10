@@ -158,8 +158,7 @@ function auth0Signin(options) {
     login({
       username: options.username,
       password: options.password,
-      realm: options.connection || 'LDAP',
-      connection: options.connection || 'LDAP'
+      realm: options.connection || 'LDAP'
     }, (err, result) => {
       if (err) return reject(err)
       resolve(result)
