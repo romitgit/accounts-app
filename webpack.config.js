@@ -1,5 +1,6 @@
 require('./node_modules/coffee-script/register')
 const filter = require('lodash/filter')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 if (process.env.CIRCLE_BRANCH === 'master') process.env.ENV = 'PROD'
 if (process.env.CIRCLE_BRANCH === 'dev') process.env.ENV = 'DEV'
@@ -43,6 +44,14 @@ config.plugins.forEach(p =>  {
   if (p.definitions && p.definitions['process.env']) {
     p.definitions['process.env'] = JSON.stringify(Object.assign(JSON.parse(p.definitions['process.env']), auth0DevConstants))
   }})
+
+config.plugins.push(new HtmlWebpackPlugin({
+  template: './app/auth0-hlp',
+  inject: 'body',
+  favicon: './app/images/favicon.ico',
+  filename: 'auth0-hlp.html',
+  DOMAIN: process.env.ACCOUNTS_APP_URL.split('#').shift()
+}))
 
 
 console.log(config.plugins)
