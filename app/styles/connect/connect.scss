@@ -105,6 +105,15 @@
     display: inline-block;
   }
 
+  .connect-accounts-header .logo {
+    background: url('../../images/connect/connect-logo-mono.svg');
+    background-size: contain;
+    background-repeat:no-repeat;
+    background-position: center center;
+    width: 59px;
+    height: 37px;
+  }
+
   .connect-accounts-header .tc-btn {
     margin-left: (2 * $base-unit);
   }

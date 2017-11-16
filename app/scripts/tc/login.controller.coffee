@@ -19,13 +19,14 @@ TCLoginController = (
   vm.init      = false
 
   vm.baseUrl =  getBaseUrl()
+  vm.homeUrl   = $state.href('HOME', {}, { absolute: true})
   vm.registrationUrl   = $state.href('MEMBER_REGISTRATION', { activated: true })
   vm.forgotPasswordUrl = $state.href('MEMBER_FORGOT_PASSWORD', {}, { absolute: true })
   vm.confirmActivationUrl = $state.href('MEMBER_REGISTRATION_SUCCESS', {}, { absolute: true })
   vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl
   
   vm.$stateParams = $stateParams
-  vm.loginErrors = 
+  vm.loginErrors =
     USERNAME_NONEXISTANT: false
     WRONG_PASSWORD: false
     SOCIAL_LOGIN_ERROR: false

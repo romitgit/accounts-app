@@ -27,6 +27,11 @@
     
     .logo-link img {
       display: inline-block;
+      background: url('../../images/logo_mobile.svg');
+      background-size: contain;
+      background-repeat:no-repeat;
+      background-position: center center;
+      width: 85px;
       height: 30px;
     }
   }

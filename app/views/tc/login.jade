@@ -1,9 +1,7 @@
-- var logoMobile = require("../../images/logo_mobile.svg")
-
 .login-container
   header
-    a.logo-link(href="/", title="Back to the home page")
-      img(src=logoMobile, alt="Topcoder Logo")
+    a.logo-link(href="{{vm.homeUrl}}", title="Back to the home page")
+      img.logo(src='data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',alt="Topcoder Logo")
 
   h1 LOG IN TO TOPCODER
 

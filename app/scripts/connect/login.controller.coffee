@@ -20,15 +20,15 @@ ConnectLoginController = (
   vm.init      = false
   vm.$stateParams = $stateParams
   vm.passwordReset = vm.$stateParams.passwordReset == true
-  vm.loginErrors = 
+  vm.loginErrors =
     USERNAME_NONEXISTANT: false
     WRONG_PASSWORD: false
     ACCOUNT_INACTIVE: false
   
   vm.baseUrl = getBaseUrl()
   vm.registrationUrl   = $state.href('CONNECT_REGISTRATION', { activated: true }, { absolute: true })
-  vm.forgotPasswordUrl = $state.href('CONNECT_FORGOT_PASSWORD', { absolute: true })
-  vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl  
+  vm.forgotPasswordUrl = $state.href('CONNECT_FORGOT_PASSWORD', {}, { absolute: true })
+  vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl
 
   vm.hasPasswordError = ->
     vm.loginErrors.WRONG_PASSWORD
