@@ -2,6 +2,7 @@
 
 `import { encodeParams } from '../../core/utils.js'`
 `import { isUrl } from '../../core/url.js'`
+`import { isAuth0Hosted } from '../../core/auth.js'`
 
 LoginController = (
   $log
@@ -12,19 +13,24 @@ LoginController = (
   vm = this
   
   isConnectLogin = ->
-    # checking with app parameter
-    app = $stateParams.app
-    if app
-      $log.info 'app: '+app
-      return app.toLowerCase() == 'connect'
-    
-    # checking with return url
-    retUrl = $stateParams.retUrl
-    if retUrl && isUrl retUrl
-      parser = document?.createElement 'a'
-      if parser
-        parser.href = retUrl
-        return parser.hostname.toLowerCase().startsWith('connect.')
+    if isAuth0Hosted()
+      # check the current clietn_id to see if it's connect
+      app = window?.config?.dict?.signin?.title
+      return app && app.toLowerCase() == 'connect'
+    else
+      # checking with app parameter
+      app = $stateParams.app
+      if app
+        $log.info 'app: '+app
+        return app.toLowerCase() == 'connect'
+
+      # checking with return url
+      retUrl = $stateParams.retUrl
+      if retUrl && isUrl retUrl
+        parser = document?.createElement 'a'
+        if parser
+          parser.href = retUrl
+          return parser.hostname.toLowerCase().startsWith('connect.')
     
     false
   

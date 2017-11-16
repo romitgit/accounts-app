@@ -13,7 +13,12 @@ HomeController = (
   
   init = ->
     unless !isAuth0Hosted() and getV3Jwt()
-      $state.go 'MEMBER_LOGIN'
+      # check the current clietn_id to see if it's connect
+      target = 'MEMBER_LOGIN'
+      if isAuth0Hosted()
+        app = window.config?.dict?.signin?.title
+        if app and app.toLowerCase() == 'connect' then target = 'CONNECT_LOGIN'
+      $state.go target
     else
       $window.location = 'https://www.' + DOMAIN + '/'
     vm
