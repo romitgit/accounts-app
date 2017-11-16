@@ -22,7 +22,7 @@ let auth0Params = {
 if (isAuth0Hosted() && window.config) {
   // If running in the hosted page we use Auth0 configuration
   auth0Params = Object.assign(
-    toCamelCase(window.config),
+    toCamelCase(window.config.internalOptions),
     {
       domain: window.config.auth0Domain,
       clientID: window.config.clientID,
@@ -155,6 +155,7 @@ function auth0Signin(options) {
     const params = {
       username: options.username,
       password: options.password,
+      connection: options.connection || 'LDAP',
       realm: options.connection || 'LDAP'
     }
     const callback = (err, result) => {
