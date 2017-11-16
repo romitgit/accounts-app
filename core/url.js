@@ -59,5 +59,5 @@ export function validateUrl(returnUrlBase) {
 }
 
 export function getBaseUrl() {
-  return isAuth0Hosted() ? ('https://' + window.location.hostname + '/' + window.location.pathname) : ('https://' + DOMAIN)
+  return isAuth0Hosted() ? ('https://' + window.location.hostname +  window.location.pathname) : ('https://' + DOMAIN)
 }
