@@ -10,6 +10,7 @@ CallbackController = (
   $window
   $state
   $stateParams
+  $window
   UserService
 ) ->
   
@@ -76,7 +77,8 @@ CallbackController.$inject = [
   '$scope'
   '$window'
   '$state'
-  '$stateParams'
+  '$stateParams',
+  '$window',
   'UserService'
 ]
 
