@@ -10,7 +10,6 @@ CallbackController = (
   $window
   $state
   $stateParams
-  $window
   UserService
 ) ->
   
@@ -36,7 +35,7 @@ CallbackController = (
       $log.info 'redirect to #{vm.confirmActivationUrl}'
       $window.location = vm.confirmActivationUrl
     else
-      $log.err(err)
+      $log.error(err)
       vm.loginErrors.WRONG_PASSWORD = true
       $state.go 'home'
 
@@ -78,7 +77,6 @@ CallbackController.$inject = [
   '$window'
   '$state'
   '$stateParams',
-  '$window',
   'UserService'
 ]
 

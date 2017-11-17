@@ -689,9 +689,8 @@ export function isAuth0Hosted() {
 
 export function redirectToAuth0(stateParams) {
   if (USE_AUTH0_HOSTED_PAGE && !isAuth0Hosted()) {
-    auth0.authorize({
-      appState: stateParams
-    });
+    localStorage.setItem('stateParams', JSON.stringify(stateParams))
+    auth0.authorize();
     throw new Error('Redirecting to Auth0');
   }
 }
@@ -702,8 +701,8 @@ export function parseResult(hash) {
       if (err) return reject(err);
 
       setAuth0Tokens(result);
-
-      resolve(result.appState);
+      const appState = JSON.parse(localStorage.getItem('stateParams')) || {};
+      resolve(appState);
     });
   });
 }
