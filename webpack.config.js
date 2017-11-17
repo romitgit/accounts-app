@@ -32,6 +32,7 @@ const config = require('appirio-tech-webpack-config')({
 
 const auth0DevConstants = {
   auth0Domain : 'topcoder-newauth.auth0.com',
+  auth0Callback:  'https://accounts-auth0.topcoder-dev.com/auth0-callback.html',
   AUTH0_DOMAIN : 'topcoder-newauth.auth0.com',
   ACCOUNTS_APP_URL : 'https://accounts-auth0.topcoder-dev.com/#!/member',
   ACCOUNTS_APP_CONNECTOR_URL : 'https://accounts-auth0.topcoder-dev.com/connector.html',
