@@ -62,7 +62,7 @@ CallbackController = (
     if isAuth0Hosted()
        return $state.go 'otherwise'
 
-    parseResult($window.location().search.substr(1))
+    parseResult($window.location.hash)
       .then(loginSuccess)
       .catch(loginFailure)
 

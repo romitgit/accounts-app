@@ -690,7 +690,6 @@ export function isAuth0Hosted() {
 export function redirectToAuth0(stateParams) {
   if (USE_AUTH0_HOSTED_PAGE && !isAuth0Hosted()) {
     auth0.authorize({
-      responseMode: 'query',
       appState: stateParams
     });
     throw new Error('Redirecting to Auth0');
