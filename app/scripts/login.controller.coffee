@@ -2,7 +2,7 @@
 
 `import { encodeParams } from '../../core/utils.js'`
 `import { isUrl } from '../../core/url.js'`
-`import { isAuth0Hosted } from '../../core/auth.js'`
+`import { isAuth0Hosted,  redirectToAuth0} from '../../core/auth.js'`
 
 LoginController = (
   $log
@@ -35,6 +35,7 @@ LoginController = (
     false
   
   init = ->
+    redirectToAuth0($stateParams)
     if isConnectLogin()
       $state.go 'CONNECT_LOGIN', encodeParams $stateParams
     else

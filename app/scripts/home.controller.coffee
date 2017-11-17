@@ -1,7 +1,7 @@
 'use strict'
 
 { DOMAIN }   = require '../../core/constants.js'
-{ isAuth0Hosted, getV3Jwt } = require '../../core/auth.js'
+{ isAuth0Hosted, getV3Jwt, redirectToAuth0} = require '../../core/auth.js'
 
 HomeController = (
   $log
@@ -12,6 +12,7 @@ HomeController = (
   vm.title     = 'Home'
   
   init = ->
+    redirectToAuth0({})
     unless !isAuth0Hosted() and getV3Jwt()
       # check the current clietn_id to see if it's connect
       target = 'MEMBER_LOGIN'

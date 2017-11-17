@@ -184,7 +184,14 @@ config = (
     url: '/401',
     template   : require('./views/401')()
     public: true
-  
+
+  # Auth0 callback
+  states['CALLBACK'] =
+    url: '/callback?state&token&id_token&error&error_description',
+    template   : require('./views/callback')()
+    controller : 'CallbackController as vm'
+    public: true
+
   # This must be the last one in the list
   states['otherwise'] =
     url: '*path',

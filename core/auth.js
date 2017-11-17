@@ -5,7 +5,7 @@ import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_JWT,  API_URL,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
   TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
-  SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER, ACCOUNTS_APP_CONNECTOR_URL } from './constants.js'
+  SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER, ACCOUNTS_APP_CONNECTOR_URL, USE_AUTH0_HOSTED_PAGE } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -31,7 +31,6 @@ if (isAuth0Hosted() && window.config) {
   )
 }
 
-/// Adding a temp comment to kick off a fresh deploy
 const auth0 = new Auth0.WebAuth(auth0Params)
 
 function fetchJSON(url, options) {
@@ -195,7 +194,7 @@ function auth0Popup(options) {
   })
 }
 
-function setAuth0Tokens({idToken, accessToken}) {
+function setAuth0Tokens({idToken, accessToken, expires_in }) {
   if (idToken === undefined || accessToken === undefined) {
     const error = new Error('Unable to contact login server')
     error.reason = 'Auth0 response did not contain proper tokens',
@@ -205,7 +204,7 @@ function setAuth0Tokens({idToken, accessToken}) {
   }
 
   setToken(AUTH0_JWT, idToken)
-  setToken(V3_JWT, accessToken)
+  setToken(V3_JWT, accessToken, expires_in)
 }
 
 export function getNewJWT() {
@@ -686,4 +685,26 @@ export function identifySSOProvider(emailOrHandle) {
 
 export function isAuth0Hosted() {
   return window.location.hostname.toLowerCase() === AUTH0_DOMAIN.toLowerCase()
+}
+
+export function redirectToAuth0(stateParams) {
+  if (USE_AUTH0_HOSTED_PAGE && !isAuth0Hosted()) {
+    auth0.authorize({
+      responseMode: 'query',
+      appState: stateParams
+    });
+    throw new Error('Redirecting to Auth0');
+  }
+}
+
+export function parseResult(hash) {
+  return new Promise((resolve, reject) => {
+    auth0.parseHash( {hash: hash} , (err, result) => {
+      if (err) return reject(err);
+
+      setAuth0Tokens(result);
+
+      resolve(result.appState);
+    });
+  });
 }

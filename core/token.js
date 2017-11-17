@@ -14,8 +14,8 @@ export function getToken(key) {
   return readCookie(key)
 }
 
-export function setToken(key, token) {
-  updateCookie(key, token, 60, DOMAIN) // valid for 60 days
+export function setToken(key, token, expires_in) {
+  updateCookie(key, token, expires_in ? (expires_in / 86400) : 60, DOMAIN) // valid for 60 days
 }
 
 export function removeToken(key) {

@@ -1,7 +1,7 @@
 'use strict'
 
 { getFreshToken, login }    = require '../../../core/auth.js'
-{ getV3Jwt } = require '../../../core/auth.js'
+{ getV3Jwt,  redirectToAuth0} = require '../../../core/auth.js'
 { getLoginConnection, isEmail } = require '../../../core/utils.js'
 { generateReturnUrl, redirectTo, getBaseUrl } = require '../../../core/url.js'
 
@@ -13,11 +13,15 @@ ConnectLoginController = (
   UserService
 ) ->
   vm           = this
+
+  # We have to send the user to Auth0
+  redirectToAuth0($stateParams)
+
   vm.username  = ''
   vm.password  = ''
   vm.error     = false
   vm.loading   = false
-  vm.init      = false
+  vm.initialized  = false
   vm.$stateParams = $stateParams
   vm.passwordReset = vm.$stateParams.passwordReset == true
   vm.loginErrors =
@@ -91,7 +95,7 @@ ConnectLoginController = (
 
   init = ->
     { handle, email, password } = $stateParams
-
+    vm.initialized = true
     getJwtSuccess = (jwt) ->
       if jwt && vm.retUrl
         redirectTo generateReturnUrl(vm.retUrl)

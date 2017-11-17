@@ -35,7 +35,8 @@ const auth0DevConstants = {
   AUTH0_DOMAIN : 'topcoder-newauth.auth0.com',
   ACCOUNTS_APP_URL : 'https://accounts-auth0.topcoder-dev.com/#!/member',
   ACCOUNTS_APP_CONNECTOR_URL : 'https://accounts-auth0.topcoder-dev.com/connector.html',
-  AUTH0_CLIENT_ID : 'G76ar2SI4tXz0jAyEbVGM7jFxheRnkqc'
+  AUTH0_CLIENT_ID : 'G76ar2SI4tXz0jAyEbVGM7jFxheRnkqc',
+  USE_AUTH0_HOSTED_PAGE: true
 }
 
 Object.assign(process.env, auth0DevConstants)
@@ -47,7 +48,7 @@ config.plugins.forEach(p =>  {
 
 config.plugins.push(new HtmlWebpackPlugin({
   template: './app/auth0-hlp',
-  inject: 'body',
+  inject: false,
   favicon: './app/images/favicon.ico',
   filename: 'auth0-hlp.html',
   DOMAIN: process.env.ACCOUNTS_APP_URL.split('#').shift()

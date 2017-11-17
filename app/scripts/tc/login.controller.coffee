@@ -1,7 +1,7 @@
 'use strict'
 
 { DOMAIN } = require '../../../core/constants.js'
-{ login, socialLogin, getFreshToken, isAuth0Hosted } = require '../../../core/auth.js'
+{ login, socialLogin, getFreshToken, isAuth0Hosted,  redirectToAuth0} = require '../../../core/auth.js'
 { isEmail, setupLoginEventMetrics } = require '../../../core/utils.js'
 { redirectTo, generateZendeskReturnUrl, generateReturnUrl, getBaseUrl } = require '../../../core/url.js'
 
@@ -15,9 +15,12 @@ TCLoginController = (
 ) ->
   
   vm = this
-  vm.loading   = false
-  vm.init      = false
 
+  #we have to send the user to Auth0
+  redirectToAuth0($stateParams)
+
+  vm.loading   = false
+  vm.initialized   = false
   vm.baseUrl =  getBaseUrl()
   vm.homeUrl   = $state.href('HOME', {}, { absolute: true})
   vm.registrationUrl   = $state.href('MEMBER_REGISTRATION', { activated: true })
@@ -38,7 +41,7 @@ TCLoginController = (
     vm.loginErrors.USERNAME_NONEXISTANT = false
     vm.loginErrors.WRONG_PASSWORD = false
     vm.loginErrors.SOCIAL_LOGIN_ERROR = false
-    
+
     loginOptions =
       popup     : true
       connection: provider
@@ -116,7 +119,8 @@ TCLoginController = (
 
   init = ->
     { handle, email, password } = $stateParams
-
+    
+    vm.initialized = true
     getJwtSuccess = (jwt) ->
       if jwt && vm.retUrl
         redirectTo generateReturnUrl(vm.retUrl)
@@ -129,9 +133,9 @@ TCLoginController = (
       vm
     else
       # if running in the Hosted Login page always login
-      if isAuth0Hosted() 
+      if isAuth0Hosted()
         vm
-      else 
+      else
         getFreshToken().then(getJwtSuccess)
     vm
   
