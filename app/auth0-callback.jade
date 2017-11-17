@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    meta(http-equiv='Content-type', content='text/html; charset=utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge, chrome=1')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no')
+    title Topcoder
+    link(rel='shortcut icon', href='#{htmlWebpackPlugin.options.DOMAIN}favicon.ico')
+    each css in htmlWebpackPlugin.files.css
+      link(rel='stylesheet', href='#{htmlWebpackPlugin.options.DOMAIN}#{css}')
+  body.tc
+    p
+      | Redirecting...
+    script.
+      window.location.replace('#{htmlWebpackPlugin.options.DOMAIN}#!/callback?' + window.location.hash.substr(1))

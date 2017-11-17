@@ -35,6 +35,7 @@ const auth0DevConstants = {
   AUTH0_DOMAIN : 'topcoder-newauth.auth0.com',
   ACCOUNTS_APP_URL : 'https://accounts-auth0.topcoder-dev.com/#!/member',
   ACCOUNTS_APP_CONNECTOR_URL : 'https://accounts-auth0.topcoder-dev.com/connector.html',
+  AUTH0_CALLBACK :  'https://accounts-auth0.topcoder-dev.com/auth0-callback.html',
   AUTH0_CLIENT_ID : 'G76ar2SI4tXz0jAyEbVGM7jFxheRnkqc',
   USE_AUTH0_HOSTED_PAGE: true
 }
@@ -51,6 +52,14 @@ config.plugins.push(new HtmlWebpackPlugin({
   inject: false,
   favicon: './app/images/favicon.ico',
   filename: 'auth0-hlp.html',
+  DOMAIN: process.env.ACCOUNTS_APP_URL.split('#').shift()
+}))
+
+config.plugins.push(new HtmlWebpackPlugin({
+  template: './app/auth0-callback',
+  inject: false,
+  favicon: './app/images/favicon.ico',
+  filename: 'auth0-callback.html',
   DOMAIN: process.env.ACCOUNTS_APP_URL.split('#').shift()
 }))
 
