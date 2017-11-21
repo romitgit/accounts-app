@@ -261,8 +261,15 @@ export function login(options) {
 }
 
 export function socialLogin(options) {
-  return auth0Popup(options)
-    .then(setAuth0Tokens)
+  if (isAuth0Hosted()){ 
+    auth0.authorize({
+      connection: options.connection
+    })
+    return new Promise(() => {})
+  } else {
+    return auth0Popup(options)
+      .then(setAuth0Tokens)
+  }
 }
 
 export function sendResetEmail(email, resetPasswordUrlPrefix) {
