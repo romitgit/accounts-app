@@ -21,6 +21,9 @@ ConnectPinVerificationController = (
   vm.emailEditMode = false
   vm.emailError = false
   vm.pinError   = false
+  vm.countErrors = 0
+  vm.errorCountDown = 0
+  vm.errorLimit = false
   vm.$stateParams = $stateParams
   
   # TODO: check if this needs to change
@@ -50,9 +53,23 @@ ConnectPinVerificationController = (
       vm.error    = true
       vm.pinError = true
       vm.loading  = false
-      vm.message  = 'That PIN is incorrect. Please check that you entered the one you received.'
+      vm.countErrors++
+      if vm.countErrors < 10
+        vm.message  = 'That PIN is incorrect. Please check that you entered the one you received.'
+      else
+        vm.errorCountDown = 30
+        vm.message  = 'Whoops, you entered the wrong PIN too many times. If you still can\'t get your PIN, please contact support@topcoder.com. Please try again in '
+        vm.errorLimit = true
+        timer = countDown(vm.errorCountDown, onTick=undefined, onEnd=resetPINFailure)
+        timer.start()
       if error.status == 400 && error.message.indexOf('has been activated')  != -1
         vm.message = 'User is already activated. Please login.'
+
+  # Handles the error in verifying/activating account
+  resetPINFailure = ->
+    $scope.$apply ->
+      vm.errorLimit = false
+      vm.message = 'That PIN is incorrect. Please check that you entered the one you received.'
 
   # Login the user
   loginUser = ->
@@ -174,6 +191,19 @@ ConnectPinVerificationController = (
         vm.message = 'User is already activated. Please login.'
       vm.loading = false
       vm.emailEditMode = true
+
+  # CountDown for the error when there were too many erroneous PIN attempts
+  countDown = (n=0, onTick=undefined, onEnd=undefined) ->
+    start = (tick=n) ->
+      vm.errorCountDown = tick
+      onTick? tick
+      $scope.$applyAsync()
+      if tick > 0
+        setTimeout (()->start(vm.errorCountDown-1)), 1000
+      else
+        onEnd?()
+
+    {start}
 
   init = ->
     # TODO we can load temp JWT token from local storage, if there exists one
