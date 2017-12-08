@@ -1,7 +1,7 @@
 import angular from 'angular'
 import _ from 'lodash'
 import { BUSY_PROGRESS_MESSAGE, DOMAIN, WIPRO_SSO_PROVIDER, V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT } from '../../../core/constants.js'
-import { registerUser, socialRegistration } from '../../../core/auth.js'
+import { registerUser, socialRegistration, identifySSOProvider } from '../../../core/auth.js'
 import { npad } from '../../../core/utils.js'
 import { generateReturnUrl, redirectTo } from '../../../core/url.js'
 import { getToken, decodeToken, setToken } from '../../../core/token.js'
@@ -23,6 +23,14 @@ import { getNewJWT } from '../../../core/auth.js'
     vm.auth0Data = $stateParams.auth0Data
     // SSO user data extracted from auth0 login data
     vm.ssoUser = vm.auth0Data && vm.auth0Data.ssoUserData ? vm.auth0Data.ssoUserData : null
+
+    vm.regForm = $stateParams.regForm
+    if(vm.regForm) {
+      vm.username = vm.regForm.handle
+      vm.firstname = vm.regForm.firstName
+      vm.lastname = vm.regForm.lastName
+      vm.countryObj = ISO3166.getCountryObjFromCountryCode(vm.regForm.country)
+    }
     // prepares utm params, if available
     var utm = {
       source : $stateParams && $stateParams.utm_source ? $stateParams.utm_source : '',
@@ -33,7 +41,7 @@ import { getNewJWT } from '../../../core/auth.js'
     // Set default for toggle password directive
     vm.defaultPlaceholder = 'Create Password'
     vm.busyMessage = BUSY_PROGRESS_MESSAGE
-    vm.retUrl = $stateParams && $stateParams.retUrl ? $stateParams.retUrl : null
+    vm.retUrl = $stateParams && $stateParams.retUrl ? $stateParams.retUrl : SKILL_PICKER_URL
     vm.countries = ISO3166.getAllCountryObjects()
 
     vm.$stateParams = $stateParams
@@ -69,7 +77,31 @@ import { getNewJWT } from '../../../core/auth.js'
       })
     }
 
+    function startSSO() {
+      $state.go ('SSO_LOGIN', 
+        {
+          app: 'member',
+          email   : vm.email,
+          regForm : {
+            handle  : vm.username,
+            firstName: vm.firstname,
+            lastName : vm.lastname,
+            country  : vm.country.code
+          },
+          retUrl  : vm.retUrl
+        }
+      )
+    }
+
     vm.register = function() {
+      if (!vm.ssoUser) {
+        const provider = identifySSOProvider(vm.email)
+        if (provider) {
+          startSSO()
+          return
+        }
+      }
+      
       vm.registering = true
       var userInfo = {
         handle: vm.username,

@@ -13,12 +13,12 @@
     form.connect-accounts-form(name="vm.registerForm" role="form" novalidate autocomplete="off" ng-submit="vm.submit()")
       .wrapper.wrapper-half
         label First name
-        input.input.input-sm(type="text" name="first-name" ng-model="vm.firstName" required=true maxlength="64" autofocus=true ng-class="{ 'error' : vm.registerForm['first-name'].$dirty && vm.registerForm['first-name'].$invalid }")
-        .error-block(ng-show="vm.registerForm['first-name'].$dirty && vm.registerForm['first-name'].$invalid") Please enter first name
+        input.input.input-sm(type="text" name="firstname" ng-model="vm.firstName" required=true maxlength="64" autofocus=true ng-class="{ 'error' : vm.registerForm.firstname.$dirty && vm.registerForm.firstname.$invalid }")
+        .error-block(ng-show="vm.registerForm.firstname.$dirty && vm.registerForm.firstname.$invalid") Please enter first name
       .wrapper.wrapper-half
         label Last name
-        input.input.input-sm(type="text" name="last-name" ng-model="vm.lastName" required=true maxlength="64" ng-class="{ 'error' : vm.registerForm['last-name'].$dirty && vm.registerForm['last-name'].$invalid }")
-        .error-block(ng-show="vm.registerForm['last-name'].$dirty && vm.registerForm['last-name'].$invalid") Please enter last name
+        input.input.input-sm(type="text" name="lastname" ng-model="vm.lastName" required=true maxlength="64" ng-class="{ 'error' : vm.registerForm.lastname.$dirty && vm.registerForm.lastname.$invalid }")
+        .error-block(ng-show="vm.registerForm.lastname.$dirty && vm.registerForm.lastname.$invalid") Please enter last name
       .wrapper
         label Country
         .country-dropdown
@@ -56,7 +56,7 @@
           span(ng-message="maxlength") That username is not the correct length or format.
       .wrapper.wrapper-tooltip
         label Email address
-        input.input.input-sm(type="text" name="email" ng-model="vm.email" ng-model-options="{ debounce: {'default': 500} }" required=true valid-email email-is-available ng-class="{ 'error' : vm.registerForm.email.$dirty && vm.registerForm.email.$invalid }")
+        input.input.input-sm(type="text" name="email" ng-model="vm.email" ng-model-options="{ debounce: {'default': 500} }" required=true valid-email email-is-available ng-class="{ 'error' : vm.registerForm.email.$dirty && vm.registerForm.email.$invalid }" ng-disabled="!!vm.ssoUser")
         .tooltip
           .arrow
           h4 EMAIL TIPS:
