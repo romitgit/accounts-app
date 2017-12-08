@@ -1,6 +1,6 @@
 'use strict'
 
-{ registerUser, getFreshToken, getOneTimeToken } = require '../../../core/auth.js'
+{ registerUser, getFreshToken, getOneTimeToken, identifySSOProvider } = require '../../../core/auth.js'
 { DOMAIN, CONNECT_PROJECT_CALLBACK, UTM_SOURCE_CONNECT } = require '../../../core/constants.js'
 { npad } = require '../../../core/utils.js'
 { decodeToken } = require '../../../core/token.js'
@@ -19,13 +19,26 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm.isValidCountry    = false
   vm.isCountryDirty    = false
   vm.ssoUser
-  vm.retUrl = $stateParams && $stateParams.retUrl ? null
+  vm.retUrl  = $stateParams.retUrl
+  vm.auth0Data = $stateParams.auth0Data
+  # SSO user data extracted from auth0 login data
+  vm.ssoUser = vm.auth0Data?.ssoUserData
+  # pre-populated data
+  vm.regForm = $stateParams.regForm
+  if vm.regForm
+    vm.username   = vm.regForm.handle
+    vm.firstName  = vm.regForm.firstName
+    vm.lastName   = vm.regForm.lastName
+    vm.countryObj = ISO3166.getCountryObjFromCountryCode(vm.regForm.country)
 
   vm.countries = ISO3166.getAllCountryObjects()
 
   afterActivationURL = $stateParams.retUrl ? 'https://connect.' + DOMAIN
   vm.isConnectProjectFlow = afterActivationURL && afterActivationURL.indexOf(CONNECT_PROJECT_CALLBACK) != -1
   
+  $scope.$watch 'registerForm', (registerForm) ->
+    vm.onSSORegister vm.ssoUser if vm.ssoUser
+
   vm.updateCountry = (angucompleteCountryObj) ->
     countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
 
@@ -40,7 +53,27 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
     vm.isCountryDirty = vm.registerForm.country.$dirty
     vm.isValidCountry = isValidCountry
 
+  # SSO Login for registration
+  startSSO = ->
+    params =
+      app: 'connect'
+      email: vm.email
+      regForm:
+        handle: vm.username
+        firstName: vm.firstname
+        lastName : vm.lastname
+        country  : vm.country.code
+      retUrl: vm.retUrl
+    $state.go 'SSO_LOGIN', params
+
+
   vm.submit = ->
+    if !vm.ssoUser
+      provider = identifySSOProvider vm.email
+      if vm.email
+        startSSO()
+        return
+
     vm.error = false
     vm.loading = true
 
@@ -49,7 +82,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
       profile =
         name: vm.ssoUser.name
         email: vm.ssoUser.email
-        providerType: 'samplp'
+        providerType: 'samlp'
         provider: vm.ssoUser.ssoProvider
         userId: vm.ssoUser.ssoUserId
 
@@ -68,6 +101,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
         afterActivationURL: afterActivationURL
 
     if profile #if sso registration
+      config.param.active = true
       config.param.profile = profile
     else # set password only if it is NON SSO registration
       config.param.credential =
@@ -85,6 +119,16 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
         vm.errorMessage = error.message
 
   registerSuccess = (user) ->
+
+    # move to the sso login if a user is already active and sso user
+    if !!user?.active && user?.profile?.providerType == 'samlp'
+      stateParams =
+        app: 'connect'
+        email: vm.email
+        retUrl: vm.retUrl
+      $state.go 'SSO_LOGIN', stateParams
+      return
+
     # options =
     #   username: vm.username
     #   password: vm.password
@@ -119,18 +163,20 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
     vm.isSSORegistration = false
     vm.ssoUser = ssoUser
     
-    if ssoUser && ssoUser.firstName
+    if ssoUser?.firstName
       vm.firstName = ssoUser.firstName
-      vm.registerForm['first-name'].$setDirty()
+      vm.registerForm?.firstname?.$setDirty()
 
-    if ssoUser && ssoUser.lastName
+    if ssoUser?.lastName
       vm.lastName = ssoUser.lastName
-      vm.registerForm['last-name'].$setDirty()
+      vm.registerForm?.lastname?.$setDirty()
 
-    if ssoUser && ssoUser.email
+    if ssoUser?.email
       vm.email = ssoUser.email
-      vm.registerForm.email.$setDirty()
+      vm.registerForm?.email?.$setDirty()
 
+  vm.onSSORegister vm.ssoUser if vm.ssoUser
+  
   vm
 
 RegistrationController.$inject = [
