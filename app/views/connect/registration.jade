@@ -62,17 +62,25 @@
           h4 EMAIL TIPS:
           p.text-mb Your email address will be private and not shared with anyone.
           p We'll send you messages related to your account and project activities.
+
+        .tooltip(ng-show="vm.ssoForced")
+          .arrow
+          h4 Note:
+          p.text-mb Your email address will be linked with your Organization account.
+          p Please use Single Sign On when you log in to Topcoder.
+          
         .error-block(ng-show="vm.registerForm.email.$dirty && vm.registerForm.email.$invalid", ng-messages="vm.registerForm.email.$error")
           span(ng-message="emailIsAvailable") {{vm.emailErrorMessage}}
 
           span(ng-message="validEmail") {{vm.emailErrorMessage}}
 
           span(ng-message="required") Please enter an email address.
-      .wrapper.wrapper-tooltip(ng-if="!vm.ssoUser")
+
+      .wrapper.wrapper-tooltip(ng-if="!vm.ssoUser && !vm.ssoForced")
         label Create password
         toggle-password-with-tips
 
-        .tooltip.tooltip-password(ng-show="vm.passwordFocus")
+        .tooltip.tooltip-password(ng-show="vm.passwordFocus && !vm.ssoForced")
           .arrow
           h4 YOUR PASSWORD MUST HAVE:
           p(ng-class="{ line : vm.registerForm.password.$error.minlength || vm.registerForm.password.$error.maxlength || vm.registerForm.password.$error.required}")

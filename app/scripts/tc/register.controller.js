@@ -23,7 +23,7 @@ import { getNewJWT } from '../../../core/auth.js'
     vm.auth0Data = $stateParams.auth0Data
     // SSO user data extracted from auth0 login data
     vm.ssoUser = vm.auth0Data && vm.auth0Data.ssoUserData ? vm.auth0Data.ssoUserData : null
-
+    // regForm is used to pre-populate form items
     vm.regForm = $stateParams.regForm
     if(vm.regForm) {
       vm.username = vm.regForm.handle
@@ -31,6 +31,7 @@ import { getNewJWT } from '../../../core/auth.js'
       vm.lastname = vm.regForm.lastName
       vm.countryObj = ISO3166.getCountryObjFromCountryCode(vm.regForm.country)
     }
+    
     // prepares utm params, if available
     var utm = {
       source : $stateParams && $stateParams.utm_source ? $stateParams.utm_source : '',
@@ -46,10 +47,15 @@ import { getNewJWT } from '../../../core/auth.js'
 
     vm.$stateParams = $stateParams
 
-    $scope.$watch("registerForm", function(registerForm) {
+    // watch form to detect particular changes in it.
+    // https://stackoverflow.com/questions/22436501/simple-angularjs-form-is-undefined-in-scope
+    $scope.$watch('registerForm', function(registerForm) {
       if (vm.ssoUser) {
         loadSSOUser(vm.ssoUser)
       }
+    })
+    $scope.$watch('vm.email', function(email) {
+      vm.ssoForced = !!(identifySSOProvider(vm.email))     
     })
 
     vm.updateCountry = function (angucompleteCountryObj) {

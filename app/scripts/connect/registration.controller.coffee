@@ -36,8 +36,13 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   afterActivationURL = $stateParams.retUrl ? 'https://connect.' + DOMAIN
   vm.isConnectProjectFlow = afterActivationURL && afterActivationURL.indexOf(CONNECT_PROJECT_CALLBACK) != -1
   
+  # watch form to detect particular changes in it.
+  # https://stackoverflow.com/questions/22436501/simple-angularjs-form-is-undefined-in-scope
   $scope.$watch 'registerForm', (registerForm) ->
     vm.onSSORegister vm.ssoUser if vm.ssoUser
+
+  $scope.$watch 'vm.email', (email) ->
+    vm.ssoForced = !!(identifySSOProvider vm.email)
 
   vm.updateCountry = (angucompleteCountryObj) ->
     countryCode = _.get(angucompleteCountryObj, 'originalObject.code', undefined)
