@@ -17,11 +17,12 @@ SSOLoginController = (
   vm.loading       = false
   vm.success       = false
   vm.error         = ''
-  vm.emailOrHandle = ''
+  vm.emailOrHandle = if !!$stateParams.email then $stateParams.email else ''
   vm.baseUrl       = "https://www.#{DOMAIN}"
   vm.org           = ''
   vm.retUrl        = if $stateParams.retUrl then $stateParams.retUrl else vm.baseUrl
   vm.app           = $stateParams.app
+  vm.regForm       = $stateParams.regForm
 
   activate = ->
     getJwtSuccess = (jwt) ->
@@ -72,7 +73,8 @@ SSOLoginController = (
       # TODO Connect registration needed to updated for the new SSO login flow
       registrationState = if vm.app == 'connect' then 'CONNECT_REGISTRATION' else 'MEMBER_REGISTRATION'
       $state.go registrationState, {
-        auth0Data: vm.auth0Data,
+        auth0Data : vm.auth0Data,
+        regForm : vm.regForm,
         retUrl : vm.retUrl
       }
 
@@ -106,6 +108,9 @@ SSOLoginController = (
     else
       $state.go 'MEMBER_LOGIN', $stateParams
   
+  if vm.emailOrHandle
+    vm.submit()
+
   activate()
 
   vm
