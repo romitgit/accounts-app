@@ -55,7 +55,7 @@ import { getNewJWT } from '../../../core/auth.js'
       }
     })
     $scope.$watch('vm.email', function(email) {
-      vm.ssoForced = !!(identifySSOProvider(vm.email))     
+      vm.ssoForced = !!(identifySSOProvider(email))     
     })
 
     vm.updateCountry = function (angucompleteCountryObj) {
