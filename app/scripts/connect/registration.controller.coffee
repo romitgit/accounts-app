@@ -75,7 +75,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm.submit = ->
     if !vm.ssoUser
       provider = identifySSOProvider vm.email
-      if vm.email
+      if provider
         startSSO()
         return
 
