@@ -20,7 +20,7 @@
     "appirio-tech-ng-ui-components": "^2.2.4",
     "appirio-tech-ng-iso-constants": "^1.0.6",
     "auth0-angular": "^4.1.0",
-    "auth0-js": "^6.8.0",
+    "auth0-js": "8.12.0",
     "babel-polyfill": "^6.7.4",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.6.1",
