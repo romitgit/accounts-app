@@ -20,6 +20,7 @@ let auth0Params = {
   audience: API_URL
 }
 
+// TODO Add tenant here (for custom domain name)
 if (isAuth0Hosted() && window.config) {
   // If running in the hosted page we use Auth0 configuration
   auth0Params = Object.assign(
