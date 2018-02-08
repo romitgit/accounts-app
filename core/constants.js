@@ -35,9 +35,10 @@ export const SEGMENT_KEY = process.env.ACCOUNTS_SEGMENT_KEY
 
 export const CONNECT_PROJECT_CALLBACK = 'new-project-callback'
 // this string should be regex aware i.e. it should backquote any regex reserve characters
-export const SSO_PROVIDER_DOMAINS = 'wipro|asp\\.appirio\\.com|topcoder'
+//export const SSO_PROVIDER_DOMAINS = 'wipro\\.com|asp\\.appirio\\.com|topcoder'
+export const SSO_PROVIDER_DOMAINS = 'wipro\\.com'
 // individual domains should not backquote anything because it is matched without regex
-export const SSO_PROVIDER_DOMAIN_WIPRO = 'wipro'
+export const SSO_PROVIDER_DOMAIN_WIPRO = 'wipro.com'
 export const SSO_PROVIDER_DOMAIN_APPIRIO = 'asp.appirio.com'
 export const SSO_PROVIDER_DOMAIN_TOPCODER = 'topcoder'
 

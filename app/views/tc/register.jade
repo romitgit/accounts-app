@@ -65,7 +65,7 @@
 
     .validation-bar(ng-class="{ 'error-bar': (vm.registerForm.email.$dirty && vm.registerForm.email.$invalid) }")
       input-sticky-placeholder.email(sticky-placeholder="Email", ng-model="vm.email")
-        input(ng-model="vm.email", ng-model-options="{ debounce: {'default': 500} }", ng-focus="vm.emailTips = true", ng-blur="vm.emailTips = false", name="email", placeholder="Enter Your Email", type="email", valid-email, email-is-available, required,  ng-disabled="!!vm.ssoUser")
+        input(ng-model="vm.email", ng-model-options="{ debounce: {'default': 500} }", ng-focus="vm.emailTips = true", ng-blur="vm.emailTips = false", name="email", placeholder="Enter Your Email", type="email", valid-email, email-is-available, required, ng-disabled="!!vm.ssoUser")
 
       .tips.email-tips(ng-show="vm.emailTips")
         .arrow
@@ -75,6 +75,14 @@
 
         p We'll occasionally send you emails related to your activities or interests.
 
+      .tips.email-tips(ng-show="vm.ssoForced")
+        .arrow
+        h3 Note:
+
+        p Your email address will be linked with your Organization account.
+
+        p Please use Single Sign On when you log in to Topcoder.
+
     .form-input-error(ng-show="vm.registerForm.email.$dirty && vm.registerForm.email.$invalid", ng-messages="vm.registerForm.email.$error")
       p.form-error(ng-message="emailIsAvailable") {{vm.emailErrorMessage}}
 
@@ -83,9 +91,9 @@
       p.form-error(ng-message="required") Please enter an email address.
 
     .validation-bar
-      toggle-password-with-tips(ng-if="!vm.isSocialRegistration && !vm.ssoUser", placeholder="Create Password")
+      toggle-password-with-tips(ng-if="!vm.isSocialRegistration && !vm.ssoForced && !vm.ssoUser", placeholder="Create Password")
 
-      .tips.password-tips(ng-show="vm.passwordFocus")
+      .tips.password-tips(ng-show="vm.passwordFocus && !vm.ssoForced")
         .arrow
         //- h3 Password Tips:
 

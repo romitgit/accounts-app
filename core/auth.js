@@ -668,7 +668,8 @@ export function updatePrimaryEmail(userId, email, tempToken) {
 }
 
 export function identifySSOProvider(emailOrHandle) {
-  var EMAIL_DOMAIN_REGEX = new RegExp('^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\\.)?[a-zA-Z]+\\.)?(' + SSO_PROVIDER_DOMAINS + ')\\.[a-zA-Z]{2,15}$')
+  //var EMAIL_DOMAIN_REGEX = new RegExp('^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\\.)?[a-zA-Z]+\\.)?(' + SSO_PROVIDER_DOMAINS + ')\\.[a-zA-Z]{2,15}$')
+  var EMAIL_DOMAIN_REGEX = new RegExp('^[a-zA-Z0-9_.+-]+@(?:(?:[a-zA-Z0-9-]+\\.)?[a-zA-Z]+\\.)?(' + SSO_PROVIDER_DOMAINS + ')$', 'i')
   var match = EMAIL_DOMAIN_REGEX.exec(emailOrHandle)
   var domain, provider = null
   if (match && match.length > 1) {
@@ -676,16 +677,18 @@ export function identifySSOProvider(emailOrHandle) {
   }
   // identify SSO provider by looking at domain of the email or handle
   // if handle does not follow email pattern, this won't work
-  switch(domain) {
+  switch(domain && domain.toLowerCase()) {
   case SSO_PROVIDER_DOMAIN_WIPRO:
     provider = WIPRO_SSO_PROVIDER
     break
-  case SSO_PROVIDER_DOMAIN_APPIRIO:
+  /* supports only wipro.com
+    case SSO_PROVIDER_DOMAIN_APPIRIO:
     provider = APPIRIO_SSO_PROVIDER
     break
   case SSO_PROVIDER_DOMAIN_TOPCODER:
     provider = TOPCODER_SSO_PROVIDER
     break
+  */
   default:
     break
   }

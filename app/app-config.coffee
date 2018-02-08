@@ -85,7 +85,7 @@ config = (
   # message      : (optional) A message handed by Identity Service when some error occurs
   states['MEMBER_REGISTRATION'] =
     url: '/member/registration?retUrl&utm_source&utm_medium&utm_campaign&userJWTToken&auth0Jwt&auth0Refresh&message'
-    params: { 'auth0Data' }
+    params: { 'auth0Data', 'regForm' }
     controller  : 'TCRegistrationController as vm'
     template: require('./views/tc/register.jade')()
     public: true
@@ -130,6 +130,7 @@ config = (
 
   states['CONNECT_REGISTRATION'] =
     url: '/connect/registration?retUrl&userJWTToken&auth0Jwt&auth0Refresh&message'
+    params: { 'auth0Data', 'regForm' }
     controller  : 'ConnectRegistrationController as vm'
     template: require('./views/connect/registration.jade')()
     public: true
@@ -163,7 +164,8 @@ config = (
   # State parameters
   # see SOCIAL_CALLBACK
   states['SSO_LOGIN'] =
-    url: '/sso-login/?app&retUrl'
+    url: '/sso-login/?app&email&retUrl'
+    params: { 'regForm' }
     template   : require('./views/sso/sso-login')()
     controller : 'SSOLoginController as vm'
     public: true
