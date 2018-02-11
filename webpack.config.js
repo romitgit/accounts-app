@@ -29,24 +29,23 @@ const config = require('appirio-tech-webpack-config')({
   template: './app/index.jade',
   favicon: './app/images/favicon.ico'
 })
-const accountsDomain = 'https://accounts-auth0.topcoder-dev.com/'
-//const accountsDomain = 'http://local.topcoder-dev.com:8000/'
-const auth0DevConstants = {
-  auth0Domain : 'topcoder-newauth.auth0.com',
-  auth0Callback:  accountsDomain + 'auth0-callback.html',
-  AUTH0_DOMAIN : 'topcoder-newauth.auth0.com',
-  ACCOUNTS_APP_URL : accountsDomain + '#!/member',
-  ACCOUNTS_APP_CONNECTOR_URL : accountsDomain + 'connector.html',
-  AUTH0_CALLBACK :  accountsDomain + 'auth0-callback.html',
-  AUTH0_CLIENT_ID : 'G76ar2SI4tXz0jAyEbVGM7jFxheRnkqc',
+
+const envOverrides = {
+  auth0Domain: process.env.AUTH0_DOMAIN,
+  auth0Callback:  'https://' + process.env.ACCOUNTS_DOMAIN + '/auth0-callback.html',
+  AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
+  ACCOUNTS_APP_URL: 'https://' + process.env.ACCOUNTS_DOMAIN + '/#!/member',
+  ACCOUNTS_APP_CONNECTOR_URL: 'https://' + process.env.ACCOUNTS_DOMAIN + '/connector.html',
+  AUTH0_CALLBACK:  'https://' + process.env.ACCOUNTS_DOMAIN + '/auth0-callback.html',
+  AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
   USE_AUTH0_HOSTED_PAGE: true
 }
 
-Object.assign(process.env, auth0DevConstants)
+Object.assign(process.env, envOverrides)
 
 config.plugins.forEach(p =>  {
   if (p.definitions && p.definitions['process.env']) {
-    p.definitions['process.env'] = JSON.stringify(Object.assign(JSON.parse(p.definitions['process.env']), auth0DevConstants))
+    p.definitions['process.env'] = JSON.stringify(Object.assign(JSON.parse(p.definitions['process.env']), envOverrides))
   }})
 
 config.plugins.push(new HtmlWebpackPlugin({
@@ -54,7 +53,7 @@ config.plugins.push(new HtmlWebpackPlugin({
   inject: false,
   favicon: './app/images/favicon.ico',
   filename: 'auth0-hlp.html',
-  DOMAIN: accountsDomain
+  DOMAIN: 'https://' + process.env.ACCOUNTS_DOMAIN + '/'
 }))
 
 config.plugins.push(new HtmlWebpackPlugin({
@@ -62,7 +61,7 @@ config.plugins.push(new HtmlWebpackPlugin({
   inject: false,
   favicon: './app/images/favicon.ico',
   filename: 'auth0-callback.html',
-  DOMAIN: accountsDomain
+  DOMAIN: 'https://' + process.env.ACCOUNTS_DOMAIN + '/'
 }))
 
 

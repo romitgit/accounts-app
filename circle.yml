@@ -38,7 +38,7 @@ deployment:
     branch: [dev-auth0]
     owner: appirio-tech
     commands:
-      - ./deploy.sh DEVAUTH0 no-cache
+      - ./deploy.sh NEWAUTH no-cache
   test:
     branch: [qa]
     owner: appirio-tech

@@ -11,8 +11,10 @@ AWS_SECRET_ACCESS_KEY=$(eval "echo \$${ENV}_AWS_SECRET_ACCESS_KEY")
 AWS_S3_BUCKET=$(eval "echo \$${ENV}_S3_BUCKET")
 
 AUTH0_DOMAIN=$(eval "echo \$${ENV}_AUTH0_DOMAIN")
-AUTH0_CLIENT_ID=$(eval "echo \$${ENV}_AUTH0_DEPLOYMENT_CLIENT_ID")
+AUTH0_CLIENT_ID=$(eval "echo \$${ENV}_AUTH0_CLIENT_ID")
 AUTH0_CLIENT_SECRET=$(eval "echo \$${ENV}_AUTH0_DEPLOYMENT_CLIENT_SECRET")
+
+ACCOUNTS_DOMAIN=$(eval "echo \$${ENV}_ACCOUNTS_DOMAIN")
 
 configure_aws_cli() {
 	aws --version
