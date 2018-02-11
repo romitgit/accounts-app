@@ -11,8 +11,8 @@ AWS_SECRET_ACCESS_KEY=$(eval "echo \$${ENV}_AWS_SECRET_ACCESS_KEY")
 AWS_S3_BUCKET=$(eval "echo \$${ENV}_S3_BUCKET")
 
 AUTH0_DOMAIN=$(eval "echo \$${ENV}_AUTH0_DOMAIN")
-AUTH0_CLIENT_ID=$(eval "echo \$${ENV}_AUTH0_CLIENT_ID")
-AUTH0_CLIENT_SECRET=$(eval "echo \$${ENV}_AUTH0_DEPLOYMENT_CLIENT_SECRET")
+AUTH0_DEPLOY_CLIENT_ID=$(eval "echo \$${ENV}_AUTH0_DEPLOY_CLIENT_ID")
+AUTH0_DEPLOY_CLIENT_SECRET=$(eval "echo \$${ENV}_AUTH0_DEPLOY_CLIENT_SECRET")
 
 ACCOUNTS_DOMAIN=$(eval "echo \$${ENV}_ACCOUNTS_DOMAIN")
 
@@ -62,7 +62,7 @@ deploy_s3bucket() {
 }
 
 deploy_auth0_page() {
-	if [ "$AUTH0_DOMAIN" = "" ] || [ "$AUTH0_CLIENT_ID" = "" ]; then
+	if [ "$AUTH0_DOMAIN" = "" ] || [ "$AUTH0_DEPLOY_CLIENT_ID" = "" ]; then
 		echo "Auth0 deployment configuration missing. Ignoring hosted login page deployment"
 		return
 	fi
@@ -70,8 +70,8 @@ deploy_auth0_page() {
 	echo "Starting deployment of Auth0 Hosted Login Page"
 
 	echo "{\"pages\":{\"login\":{\"htmlFile\":\"$(sed 's/\"/\\"/g' dist/auth0-hlp.html | tr -d '\n')\",\"metadata\":false,\"name\":\"login\"}}}" > page_deploy.json
-	echo "{\"AUTH0_CLIENT_ID\":\"$AUTH0_CLIENT_ID\", \"AUTH0_DOMAIN\": \"$AUTH0_DOMAIN\"}" > config.json
-	./node_modules/auth0-deploy-cli/index.js -i ./page_deploy.json -c ./config.json -x $AUTH0_CLIENT_SECRET
+	echo "{\"AUTH0_CLIENT_ID\":\"$AUTH0_DEPLOY_CLIENT_ID\", \"AUTH0_DOMAIN\": \"$AUTH0_DOMAIN\",\"AUTH0_EXCLUDED_RULES\":[\"Global variables and functions\",\"Add custom attributes to access token\"]}" > config.json
+	./node_modules/auth0-deploy-cli/index.js -i ./page_deploy.json -c ./config.json -x $AUTH0_DEPLOY_CLIENT_SECRET
 	if [ $? -eq 0 ]; then
 		echo "Auth0 Hosted Page deployed successfully"
 	else
