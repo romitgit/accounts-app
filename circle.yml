@@ -6,6 +6,7 @@ machine:
 
 dependencies:
   pre:
+    - ./setup_env.sh
     - sudo rm -rf /home/ubuntu/accounts-app/node_modules
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test  -y
     - sudo apt-get update -y
@@ -38,7 +39,7 @@ deployment:
     branch: [dev-auth0]
     owner: appirio-tech
     commands:
-      - source setup_env.sh NEWAUTH; ./deploy.sh NEWAUTH no-cache
+      - ./deploy.sh NEWAUTH no-cache
   test:
     branch: [qa]
     owner: appirio-tech
