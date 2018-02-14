@@ -6,16 +6,6 @@ if [ "$2" = "no-cache" ]; then
     NOCACHE=true
 fi
 
-AWS_ACCESS_KEY_ID=$(eval "echo \$${ENV}_AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY=$(eval "echo \$${ENV}_AWS_SECRET_ACCESS_KEY")
-AWS_S3_BUCKET=$(eval "echo \$${ENV}_S3_BUCKET")
-
-AUTH0_DOMAIN=$(eval "echo \$${ENV}_AUTH0_DOMAIN")
-AUTH0_DEPLOY_CLIENT_ID=$(eval "echo \$${ENV}_AUTH0_DEPLOY_CLIENT_ID")
-AUTH0_DEPLOY_CLIENT_SECRET=$(eval "echo \$${ENV}_AUTH0_DEPLOY_CLIENT_SECRET")
-
-ACCOUNTS_DOMAIN=$(eval "echo \$${ENV}_ACCOUNTS_DOMAIN")
-
 configure_aws_cli() {
 	aws --version
 	aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID

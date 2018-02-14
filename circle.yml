@@ -38,7 +38,7 @@ deployment:
     branch: [dev-auth0]
     owner: appirio-tech
     commands:
-      - source setup_env.sh
+      - source setup_env.sh NEWAUTH
       - ./deploy.sh NEWAUTH no-cache
   test:
     branch: [qa]
