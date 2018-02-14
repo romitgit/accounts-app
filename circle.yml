@@ -6,6 +6,7 @@ machine:
 
 dependencies:
   pre:
+    - source setup_env.sh
     - sudo rm -rf /home/ubuntu/accounts-app/node_modules
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test  -y
     - sudo apt-get update -y
