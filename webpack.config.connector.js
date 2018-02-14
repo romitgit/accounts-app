@@ -4,6 +4,10 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 
+const envCopy = {} // Save this before appirio-webpack screws it up
+Object.assign(envCopy, process.env)
+
+process.env.ENV = 'DEV'
 if (process.env.CIRCLE_BRANCH === 'master') process.env.ENV = 'PROD'
 if (process.env.CIRCLE_BRANCH === 'dev') process.env.ENV = 'DEV'
 if (process.env.CIRCLE_BRANCH === 'qa') process.env.ENV = 'QA'
@@ -15,11 +19,11 @@ const baseConfig = require('appirio-tech-webpack-config')({
 })
 
 const envOverrides = {
-  auth0Domain: process.env.AUTH0_DOMAIN,
-  AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
-  ACCOUNTS_APP_URL: 'https://' + process.env.ACCOUNTS_DOMAIN + '/#!/member',
-  ACCOUNTS_APP_CONNECTOR_URL: 'https://' + process.env.ACCOUNTS_DOMAIN + '/connector.html',
-  AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID
+  auth0Domain: envCopy.AUTH0_DOMAIN,
+  AUTH0_DOMAIN: envCopy.AUTH0_DOMAIN,
+  ACCOUNTS_APP_URL: 'https://' + envCopy.ACCOUNTS_DOMAIN + '/#!/member',
+  ACCOUNTS_APP_CONNECTOR_URL: 'https://' + envCopy.ACCOUNTS_DOMAIN + '/connector.html',
+  AUTH0_CLIENT_ID: envCopy.AUTH0_CLIENT_ID
 }
 
 Object.assign(process.env, envOverrides)
