@@ -19,7 +19,7 @@
     "angular-messages": "^1.5.2",
     "appirio-tech-ng-iso-constants": "^1.0.6",
     "appirio-tech-ng-ui-components": "^2.2.4",
-    "auth0-js": "^8.10.1",
+    "auth0-js": "^9.2.3",
     "babel-polyfill": "^6.7.4",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.6.1",
