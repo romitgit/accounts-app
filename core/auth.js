@@ -4,7 +4,7 @@ import merge from 'lodash/merge'
 import { getLoginConnection,  toCamelCase } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_JWT,  API_URL,
-  AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
+  AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, AUTH0_TENANT, WIPRO_SSO_PROVIDER,
   TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
   SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER, ACCOUNTS_APP_CONNECTOR_URL, USE_AUTH0_HOSTED_PAGE } from './constants.js'
 import fetch from 'isomorphic-fetch'
@@ -28,7 +28,8 @@ if (isAuth0Hosted() && window.config) {
     {
       domain: window.config.auth0Domain,
       clientID: window.config.clientID,
-      redirectUri: window.config.callbackURL
+      redirectUri: window.config.callbackURL,
+      tenant: AUTH0_TENANT
     }
   )
 }
