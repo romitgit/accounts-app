@@ -44,7 +44,7 @@ export const SSO_PROVIDER_DOMAIN_TOPCODER = 'topcoder'
 
 export const UTM_SOURCE_CONNECT = 'connect'
 
-export const USE_AUTH0_HOSTED_PAGE = process.env.USE_AUTH0_HOSTED_PAGE;
+export const USE_AUTH0_HOSTED_PAGE = true
 
 // Custom Auth0 namespace
 export const AUTH0_CLAIM_NAMESPACE = 'https://topcoder.com/claims/'

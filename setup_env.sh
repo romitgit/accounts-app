@@ -10,4 +10,5 @@ echo export AUTH0_DOMAIN=$(eval "echo \$${ENV}_AUTH0_DOMAIN") >> ~/.circlerc
 echo export AUTH0_CLIENT_ID=$(eval "echo \$${ENV}_AUTH0_CLIENT_ID") >> ~/.circlerc
 echo export AUTH0_DEPLOY_CLIENT_ID=$(eval "echo \$${ENV}_AUTH0_DEPLOY_CLIENT_ID") >> ~/.circlerc
 echo export AUTH0_DEPLOY_CLIENT_SECRET=$(eval "echo \$${ENV}_AUTH0_DEPLOY_CLIENT_SECRET") >> ~/.circlerc
+echo export AUTH0_DEPLOY_DOMAIN=$(eval "echo \$${ENV}_AUTH0_DEPLOY_DOMAIN") >> ~/.circlerc
 echo export ACCOUNTS_DOMAIN=$(eval "echo \$${ENV}_ACCOUNTS_DOMAIN") >> ~/.circlerc
