@@ -29,7 +29,9 @@ if (isAuth0Hosted() && window.config) {
       domain: window.config.auth0Domain,
       clientID: window.config.clientID,
       redirectUri: window.config.callbackURL,
-      tenant: AUTH0_TENANT
+      overrides: {
+        __tenant: AUTH0_TENANT
+      }
     }
   )
 }
