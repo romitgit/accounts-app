@@ -30,7 +30,8 @@ if (isAuth0Hosted() && window.config) {
       clientID: window.config.clientID,
       redirectUri: window.config.callbackURL,
       overrides: {
-        __tenant: AUTH0_TENANT
+        __tenant: AUTH0_TENANT,
+        __token_issuer: 'https://' + AUTH0_DOMAIN + '/'
       }
     }
   )
