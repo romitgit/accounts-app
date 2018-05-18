@@ -1,23 +1,19 @@
 version: 2
 jobs:
-  # Build & Deploy against development backend
   "build-dev":
     docker:
       - image: node:5.10.1
     steps:
-      - run:
-          name: Installation of build dependencies.
-          command: |
-            echo "hello"
       - checkout
 
 workflows:
   version: 2
   build:
     jobs:
-      - build-dev:
+      - build-dev
           filters:
             branches:
-              only: dev-circleci2
+              only: dev-circleci2      
+
 	  
   
