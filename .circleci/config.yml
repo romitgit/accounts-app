@@ -1,0 +1,107 @@
+version: 2
+
+jobs:
+  # Build & Deploy against development backend
+  "build-dev":
+    docker:
+      - image: node:5.10.1
+    steps:
+      - run:
+          name: Installation of build dependencies.
+          command: |
+            sudo add-apt-repository ppa:ubuntu-toolchain-r/test  -y
+            sudo apt-get update -y
+            sudo apt-get install g++-4.8  -y
+            sudo chmod 777 /etc/mime.types
+            sudo sed -i 's/^application\/x-font-woff.*/application\/font-woff\t\t\t\twoff/' /etc/mime.types
+            sudo sed -i 's/^image\/vnd.microsoft.icon.*/image\/vnd.microsoft.icon/' /etc/mime.types
+            sudo sed -i 's/^image\/x-icon.*/image\/x-icon\t\t\t\tico/' /etc/mime.types			
+      - checkout
+      - restore_cache:
+          key: ac-node-modules-{{ checksum "package-lock.json" }}
+      - run: npm install
+      - save_cache:
+          key: ac-node-modules-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      - run: npm run build
+      - run: npm run build-connector
+      - run: npm test
+      - run: echo "deploy.sh DEV"
+  "build-qa":
+    docker:
+      - image: node:5.10.1
+    steps:
+      - run:
+          name: Installation of build dependencies.
+          command: |
+            sudo add-apt-repository ppa:ubuntu-toolchain-r/test  -y
+            sudo apt-get update -y
+            sudo apt-get install g++-4.8  -y
+            sudo chmod 777 /etc/mime.types
+            sudo sed -i 's/^application\/x-font-woff.*/application\/font-woff\t\t\t\twoff/' /etc/mime.types
+            sudo sed -i 's/^image\/vnd.microsoft.icon.*/image\/vnd.microsoft.icon/' /etc/mime.types
+            sudo sed -i 's/^image\/x-icon.*/image\/x-icon\t\t\t\tico/' /etc/mime.types			
+      - checkout
+      - restore_cache:
+          key: ac-node-modules-{{ checksum "package-lock.json" }}
+      - run: npm install
+      - save_cache:
+          key: ac-node-modules-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      - run: npm run build
+      - run: npm run build-connector
+      - run: npm test
+      - run:	  
+          name: Installation of build dependencies.
+          command: |
+            ./deploy.sh TEST01
+            ./deploy.sh QA
+  "build-prod":
+    docker:
+      - image: node:5.10.1
+    steps:
+      - run:
+          name: Installation of build dependencies.
+          command: |
+            sudo add-apt-repository ppa:ubuntu-toolchain-r/test  -y
+            sudo apt-get update -y
+            sudo apt-get install g++-4.8  -y
+            sudo chmod 777 /etc/mime.types
+            sudo sed -i 's/^application\/x-font-woff.*/application\/font-woff\t\t\t\twoff/' /etc/mime.types
+            sudo sed -i 's/^image\/vnd.microsoft.icon.*/image\/vnd.microsoft.icon/' /etc/mime.types
+            sudo sed -i 's/^image\/x-icon.*/image\/x-icon\t\t\t\tico/' /etc/mime.types			
+      - checkout
+      - restore_cache:
+          key: ac-node-modules-{{ checksum "package-lock.json" }}
+      - run: npm install
+      - save_cache:
+          key: ac-node-modules-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      - run: npm run build
+      - run: npm run build-connector
+      - run: npm test
+      - run:	  
+          name: Installation of build dependencies.
+          command: |
+            ./deploy.sh PROD
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-dev:
+          filters:
+            branches:
+              only: [ dev, dev-circleci2 ]
+      - build-qa:
+          filters:
+            branches:
+              only: qa
+      - build-prod:
+          filters:
+            branches:
+              only: master			
+	  
+  
