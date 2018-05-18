@@ -14,6 +14,3 @@ workflows:
           filters:
             branches:
               only: dev-circleci2      
-
-	  
-  
