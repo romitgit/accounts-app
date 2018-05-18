@@ -21,8 +21,8 @@ deploy_s3bucket() {
 	cat dist/app.2e9868372e0e2992d5d2.css 
 	#aws s3 sync --dryrun ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0
 	#result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0`	
-	aws s3 sync --dryrun ${CIRCLE_WORKING_DIRECTORYE}/dist s3://${AWS_S3_BUCKET} --cache-control max-age=0,s-maxage=86400 --exclude "*.txt" --exclude "*.js" --exclude "*.css"
-	result=`aws s3 sync ${CIRCLE_WORKING_DIRECTORY}/dist s3://${AWS_S3_BUCKET}  --cache-control max-age=0,s-maxage=86400 --exclude "*.txt" --exclude "*.js" --exclude "*.css"`
+	aws s3 sync --dryrun dist s3://${AWS_S3_BUCKET} --cache-control max-age=0,s-maxage=86400 --exclude "*.txt" --exclude "*.js" --exclude "*.css"
+	result=`aws s3 sync dist s3://${AWS_S3_BUCKET}  --cache-control max-age=0,s-maxage=86400 --exclude "*.txt" --exclude "*.js" --exclude "*.css"`
 	if [ $? -eq 0 ]; then
 		#echo $result
 		echo "All html, font, image and media files are Deployed without gzip encoding!"
@@ -31,8 +31,8 @@ deploy_s3bucket() {
 		exit 1
 	fi
 	#result=`aws s3 sync ${HOME}/${CIRCLE_PROJECT_REPONAME}/dist s3://${AWS_S3_BUCKET} --cache-control private,no-store,no-cache,must-revalidate,max-age=0`
-	aws s3 sync --dryrun ${CIRCLE_WORKING_DIRECTORY}/dist s3://${AWS_S3_BUCKET} --cache-control max-age=0,s-maxage=86400 --exclude "*" --include "*.txt" --include "*.js" --include "*.css" --content-encoding gzip
-	result=`aws s3 sync ${CIRCLE_WORKING_DIRECTORY}/dist s3://${AWS_S3_BUCKET}  --cache-control max-age=0,s-maxage=86400 --exclude "*" --include "*.txt" --include "*.js" --include "*.css" --content-encoding gzip`
+	aws s3 sync --dryrun dist s3://${AWS_S3_BUCKET} --cache-control max-age=0,s-maxage=86400 --exclude "*" --include "*.txt" --include "*.js" --include "*.css" --content-encoding gzip
+	result=`aws s3 sync dist s3://${AWS_S3_BUCKET}  --cache-control max-age=0,s-maxage=86400 --exclude "*" --include "*.txt" --include "*.js" --include "*.css" --content-encoding gzip`
 	if [ $? -eq 0 ]; then
 		#echo $result
 		echo "All css, js, and map files are Deployed! with gzip"
