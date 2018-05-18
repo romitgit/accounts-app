@@ -35,6 +35,7 @@ jobs:
           command: |
             apt-get update -y
             apt-get install g++-4.8  -y
+            apt install awscli -y            
             chmod 777 /etc/mime.types
             sed -i 's/^application\/x-font-woff.*/application\/font-woff\t\t\t\twoff/' /etc/mime.types
             sed -i 's/^image\/vnd.microsoft.icon.*/image\/vnd.microsoft.icon/' /etc/mime.types
@@ -60,6 +61,7 @@ jobs:
           command: |
             apt-get update -y
             apt-get install g++-4.8  -y
+            apt install awscli -y            
             chmod 777 /etc/mime.types
             sed -i 's/^application\/x-font-woff.*/application\/font-woff\t\t\t\twoff/' /etc/mime.types
             sed -i 's/^image\/vnd.microsoft.icon.*/image\/vnd.microsoft.icon/' /etc/mime.types
