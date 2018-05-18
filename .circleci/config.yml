@@ -7,7 +7,6 @@ jobs:
       - run:
           name: Installation of build dependencies.
           command: |
-            add-apt-repository ppa:ubuntu-toolchain-r/test  -y
             apt-get update -y
             apt-get install g++-4.8  -y
             chmod 777 /etc/mime.types
