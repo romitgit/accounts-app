@@ -10,7 +10,7 @@ workflows:
   version: 2
   build:
     jobs:
-      - build-dev
+      - build-dev:
           filters:
             branches:
               only: dev-circleci2      
