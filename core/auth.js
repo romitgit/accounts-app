@@ -158,11 +158,11 @@ function auth0Signin(options) {
 
 function auth0Popup(options) {
   return new Promise( (resolve, reject) => {
-    auth0.login(
+    auth0.popup.authorize(
       {
         scope: options.scope || 'openid profile offline_access',
         connection: options.connection,
-        popup: true
+        owp: true
       },
       (err, profile, id_token, access_token, state, refresh_token) => {
         if (err) {
@@ -342,8 +342,7 @@ export function ssoLogin(provider, state) {
     // supported backends
     var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER ]
     if (providers.indexOf(provider) > -1) {
-      auth0.signin({
-        popup: true,
+      auth0.popup.authorize({
         connection: provider,
         scope: 'openid profile offline_access',
         state: state
@@ -385,11 +384,11 @@ export function socialRegistration(provider, state) {
     // supported backends
     var providers = ['facebook', 'google-oauth2', 'twitter', 'github']
     if (providers.indexOf(provider) > -1) {
-      auth0.signin({
-        popup: true,
+      auth0.popup.authorize({
         connection: provider,
         scope: 'openid profile offline_access',
-        state: state
+        state: state,
+        owp: true
       },
         function(error, profile, idToken, accessToken, state, refreshToken) {
           if (error) {
