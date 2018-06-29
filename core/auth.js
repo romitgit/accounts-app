@@ -11,10 +11,10 @@ import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
 /// Adding a temp comment to kick off a fresh deploy
-const auth0 = new Auth0({
+const auth0 = new Auth0.WebAuth({
   domain      : AUTH0_DOMAIN,
   clientID    : AUTH0_CLIENT_ID,
-  callbackOnLocationHash: true
+  responseType: 'token'
 })
 
 function fetchJSON(url, options) {

@@ -7,7 +7,7 @@
 config = (
   $locationProvider
   $stateProvider
-  authProvider
+  angularAuth0Provider
 ) ->
   
   states = {}
@@ -199,7 +199,7 @@ config = (
     $stateProvider.state key, state
   
   # Setup Auth0 (for Social Login)
-  authProvider.init({
+  angularAuth0Provider.init({
     domain: AUTH0_DOMAIN
     clientID: AUTH0_CLIENT_ID
     sso: false
@@ -209,7 +209,7 @@ config = (
 config.$inject = [
   '$locationProvider'
   '$stateProvider'
-  'authProvider'
+  'angularAuth0Provider'
 ]
 
 angular.module('accounts').config config
