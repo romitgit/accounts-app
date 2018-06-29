@@ -2,7 +2,7 @@ import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection, isEmail } from './utils.js'
-import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
+import { setToken, getToken, clearTokens, isTokenExpired, decodeToken } from './token.js'
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
   TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
@@ -14,7 +14,7 @@ import Auth0 from 'auth0-js'
 const auth0 = new Auth0.WebAuth({
   domain      : AUTH0_DOMAIN,
   clientID    : AUTH0_CLIENT_ID,
-  responseType: 'token'
+  responseType: 'token id_token'
 })
 
 function fetchJSON(url, options) {
@@ -348,19 +348,20 @@ export function ssoLogin(provider, state) {
         state: state,
         owp: true
       },
-        function(error, profile, idToken, accessToken, state, refreshToken) {
+        function(error, authResult) {
           if (error) {
             console.warn('onSSORegistrationFailure ' + JSON.stringify(error))
             reject(error)
             return
           }
-          var ssoUserData = extractSSOUserData(profile, accessToken)
+          var profile = decodeToken(authResult.idToken);
+          var ssoUserData = extractSSOUserData(profile, authResult.accessToken)
           var result = {
             status: 'SUCCESS',
             data: {
               profile: profile,
-              idToken: idToken,
-              accessToken: accessToken,
+              idToken: authResult.idToken,
+              accessToken: authResult.accessToken,
               refreshToken: refreshToken,
               ssoUserData : ssoUserData
             }
@@ -436,13 +437,16 @@ export function socialRegistration(provider, state) {
 }
 
 function extractSSOUserData(profile, accessToken) {
+  profile.identities = profile[Object.keys(profile).filter(key => {return key.indexOf('identities') !== -1 })[0]] // This sucks, isn't there a lodash way?
+  profile.user_id = profile.identities[0].user_id;
+  profile.email = profile[Object.keys(profile).filter(key => {return key.indexOf('email') !== -1 })[0]]
   var ssoProvider = profile.identities[0].connection
   var firstName = '',
     lastName = '',
     name = '',
     handle = '',
     email = ''
-
+ 
   var ssoUserId = profile.user_id.substring(profile.user_id.lastIndexOf('|') + 1)
   if (ssoProvider === WIPRO_SSO_PROVIDER || ssoProvider === APPIRIO_SSO_PROVIDER
     || ssoProvider === TOPCODER_SSO_PROVIDER) {
