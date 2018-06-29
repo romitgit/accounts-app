@@ -345,7 +345,8 @@ export function ssoLogin(provider, state) {
       auth0.popup.authorize({
         connection: provider,
         scope: 'openid profile offline_access',
-        state: state
+        state: state,
+        owp: true
       },
         function(error, profile, idToken, accessToken, state, refreshToken) {
           if (error) {
