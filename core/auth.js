@@ -362,7 +362,7 @@ export function ssoLogin(provider, state) {
               profile: profile,
               idToken: authResult.idToken,
               accessToken: authResult.accessToken,
-              refreshToken: refreshToken,
+              refreshToken: authResult.refreshToken,
               ssoUserData : ssoUserData
             }
           }
