@@ -183,18 +183,18 @@ function auth0Popup(options) {
   })
 }
 
-function setAuth0Tokens({id_token, refresh_token}) {
-  if (id_token === undefined || refresh_token === undefined) {
+function setAuth0Tokens({profile: {idToken, refreshToken}}) {
+  if (idToken === undefined || refreshToken === undefined) {
     const error = new Error('Unable to contact login server')
     error.reason = 'Auth0 response did not contain proper tokens',
-    error.id_token = id_token
-    error.refresh_token = refresh_token
+    error.idToken = idToken
+    error.refreshToken = refreshToken
 
     throw error
   }
 
-  setToken(AUTH0_JWT, id_token)
-  setToken(AUTH0_REFRESH, refresh_token)
+  setToken(AUTH0_JWT, idToken)
+  setToken(AUTH0_REFRESH, refreshToken)
 }
 
 export function getNewJWT() {
