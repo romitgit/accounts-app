@@ -183,7 +183,9 @@ function auth0Popup(options) {
   })
 }
 
-function setAuth0Tokens({profile: {idToken, refreshToken}}) {
+function setAuth0Tokens({id_token, refresh_token, profile}) {
+  var idToken = id_token || profile.idToken
+  var refreshToken = refresh_token || profile.refreshToken
   if (idToken === undefined || refreshToken === undefined) {
     const error = new Error('Unable to contact login server')
     error.reason = 'Auth0 response did not contain proper tokens',
