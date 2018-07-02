@@ -10,8 +10,9 @@ require 'angular'
 require '@uirouter/angularjs'
 require '@uirouter/angularjs/lib/legacy/stateEvents'
 require 'angular-messages'
-require 'auth0-angular'
 require 'auth0-js'
+
+require './3rdparty/angular-auth0.js'
 require 'appirio-tech-ng-iso-constants'
 require 'angucomplete-alt'
 

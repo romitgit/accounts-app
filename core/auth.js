@@ -2,7 +2,7 @@ import replace from 'lodash/replace'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection, isEmail } from './utils.js'
-import { setToken, getToken, clearTokens, isTokenExpired } from './token.js'
+import { setToken, getToken, clearTokens, isTokenExpired, decodeToken } from './token.js'
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
   TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
@@ -11,10 +11,10 @@ import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
 /// Adding a temp comment to kick off a fresh deploy
-const auth0 = new Auth0({
+const auth0 = new Auth0.WebAuth({
   domain      : AUTH0_DOMAIN,
   clientID    : AUTH0_CLIENT_ID,
-  callbackOnLocationHash: true
+  responseType: 'token id_token'
 })
 
 function fetchJSON(url, options) {
@@ -158,11 +158,11 @@ function auth0Signin(options) {
 
 function auth0Popup(options) {
   return new Promise( (resolve, reject) => {
-    auth0.login(
+    auth0.popup.authorize(
       {
         scope: options.scope || 'openid profile offline_access',
         connection: options.connection,
-        popup: true
+        owp: true
       },
       (err, profile, id_token, access_token, state, refresh_token) => {
         if (err) {
@@ -183,18 +183,20 @@ function auth0Popup(options) {
   })
 }
 
-function setAuth0Tokens({id_token, refresh_token}) {
-  if (id_token === undefined || refresh_token === undefined) {
+function setAuth0Tokens({id_token, refresh_token, profile}) {
+  var idToken = id_token || profile.idToken
+  var refreshToken = refresh_token || profile.refreshToken
+  if (idToken === undefined || refreshToken === undefined) {
     const error = new Error('Unable to contact login server')
     error.reason = 'Auth0 response did not contain proper tokens',
-    error.id_token = id_token
-    error.refresh_token = refresh_token
+    error.idToken = idToken
+    error.refreshToken = refreshToken
 
     throw error
   }
 
-  setToken(AUTH0_JWT, id_token)
-  setToken(AUTH0_REFRESH, refresh_token)
+  setToken(AUTH0_JWT, idToken)
+  setToken(AUTH0_REFRESH, refreshToken)
 }
 
 export function getNewJWT() {
@@ -342,26 +344,27 @@ export function ssoLogin(provider, state) {
     // supported backends
     var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER ]
     if (providers.indexOf(provider) > -1) {
-      auth0.signin({
-        popup: true,
+      auth0.popup.authorize({
         connection: provider,
         scope: 'openid profile offline_access',
-        state: state
+        state: state,
+        owp: true
       },
-        function(error, profile, idToken, accessToken, state, refreshToken) {
+        function(error, authResult) {
           if (error) {
             console.warn('onSSORegistrationFailure ' + JSON.stringify(error))
             reject(error)
             return
           }
-          var ssoUserData = extractSSOUserData(profile, accessToken)
+          var profile = decodeToken(authResult.idToken);
+          var ssoUserData = extractSSOUserData(profile, authResult.accessToken)
           var result = {
             status: 'SUCCESS',
             data: {
               profile: profile,
-              idToken: idToken,
-              accessToken: accessToken,
-              refreshToken: refreshToken,
+              idToken: authResult.idToken,
+              accessToken: authResult.accessToken,
+              refreshToken: authResult.refreshToken,
               ssoUserData : ssoUserData
             }
           }
@@ -385,11 +388,11 @@ export function socialRegistration(provider, state) {
     // supported backends
     var providers = ['facebook', 'google-oauth2', 'twitter', 'github']
     if (providers.indexOf(provider) > -1) {
-      auth0.signin({
-        popup: true,
+      auth0.popup.authorize({
         connection: provider,
         scope: 'openid profile offline_access',
-        state: state
+        state: state,
+        owp: true
       },
         function(error, profile, idToken, accessToken, state, refreshToken) {
           if (error) {
@@ -436,13 +439,16 @@ export function socialRegistration(provider, state) {
 }
 
 function extractSSOUserData(profile, accessToken) {
+  profile.identities = profile[Object.keys(profile).filter(key => {return key.indexOf('identities') !== -1 })[0]] // This sucks, isn't there a lodash way?
+  profile.user_id = profile.identities[0].user_id;
+  profile.email = profile[Object.keys(profile).filter(key => {return key.indexOf('email') !== -1 })[0]]
   var ssoProvider = profile.identities[0].connection
   var firstName = '',
     lastName = '',
     name = '',
     handle = '',
     email = ''
-
+ 
   var ssoUserId = profile.user_id.substring(profile.user_id.lastIndexOf('|') + 1)
   if (ssoProvider === WIPRO_SSO_PROVIDER || ssoProvider === APPIRIO_SSO_PROVIDER
     || ssoProvider === TOPCODER_SSO_PROVIDER) {
