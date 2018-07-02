@@ -6,7 +6,7 @@ import { setToken, getToken, clearTokens, isTokenExpired, decodeToken } from './
 import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
   TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
-  SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER } from './constants.js'
+  SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER, CREDITSUISSE_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_CREDITSUISSE } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -342,7 +342,7 @@ export function registerUser(body) {
 export function ssoLogin(provider, state) {
   return new Promise(function(resolve, reject) {
     // supported backends
-    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER ]
+    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER, CREDITSUISSE_SSO_PROVIDER ]
     if (providers.indexOf(provider) > -1) {
       auth0.popup.authorize({
         connection: provider,
@@ -711,6 +711,9 @@ export function identifySSOProvider(emailOrHandle) {
   switch(domain && domain.toLowerCase()) {
   case SSO_PROVIDER_DOMAIN_WIPRO:
     provider = WIPRO_SSO_PROVIDER
+    break
+  case SSO_PROVIDER_DOMAIN_CREDITSUISSE:
+    provider = CREDITSUISSE_SSO_PROVIDER
     break
   /* supports only wipro.com
     case SSO_PROVIDER_DOMAIN_APPIRIO:
