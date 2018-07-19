@@ -394,13 +394,14 @@ export function socialRegistration(provider, state) {
         state: state,
         owp: true
       },
-        function(error, profile, idToken, accessToken, state, refreshToken) {
+        function(error, authResult) {
           if (error) {
             console.warn('onSocialLoginFailure ' + JSON.stringify(error))
             reject(error)
             return
           }
-          var socialData = extractSocialUserData(profile, accessToken)
+          var profile = decodeToken(authResult.idToken);
+          var socialData = extractSocialUserData(profile, authResult.accessToken)
 
           validateSocialProfile(socialData.socialUserId, socialData.socialProvider)
             .then(function(resp) {
@@ -477,6 +478,7 @@ function extractSSOUserData(profile, accessToken) {
 }
 
 function extractSocialUserData(profile, accessToken) {
+  profile.identities = profile[Object.keys(profile).filter(key => {return key.indexOf('identities') !== -1 })[0]]
   var socialProvider = profile.identities[0].connection
   var firstName = '',
     lastName = '',
@@ -530,10 +532,10 @@ function extractSocialUserData(profile, accessToken) {
 
   var token = accessToken
   var tokenSecret = null
-  if (profile.identities && profile.identities.length > 0) {
-    token = profile.identities[0].access_token
-    tokenSecret = profile.identities[0].access_token_secret
-  }
+  // if (profile.identities && profile.identities.length > 0) {
+  //   token = profile.identities[0].access_token
+  //   tokenSecret = profile.identities[0].access_token_secret
+  // }
   return {
     socialUserId: socialUserId,
     username: handle,
