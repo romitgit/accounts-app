@@ -10,7 +10,7 @@ import { getNewJWT } from '../../../core/auth.js'
 (function() {
   'use strict'
 
-  const SKILL_PICKER_URL = 'https://www.' + DOMAIN + '/skill-picker'
+  const SKILL_PICKER_URL = 'https://www.' + DOMAIN + '/settings/profile'
 
   angular.module('accounts').controller('TCRegistrationController', TCRegistrationController)
 
