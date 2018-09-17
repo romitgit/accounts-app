@@ -71,7 +71,7 @@ If you only need to work on the app itself, getting up and running is super simp
 > npm install
 > npm run dev
 ```
-- Browse to ``localhost:3000``
+- Browse to ``localhost:3100``
 
 ## Testing integration locally
 If you need to test your integration locally, you'll need a few more steps. The iframe technique we are using here does not play well with webpack-dev-server, and we need to serve two apps from the same subdomain (port, in this case).

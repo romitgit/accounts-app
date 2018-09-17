@@ -151,6 +151,13 @@ config = (
     template: require('./views/connect/pin-verification.jade')()
     public: true
 
+  states['CONNECT_WELCOME'] =
+    url: '/connect/welcome'
+    params: {'email', 'username', 'password', 'userId', 'afterActivationURL'}
+    controller  : 'ConnectWelcomeController as vm'
+    template: require('./views/connect/welcome.jade')()
+    public: true
+
   states['CONNECT_FORGOT_PASSWORD'] =
     url: '/connect/forgot-password'
     controller  : 'ConnectForgotPasswordController as vm'

@@ -10,6 +10,7 @@ ConnectPinVerificationController = (
   $scope
   $state
   $stateParams
+  UserService
 ) ->
   vm           = this
   vm.email  = $stateParams.email
@@ -25,6 +26,7 @@ ConnectPinVerificationController = (
   vm.errorCountDown = 0
   vm.errorLimit = false
   vm.$stateParams = $stateParams
+  vm.screenType = "pin"
   
   vm.baseUrl = "https://connect.#{DOMAIN}"
   vm.loginUrl   = $state.href('CONNECT_LOGIN', { activated: true }, { absolute: true })
@@ -34,6 +36,11 @@ ConnectPinVerificationController = (
   # Submits the form
   vm.submit = ->
     activateUser(vm.pin)
+
+  vm.goToLogin = ->
+    stateParams =
+        retUrl: vm.retUrl
+    $state.go 'CONNECT_LOGIN', stateParams
 
   # Activates the user by verifying the PIN, also login the user if activated
   activateUser = (pin) ->
@@ -45,6 +52,7 @@ ConnectPinVerificationController = (
     vm.emailEditSuccess = false
 
     verifyPIN(pin, UTM_SOURCE_CONNECT).then(loginUser, verifyPINFailure)
+    vm.reRender()
 
   # Handles the error in verifying/activating account
   verifyPINFailure = (error) ->
@@ -63,6 +71,7 @@ ConnectPinVerificationController = (
         timer.start()
       if error.status == 400 && error.message.indexOf('has been activated')  != -1
         vm.message = 'User is already activated. Please login.'
+      vm.reRender()
 
   # Handles the error in verifying/activating account
   resetPINFailure = ->
@@ -101,22 +110,28 @@ ConnectPinVerificationController = (
       $scope.$apply ->
         vm.activated = false
         vm.loggedIn = true
-      $state.go 'home'
+      $state.go 'CONNECT_WELCOME'
+    vm.reRender()
 
   # Handles login failure 
   loginFailure = ->
     vm.error = true
     vm.loading = false
     vm.message = 'Unable to log you in automatically. Please try login using login link.'
+    vm.reRender()
 
   # Toggles the Email Edit form
   vm.toggleEmailEdit = () ->
     vm.error = false
+    vm.isEmailInvalid = false
+    vm.message = ''
+    vm.emailErrorMessage = ''
     if vm.emailEditMode
       vm.email = vm.emailBackup
     else
       vm.emailBackup = vm.email
     vm.emailEditMode = !vm.emailEditMode
+    vm.reRender()
 
   # Updates email and resends activation PIN
   vm.updateEmailAndResendPIN = () ->
@@ -131,7 +146,7 @@ ConnectPinVerificationController = (
     # resend activation pin
     authorizeInactiveUser()
       .then(updateEmail)
-      .then(resendPIN)
+      .then(vm.resendPIN)
       .then(
         () ->
           console.log 'Successfully updated email address and resent PIN'
@@ -139,8 +154,10 @@ ConnectPinVerificationController = (
             vm.emailEditMode = false
             vm.loading = false
             vm.emailEditSuccess = true
+            vm.reRender()
       )
       .catch(updateEmailFailure)
+    vm.reRender()
 
   # Authorizes the inactive user and gets the temp token
   authorizeInactiveUser = () ->
@@ -174,7 +191,7 @@ ConnectPinVerificationController = (
     updatePrimaryEmail(vm.$stateParams.userId, vm.email, token)
 
   # Call API to resend Activation code
-  resendPIN = () ->
+  vm.resendPIN = () ->
     resendActivationCode(vm.$stateParams.userId, vm.retUrl)
 
   # Handles error in updating email
@@ -190,6 +207,7 @@ ConnectPinVerificationController = (
         vm.message = 'User is already activated. Please login.'
       vm.loading = false
       vm.emailEditMode = true
+      vm.reRender()
 
   # CountDown for the error when there were too many erroneous PIN attempts
   countDown = (n=0, onTick=undefined, onEnd=undefined) ->
@@ -204,6 +222,33 @@ ConnectPinVerificationController = (
 
     {start}
 
+  # check available email
+  vm.emailIsAvailable = (value) ->
+    vm.isEmailInvalid = true
+    if !vm.numberOfRequest
+      vm.numberOfRequest = 0
+    vm.numberOfRequest += 1
+    UserService.validateEmail(value)
+    .then((res) ->
+      vm.emailErrorMessage = null
+      vm.numberOfRequest -= 1
+      if !res.valid
+        switch res.reasonCode
+          when 'ALREADY_TAKEN' then vm.emailErrorMessage = 'That email address is already taken.'
+          when 'INVALID_EMAIL' then vm.emailErrorMessage = 'Please enter a valid email address.'
+          when 'INVALID_LENGTH' then vm.emailErrorMessage = 'Email address should be 100 characters or less.'
+          else vm.emailErrorMessage = 'Please enter a valid email address.'
+      else
+        if !vm.numberOfRequest
+          vm.isEmailInvalid = false
+      vm.reRender()
+    )
+    .catch((error) ->
+      vm.numberOfRequest -= 1
+    )
+
+    vm.reRender()
+
   init = ->
     # TODO we can load temp JWT token from local storage, if there exists one
     # once we have the token we can pre-fill the form, allowing user to directly access this page
@@ -216,6 +261,7 @@ ConnectPinVerificationController.$inject = [
   '$scope'
   '$state'
   '$stateParams'
+  'UserService'
 ]
 
 angular.module('accounts').controller 'ConnectPinVerificationController', ConnectPinVerificationController

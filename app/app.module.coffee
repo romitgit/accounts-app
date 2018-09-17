@@ -9,6 +9,7 @@ dependencies = [
   'appirio-tech-ng-ui-components'
   'ngIsoConstants'
   'accounts.directives'
+  'accounts.react'
 ]
 
 angular.module 'accounts', dependencies

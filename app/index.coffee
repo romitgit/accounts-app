@@ -17,6 +17,7 @@ require 'appirio-tech-ng-iso-constants'
 require 'angucomplete-alt'
 
 require './app.directives'
+require './app.react'
 require './app.module'
 require './app-config'
 require './app-run'

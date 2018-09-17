@@ -4,16 +4,18 @@
 { DOMAIN, CONNECT_PROJECT_CALLBACK, UTM_SOURCE_CONNECT } = require '../../../core/constants.js'
 { npad } = require '../../../core/utils.js'
 { decodeToken } = require '../../../core/token.js'
+{ decodeToken } = require '../../../core/token.js'
 _ = require 'lodash'
 
-RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
+ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserService) ->
   vm              = this
   vm.termsUrl     = 'https://connect.' + DOMAIN + '/terms'
   vm.privacyUrl   = 'https://www.' + DOMAIN + '/community/how-it-works/privacy-policy/'
+  vm.custommerStoriesUrl = 'https://www.topcoder.com/about/customer-stories/'
   vm.username     = ''
   vm.password     = ''
   vm.error        = false
-  vm.errorMessage = 'Error Creating User'
+  vm.errorMessage = ''
   vm.submit       = null
   vm.loading      = false
   vm.isValidCountry    = false
@@ -21,6 +23,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
   vm.ssoUser
   vm.retUrl  = $stateParams.retUrl
   vm.auth0Data = $stateParams.auth0Data
+  vm.screenType = "register"
   # SSO user data extracted from auth0 login data
   vm.ssoUser = vm.auth0Data?.ssoUserData
   # pre-populated data
@@ -113,6 +116,7 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
         password : vm.password
     registerUser(config).then(registerSuccess, registerError)
     # registerSuccess({ id: 40152526})
+    vm.reRender()
 
   registerError = (error) ->
     $scope.$apply ->
@@ -122,6 +126,12 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
         vm.errorMessage = "We weren't able to register you because of a system error. Please try again or contact support@topcoder.com."
       else
         vm.errorMessage = error.message
+    vm.reRender()
+
+  vm.goToLogin = ->
+    stateParams =
+        retUrl: vm.retUrl
+    $state.go 'CONNECT_LOGIN', stateParams
 
   registerSuccess = (user) ->
 
@@ -181,14 +191,40 @@ RegistrationController = ($state, $stateParams, $scope, ISO3166) ->
       vm.registerForm?.email?.$setDirty()
 
   vm.onSSORegister vm.ssoUser if vm.ssoUser
+
+  vm.usernameIsFree = (value) ->
+    UserService.validateHandle value
+      .then (res) ->
+        vm.usernameErrorMessage = null
+        if !res.valid
+          switch res.reasonCode
+            when 'INVALID_LENGTH' then vm.usernameErrorMessage = 'That username is not the correct length or format.'
+            when 'INVALID_FORMAT' then vm.usernameErrorMessage = 'That username is not the correct length or format.'
+            when 'INVALID_HANDLE' then vm.usernameErrorMessage = 'That username is not allowed.'
+            when 'ALREADY_TAKEN' then vm.usernameErrorMessage = 'That username is already taken.'
+            else vm.usernameErrorMessage = 'That username is not the correct length or format.'
+        vm.reRender()
+
+  vm.emailIsAvailable = (value) ->
+    UserService.validateEmail value
+      .then (res) ->
+        vm.emailErrorMessage = null
+        if !res.valid
+          switch res.reasonCode
+            when 'ALREADY_TAKEN' then vm.emailErrorMessage = 'That email address is already taken.'
+            when 'INVALID_EMAIL' then vm.emailErrorMessage = 'Please enter a valid email address.'
+            when 'INVALID_LENGTH' then vm.emailErrorMessage = 'Email address should be 100 characters or less.'
+            else vm.emailErrorMessage = 'Please enter a valid email address.'
+        vm.reRender()
   
   vm
 
-RegistrationController.$inject = [
+ConnectRegistrationController.$inject = [
   '$state'
   '$stateParams'
-  '$scope',
+  '$scope'
   'ISO3166'
+  'UserService'
 ]
 
-angular.module('accounts').controller 'ConnectRegistrationController', RegistrationController
+angular.module('accounts').controller 'ConnectRegistrationController', ConnectRegistrationController

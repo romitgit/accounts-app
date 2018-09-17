@@ -50,11 +50,14 @@ ConnectLoginController = (
           if result
             vm.loginErrors.USERNAME_NONEXISTANT = true
             vm.loading = false
+            vm.reRender()
           else
             callLogin(vm.username, vm.password)
         .catch (err) ->
           vm.loginErrors.USERNAME_NONEXISTANT = false
           callLogin(vm.username, vm.password)
+          vm.reRender()
+    vm.reRender()
 
   loginFailure = (error) ->
     if error?.message?.toLowerCase() == 'account inactive'
@@ -65,6 +68,7 @@ ConnectLoginController = (
     $scope.$apply ->
       vm.error   = true
       vm.loading = false
+    vm.reRender()
 
   loginSuccess = ->
     jwt = getV3Jwt()
@@ -75,6 +79,7 @@ ConnectLoginController = (
       redirectTo generateReturnUrl(vm.retUrl)
     else
       $state.go 'home'
+    vm.reRender()
 
   callLogin = (id, password) ->
     options =
