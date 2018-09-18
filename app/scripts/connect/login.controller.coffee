@@ -78,7 +78,7 @@ ConnectLoginController = (
     else if vm.retUrl
       redirectTo generateReturnUrl(vm.retUrl)
     else
-      $state.go 'home'
+      $state.go 'CONNECT_WELCOME'
     vm.reRender()
 
   callLogin = (id, password) ->
