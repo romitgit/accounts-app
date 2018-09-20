@@ -38,6 +38,9 @@ function fetchJSON(url, options) {
           if (json.result.status >= 200 && json.result.status < 300) {
             return json
           } else {
+            if (json.result.success) {
+              return json
+            }
             const error = new Error(json.result.content)
             error.response = response
             error.status = json.result.status
@@ -322,19 +325,43 @@ export function resetPassword(handle, resetToken, password) {
   return fetchJSON(url, config).catch(failure)
 }
 
-export function registerUser(body) {
+export function updateUserInfo(body) {
   function success(data) {
     return get(data, 'result.content')
   }
 
+  return fetchJSON(API_URL + '/members/upbeat/traits', {
+    method: 'POST',
+    body
+  })
+  .then(success)
+}
+
+export function registerUser(body, extraBody) {
+
+  let registerData
+
+  function saveRegisterData(data) {
+    registerData = get(data, 'result.content')
+    return registerData
+  }
+
+  function success() {
+    return registerData
+  }
+
   function failure(res) {
-    throw new Error( get(res, 'result.content') || "We weren't able to register you because of a system error. Please try again or contact support@topcoder.com." )
+    throw new Error( get(res, 'result.content') || 'We weren\'t able to register you because of a system error. Please try again or contact support@topcoder.com.' )
   }
 
   return fetchJSON(API_URL + '/users', {
     method: 'POST',
     body
   })
+  .then(saveRegisterData)
+  .then(new Promise(() => {
+    return updateUserInfo(extraBody)
+  }))
   .then(success)
   .catch(failure)
 }
