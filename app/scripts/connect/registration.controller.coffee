@@ -108,13 +108,26 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
       options:
         afterActivationURL: afterActivationURL
 
+    updateInfoConfig =
+      param: [
+        traitId: vm.username
+        categoryName: 'Customer Information'
+        traits:
+          data: [
+            businessPhone: vm.phone
+            title: vm.title
+            companyName: vm.companyName
+            companySize: vm.companySize
+          ]
+      ]
+
     if profile #if sso registration
       config.param.active = true
       config.param.profile = profile
     else # set password only if it is NON SSO registration
       config.param.credential =
         password : vm.password
-    registerUser(config).then(registerSuccess, registerError)
+    registerUser(config, updateInfoConfig).then(registerSuccess, registerError)
     # registerSuccess({ id: 40152526})
     vm.reRender()
 

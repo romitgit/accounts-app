@@ -8,6 +8,7 @@ _ = require 'lodash'
 ConnectWelcomeController = ($state, $stateParams, $scope, ISO3166) ->
   vm              = this
   vm.termsUrl     = 'https://connect.' + DOMAIN + '/terms'
+  vm.newProjectUrl      = 'https://connect.' + DOMAIN + '/new-project'
   vm.privacyUrl   = 'https://www.' + DOMAIN + '/community/how-it-works/privacy-policy/'
   vm.username     = ''
   vm.password     = ''
@@ -55,9 +56,9 @@ ConnectWelcomeController = ($state, $stateParams, $scope, ISO3166) ->
 
   init = ->
     { handle, email, password } = $stateParams
-
     getJwtSuccess = (jwt) ->
       vm.isLoggedIn = true
+      vm.reRender()
       if jwt && vm.retUrl
         # redirectTo generateReturnUrl(vm.retUrl)
       else if (handle || email) && password
