@@ -8,7 +8,7 @@ This repo contains several pieces:
 2. The connector mini-app, as deployed at accounts.topcoder.com/connector.html
 3. An npm module exposing:
   - The connector-wrapper module that provides 
-  - A library of shared auth functionality (token handling, etc.)
+  - A library of shared auth functionality (token handling, etc)
   
 # Using Connector in your app
 
