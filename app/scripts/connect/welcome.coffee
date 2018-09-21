@@ -24,6 +24,8 @@ ConnectWelcomeController = ($state, $stateParams, $scope, ISO3166) ->
   vm.auth0Data    = $stateParams.auth0Data
   vm.screenType   = "welcome"
   vm.isLoggedIn      = false
+  vm.userHandle =  $stateParams.username
+  
   # SSO user data extracted from auth0 login data
   vm.ssoUser = vm.auth0Data?.ssoUserData
 

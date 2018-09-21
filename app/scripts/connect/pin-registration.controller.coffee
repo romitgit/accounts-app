@@ -76,6 +76,7 @@ ConnectPinVerificationController = (
   # Handles the error in verifying/activating account
   resetPINFailure = ->
     $scope.$apply ->
+      vm.loading  = false
       vm.errorLimit = false
       vm.message = 'That PIN is incorrect. Please check that you entered the one you received.'
 
@@ -92,6 +93,15 @@ ConnectPinVerificationController = (
     # call login api
     login(options).then(loginSuccess, loginFailure)
 
+  goToWelcomePage = ->
+    $scope.$apply ->
+      vm.activated = false
+      vm.loggedIn = true
+    stateParams =
+        username: vm.$stateParams.username
+    $state.go 'CONNECT_WELCOME', stateParams
+    vm.reRender()
+
   # Handles the login success, redirects user to the return URL
   loginSuccess = ->
     jwt = getV3Jwt()
@@ -101,17 +111,9 @@ ConnectPinVerificationController = (
         vm.activated = false
         vm.error = true
         vm.message = 'Unable to log you in automatically. Please try login using login link.'
-    else if vm.retUrl
-      $scope.$apply ->
-        vm.activated = false
-        vm.loggedIn = true
-      redirectTo generateReturnUrl(vm.retUrl)
     else
-      $scope.$apply ->
-        vm.activated = false
-        vm.loggedIn = true
-      $state.go 'CONNECT_WELCOME'
-    vm.reRender()
+      goToWelcomePage()
+    
 
   # Handles login failure 
   loginFailure = ->
@@ -189,6 +191,33 @@ ConnectPinVerificationController = (
   # Call API to update user's meail
   updateEmail = (token) ->
     updatePrimaryEmail(vm.$stateParams.userId, vm.email, token)
+
+  # Call API to resend Activation code
+  vm.callResendPIN = () ->
+    vm.loading = true
+    vm.resendPIN()
+      .then(
+        () ->
+          console.log 'Successfully resent PIN'
+          $scope.$apply ->
+            vm.emailEditMode = false
+            vm.loading = false
+            vm.resendPinSuccess = true
+            vm.reRender()
+      )
+      .catch(resendPinFailure)
+    vm.reRender()
+
+  # Handles error in resending pin
+  resendPinFailure = (error) ->
+    # show error in the form
+    $scope.$apply ->
+      vm.error = true
+      vm.emailError = true
+      vm.message = 'Currently we can\'t send a new pin'
+      vm.loading = false
+      vm.emailEditMode = true
+      vm.reRender()
 
   # Call API to resend Activation code
   vm.resendPIN = () ->
