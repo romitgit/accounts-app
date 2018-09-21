@@ -202,10 +202,11 @@ ConnectPinVerificationController = (
           $scope.$apply ->
             vm.emailEditMode = false
             vm.loading = false
-            vm.emailEditSuccess = true
+            vm.resendPinSuccess = true
             vm.reRender()
       )
       .catch(resendPinFailure)
+    vm.reRender()
 
   # Handles error in resending pin
   resendPinFailure = (error) ->
