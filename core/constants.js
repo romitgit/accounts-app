@@ -9,6 +9,7 @@ export const V3_TEMP_JWT = 'v3tempjwt'
 export const SCHEME = 'https'
 export const DOMAIN = process.env.DOMAIN
 export const API_URL = process.env.API_URL
+export const API_URL_V5 = SCHEME+"://api."+DOMAIN+'/v5'
 export const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN
 export const AUTH0_CALLBACK = process.env.auth0Callback
 export const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID

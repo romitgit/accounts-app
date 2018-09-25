@@ -1,10 +1,10 @@
 'use strict'
 
-{ registerUser, getFreshToken, getOneTimeToken, identifySSOProvider } = require '../../../core/auth.js'
-{ DOMAIN, CONNECT_PROJECT_CALLBACK, UTM_SOURCE_CONNECT } = require '../../../core/constants.js'
+{ registerUser, getFreshToken, getOneTimeToken, updateUserInfo, createLead, identifySSOProvider } = require '../../../core/auth.js'
+{ DOMAIN, CONNECT_PROJECT_CALLBACK, UTM_SOURCE_CONNECT, V3_TEMP_JWT } = require '../../../core/constants.js'
 { npad } = require '../../../core/utils.js'
 { decodeToken } = require '../../../core/token.js'
-{ decodeToken } = require '../../../core/token.js'
+{ setToken } = require '../../../core/token.js'
 _ = require 'lodash'
 
 ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserService) ->
@@ -38,6 +38,7 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
 
   afterActivationURL = $stateParams.retUrl ? 'https://connect.' + DOMAIN
   vm.isConnectProjectFlow = afterActivationURL && afterActivationURL.indexOf(CONNECT_PROJECT_CALLBACK) != -1
+  oneTimeToken = null
   
   # watch form to detect particular changes in it.
   # https://stackoverflow.com/questions/22436501/simple-angularjs-form-is-undefined-in-scope
@@ -108,18 +109,7 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
       options:
         afterActivationURL: afterActivationURL
 
-    updateInfoConfig =
-      param: [
-        traitId: vm.username
-        categoryName: 'Customer Information'
-        traits:
-          data: [
-            businessPhone: vm.phone
-            title: vm.title
-            companyName: vm.companyName
-            companySize: vm.companySize
-          ]
-      ]
+    
 
     if profile #if sso registration
       config.param.active = true
@@ -127,7 +117,7 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
     else # set password only if it is NON SSO registration
       config.param.credential =
         password : vm.password
-    registerUser(config, updateInfoConfig).then(registerSuccess, registerError)
+    registerUser(config).then(registerSuccess, registerError)
     # registerSuccess({ id: 40152526})
     vm.reRender()
 
@@ -148,6 +138,35 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
 
   registerSuccess = (user) ->
 
+    return getOneTimeToken(user.id, vm.password).then((token)->oneTimeToken=token).catch(registerError).
+      then(()->
+        setToken(V3_TEMP_JWT, oneTimeToken)
+        updateInfoConfig =
+          param: [
+            traitId: vm.username
+            categoryName: 'Customer Information'
+            traits:
+              data: [
+                businessPhone: vm.phone
+                title: vm.title
+                companyName: vm.companyName
+                companySize: vm.companySize
+              ]
+          ]
+        return updateUserInfo(oneTimeToken,vm.username,updateInfoConfig);
+      ).then(()->
+        content = 
+          firstName         : vm.firstName
+          lastName          : vm.lastName
+          businessEmail     : vm.email
+          title             : vm.title
+          companyName       : vm.companyName
+          companySize       :vm.companySize
+        
+        return createLead(oneTimeToken,content);
+      ).then(()->completeRegistration(user)).catch(()->completeRegistration(user));
+  
+  completeRegistration = (user)->
     # move to the sso login if a user is already active and sso user
     if !!user?.active && user?.profile?.providerType == 'samlp'
       stateParams =
@@ -157,29 +176,15 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
       $state.go 'SSO_LOGIN', stateParams
       return
 
-    # options =
-    #   username: vm.username
-    #   password: vm.password
-    
-    # getOneTimeToken(options).then(tokenSuccess, registerError)
     stateParams =
       email              : vm.email
       username           : vm.username
       password           : vm.password
       userId             : user.id
+      tempToken          : oneTimeToken
       afterActivationURL : afterActivationURL
 
     $state.go 'CONNECT_PIN_VERIFICATION', stateParams
-
-  # following method could be used if we want to procure the temp token before
-  # landing user on pin verificaiton screen
-  # tokenSuccess = ({ token }) ->
-  #   stateParams =
-  #     email: vm.email
-  #     username: vm.username
-  #     password: vm.password
-  #     tempToken : token
-  #   $state.go 'CONNECT_PIN_VERIFICATION',stateParams
 
   vm.ssoRegister = ->
     vm.isSSORegistration = true
