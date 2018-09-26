@@ -143,10 +143,12 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
         setToken(V3_TEMP_JWT, oneTimeToken)
         updateInfoConfig =
           param: [
-            traitId: vm.username
+            traitId: "customer_info"
             categoryName: 'Customer Information'
             traits:
               data: [
+                firstNLastName: vm.firstName + ' ' + vm.lastName
+                businessEmail: vm.email
                 businessPhone: vm.phone
                 title: vm.title
                 companyName: vm.companyName
