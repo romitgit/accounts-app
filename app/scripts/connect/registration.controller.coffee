@@ -163,7 +163,8 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
           businessEmail     : vm.email
           title             : vm.title
           companyName       : vm.companyName
-          companySize       :vm.companySize
+          companySize       : vm.companySize
+          userName          : vm.username
         
         return createLead(oneTimeToken,content);
       ).then(()->completeRegistration(user)).catch(()->completeRegistration(user));
