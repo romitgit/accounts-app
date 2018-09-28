@@ -12,19 +12,26 @@
     "build-connector:dev": "webpack --bail --progress --config webpack.config.connector.js"
   },
   "dependencies": {
+    "appirio-tech-react-components": "github:appirio-tech/react-components#feature/loginFlow",
     "@uirouter/angularjs": "^1.0.0",
     "angucomplete-alt": "^2.1.0",
     "angular": "^1.4.8",
+    "angular-auth0": "^3.0.0",
     "angular-cookies": "^1.5.1",
     "angular-messages": "^1.5.2",
     "appirio-tech-ng-iso-constants": "^1.0.6",
     "appirio-tech-ng-ui-components": "^2.2.4",
     "auth0-js": "^9.6.1",
-    "angular-auth0": "^3.0.0",
     "babel-polyfill": "^6.7.4",
+    "filepicker-js": "^2.4.18",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.6.1",
-    "ng-onload": "^0.2.1"
+    "ng-onload": "^0.2.1",
+    "prop-types": "^15.6.2",
+    "rc-slider": "^8.6.2",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "react2angular": "^4.0.4"
   },
   "devDependencies": {
     "appirio-tech-webpack-config": "^0.3.0",
