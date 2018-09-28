@@ -85,7 +85,7 @@ workflows:
       - build-dev:
           filters:
             branches:
-              only: [ dev, dev-circleci2, feature/loginFlow ]
+              only: [ dev, dev-circleci2 ]
       - build-qa:
           filters:
             branches:
