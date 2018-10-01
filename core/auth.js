@@ -3,10 +3,12 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 import { getLoginConnection, isEmail } from './utils.js'
 import { setToken, getToken, clearTokens, isTokenExpired, decodeToken } from './token.js'
-import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
+import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL, API_URL_V5,
   AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CALLBACK, WIPRO_SSO_PROVIDER,
   TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
-  SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER, CREDITSUISSE_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_CREDITSUISSE, LOCALSIMPLESAML_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_LOCALSIMPLESAML } from './constants.js'
+  SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER, CREDITSUISSE_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_CREDITSUISSE,
+  LOCALSIMPLESAML_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_LOCALSIMPLESAML,
+  ZURICH_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_ZURICH } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -38,6 +40,9 @@ function fetchJSON(url, options) {
           if (json.result.status >= 200 && json.result.status < 300) {
             return json
           } else {
+            if (json.result.success && json.result.status === 401) {
+              return json
+            }
             const error = new Error(json.result.content)
             error.response = response
             error.status = json.result.status
@@ -322,13 +327,29 @@ export function resetPassword(handle, resetToken, password) {
   return fetchJSON(url, config).catch(failure)
 }
 
-export function registerUser(body) {
+export function updateUserInfo(token, handle, body) {
   function success(data) {
     return get(data, 'result.content')
   }
 
+  return fetchJSON(API_URL + '/members/'+handle+'/traits', {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body
+  })
+  .then(success)
+}
+
+export function registerUser(body) {
+
+  function success(data) {
+    return get(data, 'result.content');
+  }
+
   function failure(res) {
-    throw new Error( get(res, 'result.content') || "We weren't able to register you because of a system error. Please try again or contact support@topcoder.com." )
+    throw new Error( get(res, 'result.content') || 'We weren\'t able to register you because of a system error. Please try again or contact support@topcoder.com.' )
   }
 
   return fetchJSON(API_URL + '/users', {
@@ -342,7 +363,7 @@ export function registerUser(body) {
 export function ssoLogin(provider, state) {
   return new Promise(function(resolve, reject) {
     // supported backends
-    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER, CREDITSUISSE_SSO_PROVIDER, LOCALSIMPLESAML_SSO_PROVIDER ]
+    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER, CREDITSUISSE_SSO_PROVIDER, LOCALSIMPLESAML_SSO_PROVIDER, ZURICH_SSO_PROVIDER ]
     if (providers.indexOf(provider) > -1) {
       auth0.popup.authorize({
         connection: provider,
@@ -641,6 +662,16 @@ export function getOneTimeToken(userId, password) {
   return fetchJSON(url, config).then(success)
 }
 
+export function createLead(token, body) {
+  const url = API_URL_V5 + '/connect2sf/leadInfo'
+  return fetchJSON(url, {
+    method:'POST', 
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body})
+}
+
 export function verifyPIN(pin, source) {
   let url = API_URL + '/users/activate?code=' + pin
   // adds source param, if available. Can be used to identify the calling app.
@@ -720,6 +751,9 @@ export function identifySSOProvider(emailOrHandle) {
   case SSO_PROVIDER_DOMAIN_LOCALSIMPLESAML: 
     provider = LOCALSIMPLESAML_SSO_PROVIDER 
     break 
+  case SSO_PROVIDER_DOMAIN_ZURICH:
+    provider = ZURICH_SSO_PROVIDER
+    break
   /* supports only wipro.com
     case SSO_PROVIDER_DOMAIN_APPIRIO:
     provider = APPIRIO_SSO_PROVIDER
