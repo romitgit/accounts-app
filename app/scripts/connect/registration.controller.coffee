@@ -161,6 +161,7 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
           firstName         : vm.firstName
           lastName          : vm.lastName
           businessEmail     : vm.email
+          businessPhone     : vm.phone
           title             : vm.title
           companyName       : vm.companyName
           companySize       : vm.companySize
