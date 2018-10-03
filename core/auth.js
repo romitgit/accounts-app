@@ -40,7 +40,7 @@ function fetchJSON(url, options) {
           if (json.result.status >= 200 && json.result.status < 300) {
             return json
           } else {
-            if (json.result.success && json.result.status === 401) {
+            if (json.result.success) {
               return json
             }
             const error = new Error(json.result.content)
