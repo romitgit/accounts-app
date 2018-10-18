@@ -8,9 +8,7 @@ import { V3_JWT, V2_JWT, V2_SSO, AUTH0_REFRESH, AUTH0_JWT, ZENDESK_JWT, API_URL,
   TOPCODER_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, SSO_PROVIDER_DOMAINS, SSO_PROVIDER_DOMAIN_WIPRO,
   SSO_PROVIDER_DOMAIN_APPIRIO, SSO_PROVIDER_DOMAIN_TOPCODER, CREDITSUISSE_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_CREDITSUISSE,
   LOCALSIMPLESAML_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_LOCALSIMPLESAML,
-  ZURICH_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_ZURICH,
-  ZURICHTEST_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_ZURICHTEST
-} from './constants.js'
+  ZURICH_SSO_PROVIDER, SSO_PROVIDER_DOMAIN_ZURICH } from './constants.js'
 import fetch from 'isomorphic-fetch'
 import Auth0 from 'auth0-js'
 
@@ -362,7 +360,7 @@ export function registerUser(body) {
 export function ssoLogin(provider, state) {
   return new Promise(function(resolve, reject) {
     // supported backends
-    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER, CREDITSUISSE_SSO_PROVIDER, LOCALSIMPLESAML_SSO_PROVIDER, ZURICH_SSO_PROVIDER, ZURICHTEST_SSO_PROVIDER ]
+    var providers = [ WIPRO_SSO_PROVIDER, APPIRIO_SSO_PROVIDER, TOPCODER_SSO_PROVIDER, CREDITSUISSE_SSO_PROVIDER, LOCALSIMPLESAML_SSO_PROVIDER, ZURICH_SSO_PROVIDER ]
     if (providers.indexOf(provider) > -1) {
       auth0.popup.authorize({
         connection: provider,
@@ -472,7 +470,7 @@ function extractSSOUserData(profile, accessToken) {
  
   var ssoUserId = profile.user_id.substring(profile.user_id.lastIndexOf('|') + 1)
   if (ssoProvider === WIPRO_SSO_PROVIDER || ssoProvider === APPIRIO_SSO_PROVIDER
-    || ssoProvider === TOPCODER_SSO_PROVIDER || ssoProvider === ZURICH_SSO_PROVIDER || ssoProvider === ZURICHTEST_SSO_PROVIDER) {
+    || ssoProvider === TOPCODER_SSO_PROVIDER || ssoProvider === ZURICH_SSO_PROVIDER) {
     firstName = profile.given_name
     lastName  = profile.family_name
     name      = profile.name
@@ -752,9 +750,6 @@ export function identifySSOProvider(emailOrHandle) {
     break 
   case SSO_PROVIDER_DOMAIN_ZURICH:
     provider = ZURICH_SSO_PROVIDER
-    break
-  case SSO_PROVIDER_DOMAIN_ZURICHTEST:
-    provider = ZURICHTEST_SSO_PROVIDER
     break
   /* supports only wipro.com
     case SSO_PROVIDER_DOMAIN_APPIRIO:
