@@ -30,8 +30,12 @@ ConnectPinVerificationController = (
   
   vm.baseUrl = "https://connect.#{DOMAIN}"
   vm.loginUrl   = $state.href('CONNECT_LOGIN', { activated: true }, { absolute: true })
+  vm.forceRedirectUrlAfterSuccess = $stateParams.retUrl
   vm.retUrl = if $stateParams.afterActivationURL then decodeURIComponent($stateParams.afterActivationURL) else vm.baseUrl  
   vm.isConnectProjectFlow = vm.retUrl && vm.retUrl.indexOf(CONNECT_PROJECT_CALLBACK) != -1
+  
+  if $stateParams.retUrl
+    vm.hideLeftProgress = true
 
   # Submits the form
   vm.submit = ->
@@ -111,9 +115,10 @@ ConnectPinVerificationController = (
         vm.activated = false
         vm.error = true
         vm.message = 'Unable to log you in automatically. Please try login using login link.'
+    else if vm.forceRedirectUrlAfterSuccess
+      window.location.href = vm.forceRedirectUrlAfterSuccess
     else
       goToWelcomePage()
-    
 
   # Handles login failure 
   loginFailure = ->
