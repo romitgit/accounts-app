@@ -40,6 +40,9 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
   vm.isConnectProjectFlow = afterActivationURL && afterActivationURL.indexOf(CONNECT_PROJECT_CALLBACK) != -1
   oneTimeToken = null
   
+  if $stateParams.retUrl
+    vm.hideLeftProgress = true
+
   # watch form to detect particular changes in it.
   # https://stackoverflow.com/questions/22436501/simple-angularjs-form-is-undefined-in-scope
   $scope.$watch 'registerForm', (registerForm) ->
@@ -187,6 +190,7 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
       userId             : user.id
       tempToken          : oneTimeToken
       afterActivationURL : afterActivationURL
+      retUrl             : $stateParams.retUrl
 
     $state.go 'CONNECT_PIN_VERIFICATION', stateParams
 
