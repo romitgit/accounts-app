@@ -40,13 +40,13 @@ export const CONNECT_PROJECT_CALLBACK = 'new-project-callback'
 // this string should be regex aware i.e. it should backquote any regex reserve characters
 //export const SSO_PROVIDER_DOMAINS = 'wipro\\.com|asp\\.appirio\\.com|topcoder'
 // export const SSO_PROVIDER_DOMAINS = 'wipro\\.com'
-export const SSO_PROVIDER_DOMAINS = 'wipro\\.com|credit-suisse\\.com|localsimplesaml\\.com|zurich\\.com'
+export const SSO_PROVIDER_DOMAINS = 'wipro\\.com|credit-suisse\\.com|localsimplesaml\\.com|zurich\\.com|zurichna\\.com'
 // individual domains should not backquote anything because it is matched without regex
-export const SSO_PROVIDER_DOMAIN_WIPRO = 'wipro.com'
-export const SSO_PROVIDER_DOMAIN_APPIRIO = 'asp.appirio.com'
-export const SSO_PROVIDER_DOMAIN_TOPCODER = 'topcoder'
-export const SSO_PROVIDER_DOMAIN_CREDITSUISSE = 'credit-suisse.com'
-export const SSO_PROVIDER_DOMAIN_LOCALSIMPLESAML = 'localsimplesaml.com'
-export const SSO_PROVIDER_DOMAIN_ZURICH = 'zurich.com'
+export const SSO_PROVIDER_DOMAINS_WIPRO = ['wipro.com']
+export const SSO_PROVIDER_DOMAINS_APPIRIO = ['asp.appirio.com']
+export const SSO_PROVIDER_DOMAINS_TOPCODER = ['topcoder']
+export const SSO_PROVIDER_DOMAINS_CREDITSUISSE = ['credit-suisse.com']
+export const SSO_PROVIDER_DOMAINS_LOCALSIMPLESAML = ['localsimplesaml.com']
+export const SSO_PROVIDER_DOMAINS_ZURICH = ['zurich.com', 'zurichna.com']
 
 export const UTM_SOURCE_CONNECT = 'connect'

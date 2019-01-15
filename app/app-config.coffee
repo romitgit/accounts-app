@@ -145,7 +145,7 @@ config = (
     public: true
 
   states['CONNECT_PIN_VERIFICATION'] =
-    url: '/connect/pin-verification'
+    url: '/connect/pin-verification?retUrl'
     params: {'email', 'username', 'password', 'userId', 'afterActivationURL'}
     controller  : 'ConnectPinVerificationController as vm'
     template: require('./views/connect/pin-verification.jade')()
