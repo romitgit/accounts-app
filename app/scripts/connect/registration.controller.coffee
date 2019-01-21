@@ -150,7 +150,7 @@ ConnectRegistrationController = ($log, $state, $stateParams, $scope, ISO3166, Us
       setToken AUTH0_JWT, vm.auth0Data.idToken
       setToken AUTH0_REFRESH, vm.auth0Data.refreshToken
       $log.debug 'Getting v3jwt'
-      getNewJWT().then(setV3Tokens).catch (err) ->
+      return getNewJWT().then(setV3Tokens).catch (err) ->
         vm.loading = false
         vm.error = true
         vm.errorMessage = if err and err.message then err.message else 'Error in logging in new user'
