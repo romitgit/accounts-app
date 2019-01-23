@@ -1,13 +1,18 @@
 'use strict'
 
-{ registerUser, getFreshToken, getOneTimeToken, updateUserInfo, createLead, identifySSOProvider } = require '../../../core/auth.js'
-{ DOMAIN, CONNECT_PROJECT_CALLBACK, UTM_SOURCE_CONNECT, V3_TEMP_JWT } = require '../../../core/constants.js'
+{
+  registerUser, getFreshToken, getOneTimeToken, updateUserInfo, createLead, identifySSOProvider, getNewJWT
+} = require '../../../core/auth.js'
+{ 
+  DOMAIN, CONNECT_PROJECT_CALLBACK, UTM_SOURCE_CONNECT, V3_TEMP_JWT, ZENDESK_JWT, V3_JWT, AUTH0_JWT, AUTH0_REFRESH
+} = require '../../../core/constants.js'
 { npad } = require '../../../core/utils.js'
 { decodeToken } = require '../../../core/token.js'
 { setToken } = require '../../../core/token.js'
+{ generateReturnUrl, redirectTo } = require '../../../core/url.js'
 _ = require 'lodash'
 
-ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserService) ->
+ConnectRegistrationController = ($log, $state, $stateParams, $scope, ISO3166, UserService) ->
   vm              = this
   vm.termsUrl     = 'https://connect.' + DOMAIN + '/terms'
   vm.privacyUrl   = 'https://www.' + DOMAIN + '/community/how-it-works/privacy-policy/'
@@ -140,6 +145,18 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
     $state.go 'CONNECT_LOGIN', stateParams
 
   registerSuccess = (user) ->
+    if vm.ssoUser and vm.auth0Data
+      # LOG IN user
+      setToken AUTH0_JWT, vm.auth0Data.idToken
+      setToken AUTH0_REFRESH, vm.auth0Data.refreshToken
+      $log.debug 'Getting v3jwt'
+      return getNewJWT().then(setV3Tokens).catch (err) ->
+        vm.loading = false
+        vm.error = true
+        vm.errorMessage = if err and err.message then err.message else 'Error in logging in new user'
+        $scope.$apply()
+        $log.error 'Error in logging in new user', err
+        return
 
     return getOneTimeToken(user.id, vm.password).then((token)->oneTimeToken=token).catch(registerError).
       then(()->
@@ -218,6 +235,21 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
 
   vm.onSSORegister vm.ssoUser if vm.ssoUser
 
+  setV3Tokens = (tokens) ->
+    token = tokens.token
+    zendeskJwt = tokens.zendeskJwt
+    $log.debug 'Received v3 tokens'
+    setToken V3_JWT, token or ''
+    setToken ZENDESK_JWT, zendeskJwt or ''
+    $log.debug 'Redirecting to ' + vm.retUrl
+    error = redirectTo(generateReturnUrl(vm.retUrl))
+    $scope.$apply ->
+      vm.registering = false
+      if error
+        vm.error = 'Invalid URL is assigned to the return-URL.'
+      return
+    return
+
   vm.usernameIsFree = (value) ->
     UserService.validateHandle value
       .then (res) ->
@@ -246,6 +278,7 @@ ConnectRegistrationController = ($state, $stateParams, $scope, ISO3166, UserServ
   vm
 
 ConnectRegistrationController.$inject = [
+  '$log',
   '$state'
   '$stateParams'
   '$scope'
