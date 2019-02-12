@@ -30,6 +30,7 @@ ConnectLoginController = (
   vm.registrationUrl   = $state.href('CONNECT_REGISTRATION', { activated: true }, { absolute: true })
   vm.forgotPasswordUrl = $state.href('CONNECT_FORGOT_PASSWORD', { absolute: true })
   vm.retUrl = if $stateParams.retUrl then decodeURIComponent($stateParams.retUrl) else vm.baseUrl  
+  vm.ssoLoginUrl = $state.href('SSO_LOGIN', { absolute: true, app: 'connect', retUrl: vm.retUrl })
 
   vm.hasPasswordError = ->
     vm.loginErrors.WRONG_PASSWORD
