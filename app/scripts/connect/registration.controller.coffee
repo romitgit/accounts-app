@@ -161,6 +161,18 @@ ConnectRegistrationController = ($log, $state, $stateParams, $scope, ISO3166, Us
     return getOneTimeToken(user.id, vm.password).then((token)->oneTimeToken=token).catch(registerError).
       then(()->
         setToken(V3_TEMP_JWT, oneTimeToken)
+        promises = []
+        content = 
+          firstName         : vm.firstName
+          lastName          : vm.lastName
+          businessEmail     : vm.email
+          businessPhone     : vm.phone
+          title             : vm.title
+          companyName       : vm.companyName
+          companySize       : vm.companySize
+          userName          : vm.username
+        
+        promises.push createLead(oneTimeToken,content)
         updateInfoConfig =
           param: [
             traitId: "connect_info"
@@ -175,19 +187,8 @@ ConnectRegistrationController = ($log, $state, $stateParams, $scope, ISO3166, Us
                 companySize: vm.companySize
               ]
           ]
-        return updateUserInfo(oneTimeToken,vm.username,updateInfoConfig);
-      ).then(()->
-        content = 
-          firstName         : vm.firstName
-          lastName          : vm.lastName
-          businessEmail     : vm.email
-          businessPhone     : vm.phone
-          title             : vm.title
-          companyName       : vm.companyName
-          companySize       : vm.companySize
-          userName          : vm.username
-        
-        return createLead(oneTimeToken,content);
+        promises.push updateUserInfo(oneTimeToken,vm.username,updateInfoConfig)
+        return Promise.all promises
       ).then(()->completeRegistration(user)).catch(()->completeRegistration(user));
   
   completeRegistration = (user)->
