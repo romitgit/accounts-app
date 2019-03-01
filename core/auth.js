@@ -630,7 +630,6 @@ export function validateSocialProfile(userId, provider) {
   const url = API_URL + '/users/validateSocial?socialUserId=' + userId + '&socialProvider=' + encodeURIComponent(provider)
   var config = {
     method: 'GET',
-    cache: false,
     skipAuthorization: true
   }
   var success = function(res) {
@@ -641,7 +640,11 @@ export function validateSocialProfile(userId, provider) {
     }
   }
 
-  return fetchJSON(url, config).then(success)
+  function failure(res) {
+    console.error(res)
+  }
+
+  return fetchJSON(url, config).catch(failure).then(success)
 }
 
 export function getOneTimeToken(userId, password) {
