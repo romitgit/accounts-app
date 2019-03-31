@@ -2,7 +2,7 @@ version: 2
 jobs:
   "build-dev":
     docker:
-      - image: node:5.10.1
+      - image: node:11
     steps:
       - run:
           name: Installation of build dependencies.
