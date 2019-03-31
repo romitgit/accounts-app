@@ -66,3 +66,31 @@ export function supplant(template, values, pattern) {
     return (typeof r === 'string' || typeof r === 'number') ? r : a
   })
 }
+
+/**
+ * Extract naked domain from URL
+ * @param {String} url the url string
+ */
+export function extractNakedDomain(url) {
+  let hostname;
+  // find & remove protocol (http, ftp, etc.) and get hostname
+  if (url.indexOf("//") > -1) {
+    hostname = url.split('/')[2]
+  } else {
+    hostname = url.split('/')[0]
+  }
+
+  // find & remove port number
+  hostname = hostname.split(':')[0]
+  // find & remove "?"
+  hostname = hostname.split('?')[0]
+
+  // Find & remove subDomain
+  const parts = hostname.split('.')
+  if (parts.length > 2) {
+    parts.splice(0, 1)
+    hostname = parts.join('.')
+  }
+
+  return hostname.toLowerCase()
+}

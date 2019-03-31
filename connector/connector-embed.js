@@ -2,6 +2,7 @@ import 'babel-polyfill'
 
 import { GET_FRESH_TOKEN_REQUEST, GET_FRESH_TOKEN_SUCCESS, GET_FRESH_TOKEN_FAILURE, LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE, ALLOWED_ORIGINS } from '../core/constants.js'
 import { getFreshToken, logout } from '../core/auth.js'
+import { extractNakedDomain } from '../core/utils'
 
 function bindHandler(REQUEST, SUCCESS, FAILURE, action) {
   window.addEventListener('message', (e) => {
@@ -10,8 +11,10 @@ function bindHandler(REQUEST, SUCCESS, FAILURE, action) {
         validOrigin = false;
     
     ALLOWED_ORIGINS.forEach((allowedOrigin) => {
-      if (!validOrigin && origin.endsWith(allowedOrigin)) {
-        validOrigin = true;
+      if (!validOrigin) {
+        if (extractNakedDomain(allowedOrigin) === extractNakedDomain(origin)) {
+          validOrigin = true
+        }
       }
     })
 
