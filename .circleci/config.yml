@@ -77,6 +77,7 @@ jobs:
           key: ac-node-modules-{{ checksum "package.json" }}
           paths:
             - node_modules
+      - run: npm rebuild node-sass            
       - run: npm run build
       - run: npm run build-connector
       - run: npm test
