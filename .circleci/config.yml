@@ -2,13 +2,14 @@ version: 2
 jobs:
   "build-dev":
     docker:
-      - image: nodesource/sid:latest
+      - image: node:5.10.1
     steps:
       - run:
           name: Installation of build dependencies.
           command: |
+            set +e
             apt-get update -y
-            apt-get install g++  -y
+            apt-get install g++-4.8  -y
             apt install awscli -y
             chmod 777 /etc/mime.types
             sed -i 's/^application\/x-font-woff.*/application\/font-woff\t\t\t\twoff/' /etc/mime.types
