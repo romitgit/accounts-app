@@ -2,7 +2,7 @@ version: 2
 jobs:
   "build-dev":
     docker:
-      - image: node:11
+      - image: nodesource/sid:latest
     steps:
       - run:
           name: Installation of build dependencies.
