@@ -8,7 +8,6 @@ jobs:
           name: Installation of build dependencies.
           command: |
             set +e
-            sed -i '/jessie-updates/d' /etc/apt/sources.list
             apt-get update -y
             apt-get install g++-4.8  -y
             apt install awscli -y
@@ -62,7 +61,7 @@ jobs:
       - run:
           name: Installation of build dependencies.
           command: |
-            sed -i '/jessie-updates/d' /etc/apt/sources.list
+            set +e
             apt-get update -y
             apt-get install g++-4.8  -y
             apt install awscli -y            
