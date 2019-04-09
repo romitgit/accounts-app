@@ -28,8 +28,6 @@ function bindHandler(REQUEST, SUCCESS, FAILURE, action) {
         type: SUCCESS
       }, data)
 
-      console.log('Connector iframe: sending response', response)
-
       var origin = e.origin || e.originalEvent.origin;
       e.source.postMessage(response, origin)
     }
@@ -47,13 +45,10 @@ function bindHandler(REQUEST, SUCCESS, FAILURE, action) {
         type: FAILURE
       }, error)
 
-      console.log('Connector iframe: sending response', response)
-
       e.source.postMessage(response, e.origin)
     }
 
     if (e.data.type === REQUEST) {
-      console.log('Connector iframe: request received', e.data)
       action(success, failure)
     }
   })
