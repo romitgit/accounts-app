@@ -47,6 +47,6 @@ export const SSO_PROVIDER_DOMAINS_APPIRIO = ['asp.appirio.com']
 export const SSO_PROVIDER_DOMAINS_TOPCODER = ['topcoder']
 export const SSO_PROVIDER_DOMAINS_CREDITSUISSE = ['credit-suisse.com']
 export const SSO_PROVIDER_DOMAINS_LOCALSIMPLESAML = ['localsimplesaml.com']
-export const SSO_PROVIDER_DOMAINS_ZURICH = ['zurich.com', 'zurichna.com']
+export const SSO_PROVIDER_DOMAINS_ZURICH = ['zurich.com', 'zurichna.com', 'zurich.co.jp']
 
 export const UTM_SOURCE_CONNECT = 'connect'
