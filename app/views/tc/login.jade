@@ -31,19 +31,19 @@
 
     ul.networks
       li.network.github
-        a.ico(ng-click="vm.socialLogin('github')")
+        a.ico(ng-click="vm.socialLogin('github')", title="Login via Github", tabIndex="0")
         span Github
       li.network.google-plus
-        a.ico(ng-click="vm.socialLogin('google-oauth2')")
+        a.ico(ng-click="vm.socialLogin('google-oauth2')", title="Login via Google", tabIndex="0")
         span Google
       li.network.facebook
-        a.ico(ng-click="vm.socialLogin('facebook')")
+        a.ico(ng-click="vm.socialLogin('facebook')", title="Login via Facebook", tabIndex="0")
         span Facebook
       li.network.twitter
-        a.ico(ng-click="vm.socialLogin('twitter')")
+        a.ico(ng-click="vm.socialLogin('twitter')", title="Login via Twitter", tabIndex="0")
         span Twitter
       li.network.sso
-        a.ico(ui-sref="SSO_LOGIN({app:'member',retUrl:vm.$stateParams.retUrl})")
+        a.ico(ui-sref="SSO_LOGIN({app:'member',retUrl:vm.$stateParams.retUrl})", title="Login via Single Sign On", tabIndex="0")
         span Single Sign On
 
 p.join-topcoder Not a member yet? &nbsp;
