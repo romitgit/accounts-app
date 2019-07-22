@@ -10,7 +10,7 @@
     button {
       margin-top: 0;
       &.disabled {
-        background-color: $tc-gray-65;
+        background-color: $tc-gray-65!important;
         color: $tc-white-cream;
       }
     }
