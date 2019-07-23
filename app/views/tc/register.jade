@@ -1,7 +1,12 @@
+- var logoMobile = require("../../images/logo_mobile.svg")
+- var logoGithub = require("../../images/tc/github.svg")
+- var logoGooglePlus = require("../../images/tc/gplus.svg")
+- var logoFacebook = require("../../images/tc/facebook.svg")
+
 .register-container
   header
     a.logo-link(href="/")
-      img(src=require("../../images/logo_mobile.svg"), alt="Topcoder Logo")
+      img(src=logoMobile, alt="Topcoder Logo")
     .arrow
   //- h1 Join the Topcoder technology community to earn, learn, and connect
   h1 Join Topcoder
@@ -118,12 +123,15 @@
     ul.networks
       li.network.github
         a.ico(ng-click="vm.socialRegister('github')")
+          img(src=logoGithub, alt="Github Logo")
         span Github
       li.network.google-plus
         a.ico(ng-click="vm.socialRegister('google-oauth2')")
+          img(src=logoGooglePlus, alt="Google Logo")
         span Google
       li.network.facebook
         a.ico(ng-click="vm.socialRegister('facebook')")
+          img(src=logoFacebook, alt="Facebook Logo")
         span Facebook
 
 .join-topcoder
