@@ -1,4 +1,5 @@
 @import 'topcoder/tc-includes';
+@import "../tc-ui-variables";
 
 .register-container {
   form {
@@ -8,6 +9,10 @@
     align-items: center;
     button {
       margin-top: 0;
+      &.disabled {
+        background-color: $tc-gray-65!important;
+        color: $tc-white-cream;
+      }
     }
 
     @media (min-width: 768px) {
@@ -38,7 +43,7 @@
     margin-bottom: 20px;
     margin-top: 10px;
     p {
-      color: #a3a3ae;
+      color: #3A3A3A;
       font-size: 12px;
       line-height: 15px;
     }
@@ -51,6 +56,10 @@
       margin: 10px auto 20px;
       max-width: 180px;
     }
+  }
+
+  .login-options .networks .network .ico:focus {
+    outline: 3px solid #77A1F8;
   }
 }
 
