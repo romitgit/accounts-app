@@ -47,6 +47,9 @@
       font-size: 12px;
       line-height: 15px;
     }
+    a:focus{
+      outline: 2px solid $tc-dark-blue-70;
+    }
   }
   // login-options section
   .section-break {
@@ -60,6 +63,12 @@
 
   .login-options .networks .network .ico:focus {
     outline: 3px solid #77A1F8;
+  }
+
+  .tc-btn:focus {
+    border: 1px solid $tc-dark-blue-90;
+    background-color: $tc-dark-blue-90;
+    box-shadow: 0 0 2px 1px $tc-dark-blue-70;
   }
 }
 

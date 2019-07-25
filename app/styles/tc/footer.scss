@@ -1,4 +1,5 @@
 @import 'topcoder/tc-includes';
+@import "../tc-ui-variables";
 
 .bottom-footer {
 	background-color: $gray-darkest;
@@ -38,6 +39,10 @@
 .privacy-policy {
 	@extend .copyright-notice;
 	margin-right: 1.0em;
+}
+
+.privacy-policy:focus {
+  outline: 2px solid $tc-dark-blue-70;
 }
 
 /*

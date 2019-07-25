@@ -1,5 +1,7 @@
 @import 'topcoder/tc-includes';
 @import 'topcoder/tc-forms';
+@import "../tc-ui-variables";
+
 
 .login-container,
 .register-container,
@@ -205,6 +207,9 @@
   .redirect {
     width: 111px;
     padding: 8px 10px;
+  }
+  a:focus{
+    outline: 2px solid $tc-dark-blue-70;
   }
 }
 
