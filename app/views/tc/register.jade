@@ -1,7 +1,12 @@
+- var logoMobile = require("../../images/logo_mobile.svg")
+- var logoGithub = require("../../images/tc/github.svg")
+- var logoGooglePlus = require("../../images/tc/gplus.svg")
+- var logoFacebook = require("../../images/tc/facebook.svg")
+
 .register-container
   header
     a.logo-link(href="/")
-      img(src=require("../../images/logo_mobile.svg"), alt="Topcoder Logo")
+      img(src=logoMobile, alt="Topcoder Logo")
     .arrow
   //- h1 Join the Topcoder technology community to earn, learn, and connect
   div(role="region", aria-label="Registration Form", style="display: flex;flex-direction: column;")
@@ -116,7 +121,6 @@
     section.login-options(ng-if="!vm.ssoUser")
       p.tc-separator
         span Or Register With
-
       ul.networks
         li.network.github
           a.ico(ng-click="vm.socialRegister('github')", tabindex="0", title="Register with Github")

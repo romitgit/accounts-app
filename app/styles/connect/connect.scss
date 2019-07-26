@@ -81,6 +81,11 @@
   a {
     color: #006dea;
     text-decoration: none;
+    outline-width: 3px;
+  }
+
+  a:focus{
+    outline: 2px solid $tc-dark-blue-70;
   }
 
   .small-text {
