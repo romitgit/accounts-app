@@ -40,9 +40,9 @@
   @extend .copyright-notice;
   margin-right: 1.0em;
 
-	&:focus {
-		color: $tc-dark-blue;
-	}
+  &:focus {
+	color: $tc-dark-blue;
+  }
 }
 
 a.privacy-policy:focus {
