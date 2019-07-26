@@ -9,6 +9,10 @@
 
     p + button {
       margin-top: 0;
+      
+      &:focus {
+        outline: 3px auto $tc-dark-blue-90;
+      }
     }
   }
   .form-errors {
