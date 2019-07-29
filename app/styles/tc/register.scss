@@ -13,15 +13,11 @@
     align-items: center;
     button {
       margin-top: 0;
+      background-color: $tc-dark-blue-90;
       &.disabled {
         background-color: $tc-gray-60 !important;
         color: $tc-white-cream;
-      }
-      &.validCountry {
-        background-color: $tc-dark-blue-90;
-        &.disabled {
-          background-color: $tc-gray-60 !important;
-        }
+        opacity: 1;
       }
     }
 
