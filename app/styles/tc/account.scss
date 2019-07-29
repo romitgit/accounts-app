@@ -114,9 +114,6 @@
   }
   .login-options {
     margin-bottom: 40px;
-    span {
-      text-decoration: underline;
-    }
     p {
       @include font-with-weight;
       color: $tc-gray-60;
