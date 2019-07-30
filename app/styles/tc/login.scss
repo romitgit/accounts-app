@@ -21,6 +21,15 @@
       margin-bottom: 20px;
     }
   }
+
+  button[type=submit] {
+    background-color: $tc-dark-blue-110 !important;
+  }
+
+  button[type=submit]:disabled {
+    background-color: $tc-gray-60 !important;
+  }
+
   .problem-signin {
     @include font-with-weight('Merriweather Sans');
     color: #a3a3ae;
@@ -31,13 +40,18 @@
       font-size: 12px;
       margin-bottom: 25px;
       margin-top: 25px;
-
+      color: #006DEA;
       &:focus {
         outline: 3px auto $tc-dark-blue-90;
       }
     }
   }
   section.login-options {
+    .network {
+      span {
+        text-decoration: underline;
+      }
+    }
     @media (max-width: 767px) {
       margin-bottom: 41px;
     }

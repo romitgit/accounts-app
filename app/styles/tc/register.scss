@@ -13,6 +13,12 @@
     align-items: center;
     button {
       margin-top: 0;
+      background-color: $tc-dark-blue-90;
+      &.disabled {
+        background-color: $tc-gray-60 !important;
+        color: $tc-white-cream;
+        opacity: 1;
+      }
     }
 
     @media (min-width: 768px) {
@@ -61,6 +67,14 @@
     }
   }
 
+  .login-options .networks .network {
+    span {
+      text-decoration: underline;  
+    }
+    .ico:focus {
+      outline: 3px solid #77A1F8;
+    }
+  }
   .tc-btn:focus {
     border: 1px solid $tc-dark-blue-90;
     background-color: $tc-dark-blue-90;
