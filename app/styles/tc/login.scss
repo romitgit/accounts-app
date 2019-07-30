@@ -47,6 +47,11 @@
     }
   }
   section.login-options {
+    .network {
+      span {
+        text-decoration: underline;
+      }
+    }
     @media (max-width: 767px) {
       margin-bottom: 41px;
     }
