@@ -26,7 +26,7 @@
     height: 70px;
     position: relative;
     
-    .logo-link img {
+    .logo-link img, .ico img {
       display: inline-block;
       height: 30px;
     }
@@ -97,7 +97,7 @@
       }
       span {
         @include font-with-weight('Sofia Pro', 500);
-        color: #6b6b6b;
+        color: $tc-gray-60;
         cursor: pointer;
         font-size: 10px;
         line-height: 13px;
@@ -114,12 +114,9 @@
   }
   .login-options {
     margin-bottom: 40px;
-    span {
-      text-decoration: underline;
-    }
     p {
       @include font-with-weight;
-      color: #6b6b6b;
+      color: $tc-gray-60;
       font-size: 13px;
       line-height: 22px;
       text-transform: uppercase;
@@ -195,7 +192,7 @@
   text-transform: uppercase;
   a {
     display: inline;
-    color: #006dea !important;
+    color: $tc-dark-blue-90 !important;
 
     &:focus {
       outline: 3px auto $tc-dark-blue-90;
@@ -225,7 +222,7 @@
     text-decoration: underline;
   }
   .copyright-notice {
-    color: #6b6b6b;
+    color: $tc-gray-60;
   }
 }
 
